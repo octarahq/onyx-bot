@@ -14,6 +14,7 @@ import (
 
 	_ "onyx/bot/commands"
 	_ "onyx/bot/events"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
@@ -25,6 +26,9 @@ import (
 
 func main() {
 	_ = godotenv.Load()
+	if err := locales.Load("locales"); err != nil {
+		fmt.Printf("Warning: failed to load locales: %v\n", err)
+	}
 
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {

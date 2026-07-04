@@ -34,9 +34,6 @@ func init() {
 				return
 			}
 
-			// In a real bot, we would parse the custom ID to find the command or component handler
-			// For this boilerplate, we'll iterate over commands to see if they have ExecuteButton or ExecuteMenu (very simplified)
-			// A robust implementation would store component handlers separately or route by a prefix.
 			for _, cmd := range handlers.Commands {
 				if cmd.ExecuteButton != nil {
 					cmd.ExecuteButton(b, event)
@@ -47,7 +44,7 @@ func init() {
 			}
 		},
 	})
-	
+
 	handlers.RegisterEvent(handlers.Event{
 		Name:     "ModalSubmitInteractionCreate",
 		ExecOnce: false,
@@ -64,7 +61,7 @@ func init() {
 			}
 		},
 	})
-	
+
 	handlers.RegisterEvent(handlers.Event{
 		Name:     "AutocompleteInteractionCreate",
 		ExecOnce: false,
