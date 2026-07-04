@@ -3,6 +3,7 @@ package commands
 import (
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -31,6 +32,7 @@ func init() {
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
 			cmd := event.SlashCommandInteractionData()
+			trad := locales.GetNasa(event.Locale())
 
 			var msg discord.MessageCreate
 			switch *cmd.SubCommandName {
@@ -44,8 +46,8 @@ func init() {
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplay("# ISS"),
-						discord.NewTextDisplayf("The International Space Station is currently located at %.4f, %.4f.\nIt is orbiting at an altitude of %.0f km with a speed of %.0f km/h. (Updated <t:%d:R>)", res.Latitude, res.Longitude, res.Altitude, res.Velocity, int64(res.Timestamp)),
+						discord.NewTextDisplay("# " + trad.Iss_title),
+						discord.NewTextDisplayf(trad.Iss_position+"\n"+trad.Iss_altitude+"\n("+trad.Iss_updated+" <t:%d:R>)", res.Latitude, res.Longitude, res.Altitude, res.Velocity, int64(res.Timestamp)),
 						discord.NewMediaGallery(
 							discord.MediaGalleryItem{
 								Media: discord.UnfurledMediaItem{
@@ -60,7 +62,7 @@ func init() {
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplay("# NASA Apod"),
+						discord.NewTextDisplay("# " + trad.Apod_title),
 						discord.NewTextDisplayf("### %s", res.Title),
 						discord.NewTextDisplayf("> %s", res.Explanation),
 						discord.NewMediaGallery(
@@ -71,7 +73,7 @@ func init() {
 							},
 						),
 						discord.NewActionRow(
-							discord.NewLinkButton("Source", res.Url),
+							discord.NewLinkButton(trad.Source, res.Url),
 						),
 					),
 				)

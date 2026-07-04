@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "name": "conseil",
+    "description": "Obtenir un conseil aléatoire"
+  },
+  "trad": {
+    "title": "Conseil",
+    "advice": "> Mon conseil : %s"
+  }
+}

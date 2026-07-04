@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -36,6 +37,7 @@ func init() {
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
 			cmd := event.SlashCommandInteractionData()
+			trad := locales.GetMath(event.Locale())
 
 			var msg discord.MessageCreate
 			switch *cmd.SubCommandName {
@@ -48,9 +50,9 @@ func init() {
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplay("# Math expression"),
-						discord.NewTextDisplay(fmt.Sprintf("Expression : %s", expr)),
-						discord.NewTextDisplay(fmt.Sprintf("> The result : %s", res.Result)),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Expression, expr)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Result, res.Result)),
 					),
 				)
 			}

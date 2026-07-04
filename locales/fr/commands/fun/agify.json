@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "name": "agify",
+    "description": "Obtenir l'âge d'un utilisateur",
+    "options": {
+      "user": {
+        "name": "utilisateur",
+        "description": "L'utilisateur"
+      }
+    }
+  },
+  "trad": {
+    "title": "Agify",
+    "age": "> <@%d> a %d ans."
+  }
+}

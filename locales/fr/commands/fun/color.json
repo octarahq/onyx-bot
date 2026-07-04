@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "name": "couleur",
+    "description": "Obtenir des infos sur une couleur",
+    "options": {
+      "info": {
+        "name": "info",
+        "description": "Obtenir des infos sur une couleur",
+        "options": {
+          "hex": {
+            "name": "hex",
+            "description": "Une couleur hexadécimale valide (sans le #)"
+          }
+        }
+      },
+      "random": {
+        "name": "aleatoire",
+        "description": "Obtenir des infos sur une couleur aléatoire"
+      }
+    }
+  },
+  "trad": {
+    "hex": "**Hex :** %s",
+    "rgb": "**RGB :** %s",
+    "hsl": "**HSL :** %s",
+    "hsv": "**HSV :** %s",
+    "cmyk": "**CMJN :** %s",
+    "decimal": "**Décimal :** %d"
+  }
+}

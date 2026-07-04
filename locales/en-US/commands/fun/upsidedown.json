@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "name": "upsidedown",
+    "description": "Put a text upside down",
+    "options": {
+      "text": {
+        "name": "text",
+        "description": "The text"
+      }
+    }
+  },
+  "trad": {
+    "title": "Upside down",
+    "text": "> %s"
+  }
+}

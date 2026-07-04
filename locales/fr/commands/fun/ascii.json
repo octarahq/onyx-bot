@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "name": "ascii",
+    "description": "Créer de l'art ASCII"
+  },
+  "trad": {
+    "title": "Voici votre art ASCII",
+    "error": "Impossible de créer l'art"
+  }
+}

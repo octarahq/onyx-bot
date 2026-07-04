@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "npm",
+    "description": "Obtenir des informations sur un paquet NPM",
+    "options": {
+      "name": {
+        "name": "nom",
+        "description": "Le nom du paquet"
+      }
+    }
+  },
+  "trad": {
+    "not_found": "Impossible de trouver le paquet **%s** sur NPM.",
+    "unknown": "Inconnu",
+    "none": "Aucun",
+    "npm_page": "Page NPM",
+    "repository": "Dépôt",
+    "na": "N/A",
+    "title": "Paquet NPM : %s (v%s)",
+    "desc": "> %s\n\n**Auteur :** %s\n**Mots-clés :** %s\n**Dépendances :** %d",
+    "downloads": "**Téléchargements :**\n- **Hebdomadaire :** %s\n- **Mensuel :** %s\n- **Annuel :** %s",
+    "last_published": "**Dernière publication :** <t:%d:R>"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "math",
+    "description": "Calculer le résultat d'une expression mathématique",
+    "options": {
+      "expr": {
+        "name": "expr",
+        "description": "Calculer le résultat d'une expression mathématique",
+        "options": {
+          "expr": {
+            "name": "expr",
+            "description": "L'expression à calculer"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "title": "Expression mathématique",
+    "expression": "Expression : %s",
+    "result": "> Le résultat : %s"
+  }
+}

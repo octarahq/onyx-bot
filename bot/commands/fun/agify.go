@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -37,12 +38,13 @@ func init() {
 			res, _ := client.GetAgify(&plume.GetAgifyParams{
 				Name: user.Username,
 			})
+			trad := locales.GetAgify(event.Locale())
 
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
-						discord.NewTextDisplay("# Agify"),
-						discord.NewTextDisplay(fmt.Sprintf("> <@%d> is %d years old.", user.ID, res.Age)),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Age, user.ID, res.Age)),
 					).WithAccessory(discord.NewThumbnail(*user.AvatarURL())),
 				),
 			)

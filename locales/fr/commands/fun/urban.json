@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "urban",
+    "description": "Obtenir la définition d'un mot sur Urban Dictionary",
+    "options": {
+      "word": {
+        "name": "mot",
+        "description": "Le mot"
+      }
+    }
+  },
+  "trad": {
+    "title": "Urban",
+    "definition": "> %s",
+    "example": "Exemple *%s*",
+    "author": "-# %s",
+    "source": "Source"
+  }
+}

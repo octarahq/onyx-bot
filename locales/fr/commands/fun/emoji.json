@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "emoji",
+    "description": "Commandes d'emojis",
+    "options": {
+      "emojify": {
+        "name": "emojifier",
+        "description": "Emojifier un texte",
+        "options": {
+          "text": {
+            "name": "texte",
+            "description": "Le texte à emojifier"
+          }
+        }
+      },
+      "mix": {
+        "name": "mix",
+        "description": "Mélanger des emojis",
+        "options": {
+          "custom": {
+            "name": "personnalise",
+            "description": "Mélanger deux emojis",
+            "options": {
+              "emoji1": {
+                "name": "emoji1",
+                "description": "Premier emoji"
+              },
+              "emoji2": {
+                "name": "emoji2",
+                "description": "Deuxième emoji"
+              }
+            }
+          },
+          "random": {
+            "name": "aleatoire",
+            "description": "Mélanger deux emojis aléatoires"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "emojify_error": "Erreur lors de l'emojification du texte.",
+    "emojify_title": "Emojifier",
+    "mix_error": "Erreur lors du mélange. Ils ne sont peut-être pas compatibles !",
+    "mix_title": "Mix d'Emojis",
+    "random_error": "Erreur lors du mélange aléatoire.",
+    "random_title": "Mix d'Emojis Aléatoire"
+  }
+}

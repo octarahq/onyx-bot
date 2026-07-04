@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "name": "citation",
+    "description": "Obtenir une citation de motivation"
+  },
+  "trad": {
+    "title": "Citation",
+    "quote": "> %s",
+    "author": "-# %s"
+  }
+}

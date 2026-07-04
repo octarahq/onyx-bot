@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -21,14 +22,23 @@ func init() {
 		},
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
-			res, _ := client.GetQuote(&plume.GetQuoteParams{})
+
+			loc := plume.Def4("en")
+			if event.Locale() == discord.LocaleFrench {
+				loc = plume.Def4("fr")
+			}
+
+			res, _ := client.GetQuote(&plume.GetQuoteParams{
+				Locale: &loc,
+			})
+			trad := locales.GetQuote(event.Locale())
 
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
-						discord.NewTextDisplay("# Quote"),
-						discord.NewTextDisplay(fmt.Sprintf("> %s", res.Quote)),
-						discord.NewTextDisplayf("-# %s", res.Author),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Quote, res.Quote)),
+						discord.NewTextDisplayf(trad.Author, res.Author),
 					).WithAccessory(discord.NewThumbnail(*event.User().AvatarURL())),
 				),
 			)

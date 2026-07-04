@@ -3,6 +3,7 @@ package commands
 import (
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -60,6 +61,7 @@ func init() {
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
 			cmd := event.SlashCommandInteractionData()
+			trad := locales.GetEmoji(event.Locale())
 
 			var msg discord.MessageCreate
 
@@ -72,13 +74,13 @@ func init() {
 				if err != nil || res == nil {
 					msg = discord.NewMessageCreateV2(
 						discord.NewContainer(
-							discord.NewTextDisplay("Error emojifying text."),
+							discord.NewTextDisplay(trad.Emojify_error),
 						),
 					)
 				} else {
 					msg = discord.NewMessageCreateV2(
 						discord.NewContainer(
-							discord.NewTextDisplay("# Emojify"),
+							discord.NewTextDisplay("# "+trad.Emojify_title),
 							discord.NewTextDisplay(res.Text),
 						),
 					)
@@ -94,13 +96,13 @@ func init() {
 				if err != nil || res == nil {
 					msg = discord.NewMessageCreateV2(
 						discord.NewContainer(
-							discord.NewTextDisplay("Error mixing emojis. They might not be compatible!"),
+							discord.NewTextDisplay(trad.Mix_error),
 						),
 					)
 				} else {
 					msg = discord.NewMessageCreateV2(
 						discord.NewContainer(
-							discord.NewTextDisplay("# Emoji Mix"),
+							discord.NewTextDisplay("# "+trad.Mix_title),
 							discord.NewMediaGallery(
 								discord.MediaGalleryItem{
 									Media: discord.UnfurledMediaItem{
@@ -117,13 +119,13 @@ func init() {
 				if err != nil || res == nil {
 					msg = discord.NewMessageCreateV2(
 						discord.NewContainer(
-							discord.NewTextDisplay("Error getting random emoji mix."),
+							discord.NewTextDisplay(trad.Random_error),
 						),
 					)
 				} else {
 					msg = discord.NewMessageCreateV2(
 						discord.NewContainer(
-							discord.NewTextDisplay("# Random Emoji Mix"),
+							discord.NewTextDisplay("# "+trad.Random_title),
 							discord.NewMediaGallery(
 								discord.MediaGalleryItem{
 									Media: discord.UnfurledMediaItem{
@@ -137,7 +139,7 @@ func init() {
 			}
 
 			if err := event.CreateMessage(msg); err != nil {
-				// Failed to send message, nothing we can do here usually
+
 			}
 		},
 	})

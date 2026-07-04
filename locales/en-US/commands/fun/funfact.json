@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "name": "funfact",
+    "description": "Get a random fun fact"
+  },
+  "trad": {
+    "title": "Funfact",
+    "text": "> %s",
+    "source": "Source"
+  }
+}

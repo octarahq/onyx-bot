@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "emoji",
+    "description": "Emoji commands",
+    "options": {
+      "emojify": {
+        "name": "emojify",
+        "description": "Emojify some text",
+        "options": {
+          "text": {
+            "name": "text",
+            "description": "The text to emojify"
+          }
+        }
+      },
+      "mix": {
+        "name": "mix",
+        "description": "Mix emojis",
+        "options": {
+          "custom": {
+            "name": "custom",
+            "description": "Mix two emojis",
+            "options": {
+              "emoji1": {
+                "name": "emoji1",
+                "description": "First emoji"
+              },
+              "emoji2": {
+                "name": "emoji2",
+                "description": "Second emoji"
+              }
+            }
+          },
+          "random": {
+            "name": "random",
+            "description": "Mix two random emojis"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "emojify_error": "Error emojifying text.",
+    "emojify_title": "Emojify",
+    "mix_error": "Error mixing emojis. They might not be compatible!",
+    "mix_title": "Emoji Mix",
+    "random_error": "Error getting random emoji mix.",
+    "random_title": "Random Emoji Mix"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "name": "color",
+    "description": "Get color info",
+    "options": {
+      "info": {
+        "name": "info",
+        "description": "Get color info",
+        "options": {
+          "hex": {
+            "name": "hex",
+            "description": "A valid hexadecimal color (without the #)"
+          }
+        }
+      },
+      "random": {
+        "name": "random",
+        "description": "Get random color info"
+      }
+    }
+  },
+  "trad": {
+    "hex": "**Hex:** %s",
+    "rgb": "**RGB:** %s",
+    "hsl": "**HSL:** %s",
+    "hsv": "**HSV:** %s",
+    "cmyk": "**CMYK:** %s",
+    "decimal": "**Decimal:** %d"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "name": "eightball",
+    "description": "Obtenir une réponse avec la boule magique",
+    "options": {
+      "question": {
+        "name": "question",
+        "description": "Votre question à poser"
+      }
+    }
+  },
+  "trad": {
+    "title": "Boule Magique",
+    "question": "Votre question : %s",
+    "answer": "> Ma réponse : %s"
+  }
+}

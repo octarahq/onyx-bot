@@ -8,17 +8,107 @@ import (
 
 func unmarshalTrad(command string, raw []byte) (any, error) {
 	switch command {
+	case "advice":
+		var t AdviceTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "agify":
+		var t AgifyTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
 	case "ascii":
 		var t AsciiTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "color":
+		var t ColorTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "eightball":
+		var t EightballTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "emoji":
+		var t EmojiTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "funfact":
+		var t FunfactTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "github":
+		var t GithubTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "math":
+		var t MathTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "meme":
+		var t MemeTrad
 		err := json.Unmarshal(raw, &t)
 		return t, err
 	case "nasa":
 		var t NasaTrad
 		err := json.Unmarshal(raw, &t)
 		return t, err
+	case "npm":
+		var t NpmTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "quote":
+		var t QuoteTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "upsidedown":
+		var t UpsidedownTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "urban":
+		var t UrbanTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
 	default:
 		return nil, nil
 	}
+}
+
+type AdviceTrad struct {
+	Title  string `json:"title"`
+	Advice string `json:"advice"`
+}
+
+func GetAdvice(locale discord.Locale) AdviceTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["advice"].(AdviceTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["advice"].(AdviceTrad); ok {
+			return t
+		}
+	}
+	return AdviceTrad{}
+}
+
+type AgifyTrad struct {
+	Title string `json:"title"`
+	Age   string `json:"age"`
+}
+
+func GetAgify(locale discord.Locale) AgifyTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["agify"].(AgifyTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["agify"].(AgifyTrad); ok {
+			return t
+		}
+	}
+	return AgifyTrad{}
 }
 
 type AsciiTrad struct {
@@ -40,13 +130,165 @@ func GetAscii(locale discord.Locale) AsciiTrad {
 	return AsciiTrad{}
 }
 
+type ColorTrad struct {
+	Decimal string `json:"decimal"`
+	Hex     string `json:"hex"`
+	Rgb     string `json:"rgb"`
+	Hsl     string `json:"hsl"`
+	Hsv     string `json:"hsv"`
+	Cmyk    string `json:"cmyk"`
+}
+
+func GetColor(locale discord.Locale) ColorTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["color"].(ColorTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["color"].(ColorTrad); ok {
+			return t
+		}
+	}
+	return ColorTrad{}
+}
+
+type EightballTrad struct {
+	Title    string `json:"title"`
+	Question string `json:"question"`
+	Answer   string `json:"answer"`
+}
+
+func GetEightball(locale discord.Locale) EightballTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["eightball"].(EightballTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["eightball"].(EightballTrad); ok {
+			return t
+		}
+	}
+	return EightballTrad{}
+}
+
+type EmojiTrad struct {
+	Emojify_error string `json:"emojify_error"`
+	Emojify_title string `json:"emojify_title"`
+	Mix_error     string `json:"mix_error"`
+	Mix_title     string `json:"mix_title"`
+	Random_error  string `json:"random_error"`
+	Random_title  string `json:"random_title"`
+}
+
+func GetEmoji(locale discord.Locale) EmojiTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["emoji"].(EmojiTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["emoji"].(EmojiTrad); ok {
+			return t
+		}
+	}
+	return EmojiTrad{}
+}
+
+type FunfactTrad struct {
+	Text   string `json:"text"`
+	Source string `json:"source"`
+	Title  string `json:"title"`
+}
+
+func GetFunfact(locale discord.Locale) FunfactTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["funfact"].(FunfactTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["funfact"].(FunfactTrad); ok {
+			return t
+		}
+	}
+	return FunfactTrad{}
+}
+
+type GithubTrad struct {
+	User_title   string `json:"user_title"`
+	Repo_title   string `json:"repo_title"`
+	Repo_button  string `json:"repo_button"`
+	No_desc      string `json:"no_desc"`
+	User_page    string `json:"user_page"`
+	Repo_desc    string `json:"repo_desc"`
+	Repo_license string `json:"repo_license"`
+	Unknown      string `json:"unknown"`
+	None         string `json:"none"`
+}
+
+func GetGithub(locale discord.Locale) GithubTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["github"].(GithubTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["github"].(GithubTrad); ok {
+			return t
+		}
+	}
+	return GithubTrad{}
+}
+
+type MathTrad struct {
+	Title      string `json:"title"`
+	Expression string `json:"expression"`
+	Result     string `json:"result"`
+}
+
+func GetMath(locale discord.Locale) MathTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["math"].(MathTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["math"].(MathTrad); ok {
+			return t
+		}
+	}
+	return MathTrad{}
+}
+
+type MemeTrad struct {
+	Title      string `json:"title"`
+	Meme_title string `json:"meme_title"`
+	Author     string `json:"author"`
+}
+
+func GetMeme(locale discord.Locale) MemeTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["meme"].(MemeTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["meme"].(MemeTrad); ok {
+			return t
+		}
+	}
+	return MemeTrad{}
+}
+
 type NasaTrad struct {
+	Iss_altitude string `json:"iss_altitude"`
+	Iss_updated  string `json:"iss_updated"`
 	Apod_title   string `json:"apod_title"`
 	Source       string `json:"source"`
 	Iss_title    string `json:"iss_title"`
 	Iss_position string `json:"iss_position"`
-	Iss_altitude string `json:"iss_altitude"`
-	Iss_updated  string `json:"iss_updated"`
 }
 
 func GetNasa(locale discord.Locale) NasaTrad {
@@ -61,4 +303,92 @@ func GetNasa(locale discord.Locale) NasaTrad {
 		}
 	}
 	return NasaTrad{}
+}
+
+type NpmTrad struct {
+	None           string `json:"none"`
+	Npm_page       string `json:"npm_page"`
+	Repository     string `json:"repository"`
+	Na             string `json:"na"`
+	Desc           string `json:"desc"`
+	Downloads      string `json:"downloads"`
+	Not_found      string `json:"not_found"`
+	Unknown        string `json:"unknown"`
+	Title          string `json:"title"`
+	Last_published string `json:"last_published"`
+}
+
+func GetNpm(locale discord.Locale) NpmTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["npm"].(NpmTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["npm"].(NpmTrad); ok {
+			return t
+		}
+	}
+	return NpmTrad{}
+}
+
+type QuoteTrad struct {
+	Title  string `json:"title"`
+	Quote  string `json:"quote"`
+	Author string `json:"author"`
+}
+
+func GetQuote(locale discord.Locale) QuoteTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["quote"].(QuoteTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["quote"].(QuoteTrad); ok {
+			return t
+		}
+	}
+	return QuoteTrad{}
+}
+
+type UpsidedownTrad struct {
+	Text  string `json:"text"`
+	Title string `json:"title"`
+}
+
+func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["upsidedown"].(UpsidedownTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["upsidedown"].(UpsidedownTrad); ok {
+			return t
+		}
+	}
+	return UpsidedownTrad{}
+}
+
+type UrbanTrad struct {
+	Example    string `json:"example"`
+	Author     string `json:"author"`
+	Source     string `json:"source"`
+	Title      string `json:"title"`
+	Definition string `json:"definition"`
+}
+
+func GetUrban(locale discord.Locale) UrbanTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["urban"].(UrbanTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["urban"].(UrbanTrad); ok {
+			return t
+		}
+	}
+	return UrbanTrad{}
 }

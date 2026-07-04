@@ -3,6 +3,7 @@ package commands
 import (
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -48,6 +49,7 @@ func init() {
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
 			cmd := event.SlashCommandInteractionData()
+			trad := locales.GetGithub(event.Locale())
 
 			var msg discord.MessageCreate
 			switch *cmd.SubCommandName {
@@ -60,10 +62,10 @@ func init() {
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
 						discord.NewSection(
-							discord.NewTextDisplayf("# Github User : %s", res.Username),
+							discord.NewTextDisplayf("# "+trad.User_title, res.Username),
 						).WithAccessory(discord.NewThumbnail(res.AvatarUrl)),
 						discord.NewActionRow(
-							discord.NewLinkButton("User page", res.PageUrl),
+							discord.NewLinkButton(trad.User_page, res.PageUrl),
 						),
 					),
 				)
@@ -74,7 +76,7 @@ func init() {
 				})
 
 				descStr, _ := res.Description.AsGetGithubRepository200JSONResponseBodyDescription0()
-				description := "No description provided."
+				description := trad.No_desc
 				if descStr != "" {
 					description = descStr
 				}
@@ -91,11 +93,11 @@ func init() {
 				if res.OpenIssuesCount != nil {
 					issues = int(*res.OpenIssuesCount)
 				}
-				language := "Unknown"
+				language := trad.Unknown
 				if res.Language != nil {
 					language = *res.Language
 				}
-				license := "None"
+				license := trad.None
 				if res.LicenseName != nil {
 					license = *res.LicenseName
 				}
@@ -103,12 +105,12 @@ func init() {
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
 						discord.NewSection(
-							discord.NewTextDisplayf("# Github repository : %s", res.FullName),
-							discord.NewTextDisplayf("> %s\n\n**Stars:** %d\n**Forks:** %d\n**Issues:** %d\n**Language:** %s", description, stars, forks, issues, language),
+							discord.NewTextDisplayf("# "+trad.Repo_title, res.FullName),
+							discord.NewTextDisplayf(trad.Repo_desc, description, stars, forks, issues, language),
 						).WithAccessory(discord.NewThumbnail(res.OwnerAvatarUrl)),
-						discord.NewTextDisplayf("-# License : %s", license),
+						discord.NewTextDisplayf(trad.Repo_license, license),
 						discord.NewActionRow(
-							discord.NewLinkButton("Repository", res.Url),
+							discord.NewLinkButton(trad.Repo_button, res.Url),
 						),
 					),
 				)

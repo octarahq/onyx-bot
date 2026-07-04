@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -54,17 +55,18 @@ func init() {
 			res, _ := client.GetColor(&plume.GetColorParams{
 				Hex: &color,
 			})
+			trad := locales.GetColor(event.Locale())
 
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
 						discord.NewTextDisplay(fmt.Sprintf("# %s", res.Name)),
-						discord.NewTextDisplay(fmt.Sprintf("**Hex:** %s", res.Hex.Value)),
-						discord.NewTextDisplay(fmt.Sprintf("**RGB:** %s", res.Rgb.Value)),
-						discord.NewTextDisplay(fmt.Sprintf("**HSL:** %s", res.Hsl.Value)),
-						discord.NewTextDisplay(fmt.Sprintf("**HSV:** %s", res.Hsv.Value)),
-						discord.NewTextDisplay(fmt.Sprintf("**CMYK:** %s", res.Cmyk.Value)),
-						discord.NewTextDisplay(fmt.Sprintf("**Decimal:** %d", res.Int)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Hex, res.Hex.Value)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Rgb, res.Rgb.Value)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Hsl, res.Hsl.Value)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Hsv, res.Hsv.Value)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Cmyk, res.Cmyk.Value)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Decimal, res.Int)),
 					).WithAccessory(discord.NewThumbnail(res.Url)),
 				),
 			)

@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "name": "advice",
+    "description": "Get a random advice"
+  },
+  "trad": {
+    "title": "Advice",
+    "advice": "> My advice : %s"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "name": "alenvers",
+    "description": "Mettre un texte à l'envers",
+    "options": {
+      "text": {
+        "name": "texte",
+        "description": "Le texte"
+      }
+    }
+  },
+  "trad": {
+    "title": "A l'envers",
+    "text": "> %s"
+  }
+}

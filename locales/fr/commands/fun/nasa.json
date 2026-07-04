@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "name": "nasa",
+    "description": "Obtenir des données de la NASA"
+  },
+  "trad": {
+    "iss_title": "Suivi de l'ISS",
+    "iss_position": "La Station Spatiale Internationale est actuellement située à **%.4f, %.4f**.",
+    "iss_altitude": "Elle est en orbite à une altitude de **%.0f km** à une vitesse de **%.0f km/h**.",
+    "iss_updated": "Dernière mise à jour",
+    "apod_title": "Image du jour NASA",
+    "source": "Source"
+  }
+}

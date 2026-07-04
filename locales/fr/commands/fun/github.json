@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "name": "github",
+    "description": "Rechercher des données github",
+    "options": {
+      "user": {
+        "name": "utilisateur",
+        "description": "Rechercher un utilisateur GitHub",
+        "options": {
+          "user": {
+            "name": "utilisateur",
+            "description": "Le nom d'utilisateur"
+          }
+        }
+      },
+      "repository": {
+        "name": "depot",
+        "description": "Rechercher un dépôt GitHub",
+        "options": {
+          "repository": {
+            "name": "depot",
+            "description": "Le nom du dépôt"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "user_title": "Utilisateur Github : %s",
+    "user_page": "Page utilisateur",
+    "repo_title": "Dépôt Github : %s",
+    "repo_desc": "> %s\n\n**Étoiles :** %d\n**Forks :** %d\n**Issues :** %d\n**Langage :** %s",
+    "repo_license": "-# Licence : %s",
+    "repo_button": "Dépôt",
+    "no_desc": "Aucune description fournie.",
+    "unknown": "Inconnu",
+    "none": "Aucune"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "name": "github",
+    "description": "Search github data",
+    "options": {
+      "user": {
+        "name": "user",
+        "description": "Search a GitHub user data",
+        "options": {
+          "user": {
+            "name": "user",
+            "description": "The user name"
+          }
+        }
+      },
+      "repository": {
+        "name": "repository",
+        "description": "Search a GitHub repository data",
+        "options": {
+          "repository": {
+            "name": "repository",
+            "description": "The repository name"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "user_title": "Github User : %s",
+    "user_page": "User page",
+    "repo_title": "Github repository : %s",
+    "repo_desc": "> %s\n\n**Stars:** %d\n**Forks:** %d\n**Issues:** %d\n**Language:** %s",
+    "repo_license": "-# License : %s",
+    "repo_button": "Repository",
+    "no_desc": "No description provided.",
+    "unknown": "Unknown",
+    "none": "None"
+  }
+}

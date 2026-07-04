@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -33,12 +34,13 @@ func init() {
 			res, _ := client.GetUpsideDown(&plume.GetUpsideDownParams{
 				Text: text,
 			})
+			trad := locales.GetUpsidedown(event.Locale())
 
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
-						discord.NewTextDisplay("# Upside down"),
-						discord.NewTextDisplay(fmt.Sprintf("> %s", res.Text)),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Text, res.Text)),
 					).WithAccessory(discord.NewThumbnail(*event.User().AvatarURL())),
 				),
 			)

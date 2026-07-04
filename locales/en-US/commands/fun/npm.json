@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "npm",
+    "description": "Get information about an NPM package",
+    "options": {
+      "name": {
+        "name": "name",
+        "description": "The name of the package"
+      }
+    }
+  },
+  "trad": {
+    "not_found": "Could not find package **%s** on NPM.",
+    "unknown": "Unknown",
+    "none": "None",
+    "npm_page": "NPM Page",
+    "repository": "Repository",
+    "na": "N/A",
+    "title": "NPM Package: %s (v%s)",
+    "desc": "> %s\n\n**Author:** %s\n**Keywords:** %s\n**Dependents:** %d",
+    "downloads": "**Downloads:**\n- **Weekly:** %s\n- **Monthly:** %s\n- **Yearly:** %s",
+    "last_published": "**Last Published:** <t:%d:R>"
+  }
+}

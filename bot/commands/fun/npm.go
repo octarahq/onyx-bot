@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 	"strings"
 
 	"github.com/disgoorg/disgo/discord"
@@ -31,6 +32,7 @@ func init() {
 			client, _ := plume.NewAPIClient()
 			cmd := event.SlashCommandInteractionData()
 			pkgName, _ := cmd.OptString("name")
+			trad := locales.GetNpm(event.Locale())
 
 			res, err := client.GetNpm(&plume.GetNpmParams{
 				Name: pkgName,
@@ -41,16 +43,16 @@ func init() {
 			if err != nil || res == nil {
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplay("Could not find package **" + pkgName + "** on NPM."),
+						discord.NewTextDisplayf(trad.Not_found, pkgName),
 					),
 				)
 			} else {
 				author := res.AuthorUsername
 				if author == "" {
-					author = "Unknown"
+					author = trad.Unknown
 				}
 
-				keywords := "None"
+				keywords := trad.None
 				if len(res.Keywords) > 0 {
 					keywords = strings.Join(res.Keywords, ", ")
 				}
@@ -60,13 +62,13 @@ func init() {
 				}
 
 				buttons := []discord.InteractiveComponent{
-					discord.NewLinkButton("NPM Page", res.NpmUrl),
+					discord.NewLinkButton(trad.Npm_page, res.NpmUrl),
 				}
 				if res.RepositoryUrl != nil && strings.HasPrefix(*res.RepositoryUrl, "http") {
-					buttons = append(buttons, discord.NewLinkButton("Repository", *res.RepositoryUrl))
+					buttons = append(buttons, discord.NewLinkButton(trad.Repository, *res.RepositoryUrl))
 				}
 
-				downloadsYearly := "N/A"
+				downloadsYearly := trad.Na
 				if res.DownloadsYearly != nil {
 					downloadsYearly = fmt.Sprintf("%d", *res.DownloadsYearly)
 				}
@@ -76,10 +78,10 @@ func init() {
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplayf("# NPM Package: %s (v%s)", res.Name, res.Version),
-						discord.NewTextDisplayf("> %s\n\n**Author:** %s\n**Keywords:** %s\n**Dependents:** %d", res.Description, author, keywords, res.Dependents),
-						discord.NewTextDisplayf("**Downloads:**\n- **Weekly:** %s\n- **Monthly:** %s\n- **Yearly:** %s", downloadsWeekly, downloadsMonthly, downloadsYearly),
-						discord.NewTextDisplayf("**Last Published:** <t:%d:R>", int64(res.LastPublished)),
+						discord.NewTextDisplayf("# "+trad.Title, res.Name, res.Version),
+						discord.NewTextDisplayf(trad.Desc, res.Description, author, keywords, res.Dependents),
+						discord.NewTextDisplayf(trad.Downloads, downloadsWeekly, downloadsMonthly, downloadsYearly),
+						discord.NewTextDisplayf(trad.Last_published, int64(res.LastPublished)),
 						discord.NewActionRow(buttons...),
 					),
 				)

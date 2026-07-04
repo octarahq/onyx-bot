@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "name": "meme",
+    "description": "Obtenir un meme",
+    "options": {
+      "random": {
+        "name": "aleatoire",
+        "description": "Obtenir un meme aléatoire"
+      }
+    }
+  },
+  "trad": {
+    "title": "Meme",
+    "meme_title": "### %s",
+    "author": "-# %s"
+  }
+}

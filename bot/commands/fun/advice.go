@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -21,13 +22,22 @@ func init() {
 		},
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
-			res, _ := client.GetAdvice(&plume.GetAdviceParams{})
+
+			loc := plume.Def4("en")
+			if event.Locale() == discord.LocaleFrench {
+				loc = plume.Def4("fr")
+			}
+
+			res, _ := client.GetAdvice(&plume.GetAdviceParams{
+				Locale: &loc,
+			})
+			trad := locales.GetAdvice(event.Locale())
 
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
-						discord.NewTextDisplay("# Advice"),
-						discord.NewTextDisplay(fmt.Sprintf("> My advice : %s", res.Advice)),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Advice, res.Advice)),
 					).WithAccessory(discord.NewThumbnail(*event.User().AvatarURL())),
 				),
 			)

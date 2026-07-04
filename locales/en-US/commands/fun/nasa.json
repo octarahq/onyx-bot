@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "name": "nasa",
+    "description": "Get nasa data"
+  },
+  "trad": {
+    "iss_title": "ISS Tracker",
+    "iss_position": "The International Space Station is currently located at **%.4f, %.4f**.",
+    "iss_altitude": "It is orbiting at an altitude of **%.0f km** with a speed of **%.0f km/h**.",
+    "iss_updated": "Last updated",
+    "apod_title": "NASA Apod",
+    "source": "Source"
+  }
+}

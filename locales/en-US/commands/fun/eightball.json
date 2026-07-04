@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "name": "eightball",
+    "description": "Get answer with 8ball",
+    "options": {
+      "question": {
+        "name": "question",
+        "description": "Your question to ask"
+      }
+    }
+  },
+  "trad": {
+    "title": "8Ball",
+    "question": "Your question : %s",
+    "answer": "> My answer : %s"
+  }
+}

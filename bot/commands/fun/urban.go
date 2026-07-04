@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -31,6 +32,7 @@ func init() {
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
 			word, _ := event.SlashCommandInteractionData().OptString("word")
+			trad := locales.GetUrban(event.Locale())
 
 			res, _ := client.GetUrban(&plume.GetUrbanParams{
 				Word: word,
@@ -39,13 +41,13 @@ func init() {
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
-						discord.NewTextDisplay("# Urban"),
-						discord.NewTextDisplay(fmt.Sprintf("> %s", res.Definition)),
-						discord.NewTextDisplay(fmt.Sprintf("Exemple *%s*", res.Example)),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Definition, res.Definition)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Example, res.Example)),
 					).WithAccessory(discord.NewThumbnail(*event.User().AvatarURL())),
-					discord.NewTextDisplayf("-# %s", res.Author),
+					discord.NewTextDisplayf(trad.Author, res.Author),
 					discord.NewActionRow(
-						discord.NewLinkButton("Source", res.Url),
+						discord.NewLinkButton(trad.Source, res.Url),
 					),
 				),
 			)

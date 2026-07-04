@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -28,16 +29,25 @@ func init() {
 		},
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			client, _ := plume.NewAPIClient()
-			res, _ := client.Get8ball(&plume.Get8ballParams{})
+
+			loc := plume.Def4("en")
+			if event.Locale() == discord.LocaleFrench {
+				loc = plume.Def4("fr")
+			}
+
+			res, _ := client.Get8ball(&plume.Get8ballParams{
+				Locale: &loc,
+			})
+			trad := locales.GetEightball(event.Locale())
 
 			question, _ := event.SlashCommandInteractionData().OptString("question")
 
 			msg := discord.NewMessageCreateV2(
 				discord.NewContainer(
 					discord.NewSection(
-						discord.NewTextDisplay("# 8Ball"),
-						discord.NewTextDisplay(fmt.Sprintf("Your question : %s", question)),
-						discord.NewTextDisplay(fmt.Sprintf("> My answer : %s", res.Answer)),
+						discord.NewTextDisplay("# "+trad.Title),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Question, question)),
+						discord.NewTextDisplay(fmt.Sprintf(trad.Answer, res.Answer)),
 					).WithAccessory(discord.NewThumbnail(*event.User().AvatarURL())),
 				),
 			)

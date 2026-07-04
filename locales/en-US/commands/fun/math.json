@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "math",
+    "description": "Calculate the result of a mathematical expression",
+    "options": {
+      "expr": {
+        "name": "expr",
+        "description": "Calculate the result of a mathematical expression",
+        "options": {
+          "expr": {
+            "name": "expr",
+            "description": "The expression to calculate"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "title": "Math expression",
+    "expression": "Expression : %s",
+    "result": "> The result : %s"
+  }
+}
