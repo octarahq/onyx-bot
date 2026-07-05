@@ -10,11 +10,17 @@ import (
 	"time"
 
 	"onyx/bot/core"
+	"onyx/bot/db"
 	"onyx/bot/handlers"
 
 	_ "onyx/bot/commands"
 	_ "onyx/bot/events"
 	"onyx/bot/locales"
+	"onyx/bot/modules"
+
+	"onyx/bot/api"
+	_ "onyx/bot/api/routes"
+
 
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
@@ -44,9 +50,16 @@ func main() {
 		}
 	}
 
+	db := db.New()
+
 	coreBot := &core.Bot{
 		AdminIDs: adminIDs,
+		DB:       db,
+		Commands: handlers.Commands,
+		Events:   handlers.Events,
+		Modules:  modules.RegisteredModules,
 	}
+
 
 	client, err := disgo.New(token,
 		bot.WithGatewayConfigOpts(
@@ -70,6 +83,8 @@ func main() {
 	coreBot.Client = client
 
 	handlers.SetupEvents(coreBot)
+
+	go api.Start(coreBot)
 
 	defer func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
