@@ -1,3 +1,4 @@
 .env
 bot.db
 onyx
+bot/modules/TestModule.txt

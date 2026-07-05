@@ -6,16 +6,10 @@ import (
 	"github.com/disgoorg/disgo/events"
 )
 
-type ModuleConfig struct {
-	IsFetchable bool
-	IsEditable  bool
-}
-
 type Module interface {
 	Name() string
 	Priority() int
 	IsEnabled() bool
-	Config() ModuleConfig
 }
 
 type DataAware interface {
