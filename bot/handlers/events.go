@@ -8,11 +8,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 )
 
-type Event struct {
-	Name     string
-	ExecOnce bool
-	Execute  func(b *core.Bot, e bot.Event)
-}
+type Event = core.Event
 
 var Events []Event
 
@@ -25,6 +21,8 @@ func SetupEvents(b *core.Bot) {
 
 	b.Client.EventManager.AddEventListeners(bot.NewListenerFunc(func(e bot.Event) {
 		eventName := reflect.TypeOf(e).Elem().Name()
+
+		go ExecModulesEvent(b, e)
 
 		for _, ev := range Events {
 			if ev.Name == eventName {

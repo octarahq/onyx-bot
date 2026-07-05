@@ -6,20 +6,9 @@ import (
 	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/discord"
-	"github.com/disgoorg/disgo/events"
 )
 
-type Command struct {
-	Name                string
-	Description         string
-	Category            string
-	Create              discord.ApplicationCommandCreate
-	Execute             func(b *core.Bot, event *events.ApplicationCommandInteractionCreate)
-	ExecuteButton       func(b *core.Bot, event *events.ComponentInteractionCreate)
-	ExecuteMenu         func(b *core.Bot, event *events.ComponentInteractionCreate)
-	ExecuteModal        func(b *core.Bot, event *events.ModalSubmitInteractionCreate)
-	ExecuteAutocomplete func(b *core.Bot, event *events.AutocompleteInteractionCreate)
-}
+type Command = core.Command
 
 var Commands = make(map[string]Command)
 

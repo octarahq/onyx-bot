@@ -5,6 +5,7 @@ import (
 	"onyx/bot/core"
 	"onyx/bot/handlers"
 
+
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/events"
 )
@@ -22,9 +23,11 @@ func init() {
 			fmt.Println("Bot is ready! Logged in as", event.User.Username)
 
 			if err := handlers.SyncCommands(b); err != nil {
+
 				fmt.Printf("Failed to sync commands: %v\n", err)
 			} else {
-				fmt.Println("Successfully synced commands!")
+				fmt.Printf("Successfully synced %d commands!\n", len(b.Commands))
+				fmt.Printf("Successfully %d modules!\n", len(b.Modules))
 			}
 		},
 	})
