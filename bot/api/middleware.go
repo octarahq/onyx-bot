@@ -77,7 +77,7 @@ func RateLimitMiddleware() gin.HandlerFunc {
 		mu.Unlock()
 
 		if !limiter.Allow() {
-			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{"error": "Too many requests."})
+			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{"error": "Too many requests.", "error_code": "RATE_LIMITED"})
 			return
 		}
 
@@ -88,13 +88,13 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sessionID, err := c.Cookie("session_id")
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Missing session cookie"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Missing session cookie", "error_code": "AUTH_MISSING"})
 			return
 		}
 
 		database, exists := c.Get("db")
 		if !exists {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "User not found. Please relogin"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "User not found. Please relogin", "error_code": "USER_NOT_FOUND"})
 			return
 		}
 		gormDB := database.(*db.DB).GormDB
@@ -102,7 +102,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		var session db.Session
 		result := gormDB.Where("session_id = ? AND expires_at > ?", sessionID, time.Now()).First(&session)
 		if result.Error != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid or expired session"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid or expired session", "error_code": "AUTH_INVALID"})
 			return
 		}
 
@@ -115,13 +115,13 @@ func GuildAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sessionID, err := c.Cookie("session_id")
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Missing session cookie"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Missing session cookie", "error_code": "AUTH_MISSING"})
 			return
 		}
 
 		database, exists := c.Get("db")
 		if !exists {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "User not found. Please relogin"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "User not found. Please relogin", "error_code": "USER_NOT_FOUND"})
 			return
 		}
 		gormDB := database.(*db.DB).GormDB
@@ -129,25 +129,25 @@ func GuildAuthMiddleware() gin.HandlerFunc {
 		var session db.Session
 		result := gormDB.Where("session_id = ? AND expires_at > ?", sessionID, time.Now()).First(&session)
 		if result.Error != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid or expired session"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid or expired session", "error_code": "AUTH_INVALID"})
 			return
 		}
 
 		bot, exists := c.MustGet("bot").(*core.Bot)
 		if !exists {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
 			return
 		}
 
 		gid, err := snowflake.Parse(c.Param("guildId"))
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid guild ID", "error_code": "INVALID_GUILD_ID"})
 			return
 		}
 
 		uid, err := snowflake.Parse(session.UserID)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID", "error_code": "INVALID_USER_ID"})
 			return
 		}
 
@@ -160,7 +160,7 @@ func GuildAuthMiddleware() gin.HandlerFunc {
 			if !ok {
 				m, err := bot.Client.Rest.GetMember(gid, uid)
 				if err != nil {
-					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch member"})
+					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch member", "error_code": "INTERNAL_ERROR"})
 					return
 				}
 				member = *m
@@ -178,13 +178,13 @@ func PermissionMiddleware(permission discord.Permissions) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		bot, exists := c.MustGet("bot").(*core.Bot)
 		if !exists {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "bot context not found"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
 			return
 		}
 
 		member, exists := c.MustGet("member").(*discord.Member)
 		if !exists {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "member not found"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "member not found", "error_code": "INTERNAL_ERROR"})
 			return
 		}
 
@@ -194,7 +194,7 @@ func PermissionMiddleware(permission discord.Permissions) gin.HandlerFunc {
 				c.Next()
 				return
 			} else {
-				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "You do not have the required permissions"})
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "You do not have the required permissions", "error_code": "USER_MISSING_PERMISSIONS"})
 				return
 			}
 		}
@@ -207,7 +207,7 @@ func PermissionMiddleware(permission discord.Permissions) gin.HandlerFunc {
 
 		guild, err := bot.Client.Rest.GetGuild(member.GuildID, true)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch guild"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch guild", "error_code": "INTERNAL_ERROR"})
 			return
 		}
 
@@ -218,7 +218,7 @@ func PermissionMiddleware(permission discord.Permissions) gin.HandlerFunc {
 
 		roles, err := bot.Client.Rest.GetRoles(member.GuildID)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch roles"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch roles", "error_code": "INTERNAL_ERROR"})
 			return
 		}
 
@@ -246,7 +246,7 @@ func PermissionMiddleware(permission discord.Permissions) gin.HandlerFunc {
 		apiPermCache.Set(cacheKey, permissions)
 
 		if !permissions.Has(permission) {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "You do not have the required permissions"})
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "You do not have the required permissions", "error_code": "USER_MISSING_PERMISSIONS"})
 			return
 		}
 

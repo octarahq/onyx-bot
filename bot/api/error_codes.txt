@@ -1,0 +1,28 @@
+-- Authentification & Sessions (HTTP 401 Unauthorized) --
+AUTH_MISSING         : Le cookie de session est manquant.
+AUTH_INVALID         : La session n'existe pas en base de données ou a expiré.
+USER_NOT_FOUND       : Le contexte de base de données a échoué, l'utilisateur n'a pas pu être récupéré.
+
+-- Permissions Utilisateur (HTTP 403 Forbidden) --
+USER_MISSING_PERMISSIONS : L'utilisateur n'a pas les permissions requises sur le serveur (ex: ManageGuild).
+
+-- Permissions du Bot (HTTP 403 Forbidden) --
+BOT_MISSING_PERMISSIONS  : Le bot n'a pas les permissions nécessaires sur le serveur pour effectuer cette action (ex: activer un module). Retourne aussi un champ "missing" avec la liste.
+
+-- Limite de Requêtes (HTTP 429 Too Many Requests) --
+RATE_LIMITED         : L'utilisateur a dépassé la limite de requêtes API autorisée.
+
+-- Requêtes Invalides (HTTP 400 Bad Request) --
+INVALID_GUILD_ID     : L'ID du serveur fourni dans l'URL est invalide.
+INVALID_USER_ID      : L'ID de l'utilisateur fourni est invalide.
+INVALID_PAYLOAD      : Le JSON envoyé dans le corps de la requête est malformé ou invalide.
+VALIDATION_FAILED    : Les données envoyées ne respectent pas les règles de validation du module.
+NOT_TOGGLABLE        : Le module ciblé ne supporte pas l'activation/désactivation.
+
+-- Introuvable (HTTP 404 Not Found) --
+GUILD_NOT_FOUND      : Le serveur n'existe pas ou le bot n'est pas dessus.
+MODULE_NOT_FOUND     : Le module demandé n'existe pas.
+MODULE_DATA_NOT_FOUND: Les données pour ce module n'ont pas été trouvées.
+
+-- Erreurs Serveur (HTTP 500 Internal Server Error) --
+INTERNAL_ERROR       : Erreur générique inattendue (ex: erreur de sauvegarde en BDD, contexte bot manquant, échec de récupération Discord API).

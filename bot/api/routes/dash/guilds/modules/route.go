@@ -43,24 +43,42 @@ func init() {
 	})
 }
 
-func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, interface{}, bool) {
+func checkBotPermission(b *core.Bot, module core.Module, me discord.Member) []string {
+	var missing []string
+	botPerms := b.Client.Caches.MemberPermissions(me)
+
+	if botPerms.Has(discord.PermissionAdministrator) {
+		return missing
+	}
+
+	permissions := module.Permissions()
+	for _, p := range permissions {
+		if !botPerms.Has(p) {
+			missing = append(missing, p.String())
+		}
+	}
+
+	return missing
+}
+
+func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, core.Module, interface{}, bool) {
 	bot, exists := c.MustGet("bot").(*core.Bot)
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found"})
-		return nil, "", nil, false
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
+		return nil, "", nil, nil, false
 	}
 
 	guildId := c.Param("guildId")
 	guildIdSnowflake, err := snowflake.Parse(guildId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id"})
-		return nil, "", nil, false
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id", "error_code": "INVALID_GUILD_ID"})
+		return nil, "", nil, nil, false
 	}
 
 	if _, ok := bot.Client.Caches.GuildCache().Get(guildIdSnowflake); !ok {
 		if _, err := bot.Client.Rest.GetGuild(guildIdSnowflake, false); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)"})
-			return nil, "", nil, false
+			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)", "error_code": "GUILD_NOT_FOUND"})
+			return nil, "", nil, nil, false
 		}
 	}
 
@@ -74,22 +92,22 @@ func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, interface{}, b
 	}
 
 	if mod == nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "module not found"})
-		return nil, "", nil, false
+		c.JSON(http.StatusNotFound, gin.H{"error": "module not found", "error_code": "MODULE_NOT_FOUND"})
+		return nil, "", nil, nil, false
 	}
 
 	dbAware, ok := mod.(core.DatabaseAware)
 	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "module does not support settings"})
-		return nil, "", nil, false
+		c.JSON(http.StatusBadRequest, gin.H{"error": "module does not support settings", "error_code": "NOT_TOGGLABLE"})
+		return nil, "", nil, nil, false
 	}
 
 	if err := dbAware.LoadData(bot.DB.GormDB, guildId); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load settings"})
-		return nil, "", nil, false
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load settings", "error_code": "INTERNAL_ERROR"})
+		return nil, "", nil, nil, false
 	}
 
-	return bot, guildId, dbAware.DataPtr(), true
+	return bot, guildId, mod, dbAware.DataPtr(), true
 }
 
 func handleGetModuleData(c *gin.Context) {
@@ -103,7 +121,7 @@ func handleGetModuleData(c *gin.Context) {
 		return
 	}
 
-	_, _, dataPtr, ok := getModuleSettingsContext(c)
+	_, _, _, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
@@ -111,7 +129,7 @@ func handleGetModuleData(c *gin.Context) {
 	if dataPtr != nil {
 		c.JSON(http.StatusOK, dataPtr)
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found", "error_code": "MODULE_DATA_NOT_FOUND"})
 	}
 }
 
@@ -128,20 +146,20 @@ func handleGetModuleList(c *gin.Context) {
 
 	bot, exists := c.MustGet("bot").(*core.Bot)
 	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
 		return
 	}
 
 	guildId := c.Param("guildId")
 	guildIdSnowflake, err := snowflake.Parse(guildId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id", "error_code": "INVALID_GUILD_ID"})
 		return
 	}
 
 	if _, ok := bot.Client.Caches.GuildCache().Get(guildIdSnowflake); !ok {
 		if _, err := bot.Client.Rest.GetGuild(guildIdSnowflake, false); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)", "error_code": "GUILD_NOT_FOUND"})
 			return
 		}
 	}
@@ -188,42 +206,42 @@ func handlePatchModuleData(c *gin.Context) {
 		return
 	}
 
-	bot, _, dataPtr, ok := getModuleSettingsContext(c)
+	bot, _, _, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
 
 	if dataPtr == nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found", "error_code": "MODULE_DATA_NOT_FOUND"})
 		return
 	}
 
 	var payload map[string]any
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid json body"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid json body", "error_code": "INVALID_PAYLOAD"})
 		return
 	}
 
 	jsonBytes, err := json.Marshal(payload)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to process payload"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to process payload", "error_code": "INTERNAL_ERROR"})
 		return
 	}
 
 	if err := json.Unmarshal(jsonBytes, dataPtr); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to apply updates"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to apply updates", "error_code": "VALIDATION_FAILED"})
 		return
 	}
 
 	if v, ok := dataPtr.(db.Validatable); ok {
 		if err := v.Validate(); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "error_code": "VALIDATION_FAILED"})
 			return
 		}
 	}
 
 	if err := bot.DB.GormDB.Save(dataPtr).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save settings"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save settings", "error_code": "INTERNAL_ERROR"})
 		return
 	}
 
@@ -241,14 +259,42 @@ func setModuleStatus(c *gin.Context, status bool) {
 		return
 	}
 
-	bot, _, dataPtr, ok := getModuleSettingsContext(c)
+	bot, guildId, mod, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
 
 	if dataPtr == nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found", "error_code": "MODULE_DATA_NOT_FOUND"})
 		return
+	}
+
+	if status {
+		guildIdSnowflake, err := snowflake.Parse(guildId)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id", "error_code": "INVALID_GUILD_ID"})
+			return
+		}
+
+		me, ok := bot.Client.Caches.Member(guildIdSnowflake, bot.Client.ID())
+		if !ok {
+			m, err := bot.Client.Rest.GetMember(guildIdSnowflake, bot.Client.ID())
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch bot member", "error_code": "INTERNAL_ERROR"})
+				return
+			}
+			me = *m
+		}
+
+		missingPerms := checkBotPermission(bot, mod, me)
+		if len(missingPerms) > 0 {
+			c.JSON(http.StatusForbidden, gin.H{
+				"error":   "The bot lacks the required permissions to enable this module.",
+				"error_code": "BOT_MISSING_PERMISSIONS",
+				"missing": missingPerms,
+			})
+			return
+		}
 	}
 
 	updated := false
@@ -265,12 +311,12 @@ func setModuleStatus(c *gin.Context, status bool) {
 	}
 
 	if !updated {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "module does not support enabling/disabling"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "module does not support enabling/disabling", "error_code": "NOT_TOGGLABLE"})
 		return
 	}
 
 	if err := bot.DB.GormDB.Save(dataPtr).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save settings"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save settings", "error_code": "INTERNAL_ERROR"})
 		return
 	}
 

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"gorm.io/gorm"
 )
@@ -9,6 +10,7 @@ type Module interface {
 	Name() string
 	Priority() int
 	IsEnabled() bool
+	Permissions() []discord.Permissions
 }
 
 type DatabaseAware interface {
