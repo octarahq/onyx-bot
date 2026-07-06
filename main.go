@@ -21,7 +21,6 @@ import (
 	"onyx/bot/api"
 	_ "onyx/bot/api/routes"
 
-
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
@@ -60,6 +59,11 @@ func main() {
 		Modules:  modules.RegisteredModules,
 	}
 
+	for _, mod := range coreBot.Modules {
+		if dbAware, ok := mod.(core.DatabaseAware); ok {
+			db.GormDB.AutoMigrate(dbAware.Schema())
+		}
+	}
 
 	client, err := disgo.New(token,
 		bot.WithGatewayConfigOpts(

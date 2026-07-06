@@ -22,19 +22,23 @@ func SetupEvents(b *core.Bot) {
 	b.Client.EventManager.AddEventListeners(bot.NewListenerFunc(func(e bot.Event) {
 		eventName := reflect.TypeOf(e).Elem().Name()
 
-		go ExecModulesEvent(b, e)
-
-		for _, ev := range Events {
-			if ev.Name == eventName {
-				if ev.ExecOnce {
-					if executedEvents[ev.Name] {
-						continue
-					}
-					executedEvents[ev.Name] = true
-				}
-
-				go ev.Execute(b, e)
+		go func() {
+			if ExecModulesEvent(b, e) {
+				return
 			}
-		}
+
+			for _, ev := range Events {
+				if ev.Name == eventName {
+					if ev.ExecOnce {
+						if executedEvents[ev.Name] {
+							continue
+						}
+						executedEvents[ev.Name] = true
+					}
+
+					go ev.Execute(b, e)
+				}
+			}
+		}()
 	}))
 }

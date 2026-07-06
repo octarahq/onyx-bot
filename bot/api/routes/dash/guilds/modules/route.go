@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"encoding/json"
 	"net/http"
 	"onyx/bot/api"
 	"onyx/bot/core"
@@ -42,24 +43,24 @@ func init() {
 	})
 }
 
-func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, *db.Guild, reflect.Value, bool) {
+func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, interface{}, bool) {
 	bot, exists := c.MustGet("bot").(*core.Bot)
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found"})
-		return nil, "", nil, reflect.Value{}, false
+		return nil, "", nil, false
 	}
 
 	guildId := c.Param("guildId")
 	guildIdSnowflake, err := snowflake.Parse(guildId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id"})
-		return nil, "", nil, reflect.Value{}, false
+		return nil, "", nil, false
 	}
 
 	if _, ok := bot.Client.Caches.GuildCache().Get(guildIdSnowflake); !ok {
 		if _, err := bot.Client.Rest.GetGuild(guildIdSnowflake, false); err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)"})
-			return nil, "", nil, reflect.Value{}, false
+			return nil, "", nil, false
 		}
 	}
 
@@ -74,20 +75,21 @@ func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, *db.Guild, ref
 
 	if mod == nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "module not found"})
-		return nil, "", nil, reflect.Value{}, false
+		return nil, "", nil, false
 	}
 
-	guildData, err := db.LoadSettings(bot.DB.GormDB, guildId)
-	if err != nil {
+	dbAware, ok := mod.(core.DatabaseAware)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "module does not support settings"})
+		return nil, "", nil, false
+	}
+
+	if err := dbAware.LoadData(bot.DB.GormDB, guildId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load settings"})
-		return nil, "", nil, reflect.Value{}, false
+		return nil, "", nil, false
 	}
 
-	settingsValue := reflect.ValueOf(guildData).Elem()
-	fieldName := "Settings" + strings.TrimSuffix(mod.Name(), "Module")
-	field := settingsValue.FieldByName(fieldName)
-
-	return bot, guildId, guildData, field, true
+	return bot, guildId, dbAware.DataPtr(), true
 }
 
 func handleGetModuleData(c *gin.Context) {
@@ -101,13 +103,13 @@ func handleGetModuleData(c *gin.Context) {
 		return
 	}
 
-	_, _, _, field, ok := getModuleSettingsContext(c)
+	_, _, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
 
-	if field.IsValid() {
-		c.JSON(http.StatusOK, field.Interface())
+	if dataPtr != nil {
+		c.JSON(http.StatusOK, dataPtr)
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found"})
 	}
@@ -144,29 +146,25 @@ func handleGetModuleList(c *gin.Context) {
 		}
 	}
 
-	guildData, err := db.LoadSettings(bot.DB.GormDB, guildId)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load settings"})
-		return
-	}
-
-	settingsValue := reflect.ValueOf(guildData).Elem()
 	modules := make([]gin.H, 0, len(bot.Modules))
 
 	for _, m := range bot.Modules {
 		moduleName := m.Name()
-		fieldName := "Settings" + strings.TrimSuffix(moduleName, "Module")
-		field := settingsValue.FieldByName(fieldName)
 		active := false
 
-		if field.IsValid() {
-			if field.Kind() == reflect.Struct {
-				f := field.FieldByName("Enabled")
-				if f.IsValid() && f.Kind() == reflect.Bool {
-					active = f.Bool()
+		if dbAware, ok := m.(core.DatabaseAware); ok {
+			if err := dbAware.LoadData(bot.DB.GormDB, guildId); err == nil {
+				ptr := dbAware.DataPtr()
+				val := reflect.ValueOf(ptr).Elem()
+
+				if val.Kind() == reflect.Struct {
+					f := val.FieldByName("Enabled")
+					if f.IsValid() && f.Kind() == reflect.Bool {
+						active = f.Bool()
+					}
+				} else if val.Kind() == reflect.Bool {
+					active = val.Bool()
 				}
-			} else if field.Kind() == reflect.Bool {
-				active = field.Bool()
 			}
 		}
 
@@ -190,12 +188,12 @@ func handlePatchModuleData(c *gin.Context) {
 		return
 	}
 
-	bot, _, guildData, field, ok := getModuleSettingsContext(c)
+	bot, _, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
 
-	if !field.IsValid() || !field.CanSet() {
+	if dataPtr == nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found"})
 		return
 	}
@@ -206,28 +204,25 @@ func handlePatchModuleData(c *gin.Context) {
 		return
 	}
 
-	updated := false
-	if enabled, ok := payload["enabled"]; ok {
-		if v, ok := enabled.(bool); ok {
-			if field.Kind() == reflect.Struct {
-				f := field.FieldByName("Enabled")
-				if f.IsValid() && f.CanSet() && f.Kind() == reflect.Bool {
-					f.SetBool(v)
-					updated = true
-				}
-			} else if field.Kind() == reflect.Bool {
-				field.SetBool(v)
-				updated = true
-			}
-		}
-	}
-
-	if !updated {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "no supported fields to update"})
+	jsonBytes, err := json.Marshal(payload)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to process payload"})
 		return
 	}
 
-	if err := db.UpdateSettings(bot.DB.GormDB, guildData); err != nil {
+	if err := json.Unmarshal(jsonBytes, dataPtr); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to apply updates"})
+		return
+	}
+
+	if v, ok := dataPtr.(db.Validatable); ok {
+		if err := v.Validate(); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	}
+
+	if err := bot.DB.GormDB.Save(dataPtr).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save settings"})
 		return
 	}
@@ -246,25 +241,26 @@ func setModuleStatus(c *gin.Context, status bool) {
 		return
 	}
 
-	bot, _, guildData, field, ok := getModuleSettingsContext(c)
+	bot, _, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
 
-	if !field.IsValid() || !field.CanSet() {
+	if dataPtr == nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found"})
 		return
 	}
 
 	updated := false
-	if field.Kind() == reflect.Struct {
-		f := field.FieldByName("Enabled")
+	val := reflect.ValueOf(dataPtr).Elem()
+	if val.Kind() == reflect.Struct {
+		f := val.FieldByName("Enabled")
 		if f.IsValid() && f.CanSet() && f.Kind() == reflect.Bool {
 			f.SetBool(status)
 			updated = true
 		}
-	} else if field.Kind() == reflect.Bool {
-		field.SetBool(status)
+	} else if val.Kind() == reflect.Bool {
+		val.SetBool(status)
 		updated = true
 	}
 
@@ -273,7 +269,7 @@ func setModuleStatus(c *gin.Context, status bool) {
 		return
 	}
 
-	if err := db.UpdateSettings(bot.DB.GormDB, guildData); err != nil {
+	if err := bot.DB.GormDB.Save(dataPtr).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save settings"})
 		return
 	}

@@ -2,20 +2,21 @@ package handlers
 
 import (
 	"onyx/bot/core"
-	"onyx/bot/db"
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/events"
 )
 
-func ExecModulesEvent(b *core.Bot, event bot.Event) {
+func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 	if e, ok := event.(*events.Ready); ok {
 		for _, mod := range b.Modules {
 			if handler, ok := mod.(core.OnReady); ok {
-				go handler.HandleReady(b, e)
+				if handler.HandleReady(b, e) {
+					return true
+				}
 			}
 		}
-		return
+		return false
 	}
 
 	var guildIDStr string
@@ -28,17 +29,14 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) {
 	}
 
 	if guildIDStr == "" {
-		return
-	}
-
-	data, err := db.LoadSettings(b.DB.GormDB, guildIDStr)
-	if err != nil {
-		return
+		return false
 	}
 
 	for _, mod := range b.Modules {
-		if dataAware, ok := mod.(core.DataAware); ok {
-			dataAware.SetData(*data)
+		if dbAware, ok := mod.(core.DatabaseAware); ok {
+			if err := dbAware.LoadData(b.DB.GormDB, guildIDStr); err != nil {
+				continue
+			}
 		}
 
 		if !mod.IsEnabled() {
@@ -48,8 +46,12 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) {
 		switch e := event.(type) {
 		case *events.MessageCreate:
 			if handler, ok := mod.(core.OnMessageCreate); ok {
-				go handler.HandleMessageCreate(b, e)
+				if handler.HandleMessageCreate(b, e) {
+					return true
+				}
 			}
 		}
 	}
+
+	return false
 }

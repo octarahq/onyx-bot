@@ -14,6 +14,10 @@ type DB struct {
 	GormDB *gorm.DB
 }
 
+type Validatable interface {
+	Validate() error
+}
+
 func New() *DB {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
@@ -33,9 +37,6 @@ func New() *DB {
 	}
 
 	models := []interface{}{&Guild{}, &Session{}}
-	for _, mod := range Registry {
-		models = append(models, mod.Model)
-	}
 
 	err = db.AutoMigrate(models...)
 	if err != nil {
