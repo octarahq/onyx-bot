@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "translate",
+    "description": "Translate a text.",
+    "options": {
+      "text": {
+        "name": "text",
+        "description": "The text to translate"
+      },
+      "lang": {
+        "name": "lang",
+        "description": "The targeted lang"
+      }
+    }
+  },
+  "trad": {
+    "footer": "-# %s %s Translation"
+  }
+}

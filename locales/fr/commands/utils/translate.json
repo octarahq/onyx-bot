@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "traduire",
+    "description": "Traduire un texte.",
+    "options": {
+      "text": {
+        "name": "texte",
+        "description": "Le texte à traduire"
+      },
+      "lang": {
+        "name": "langue",
+        "description": "La langue cible"
+      }
+    }
+  },
+  "trad": {
+    "footer": "-# %s Traduction en %s"
+  }
+}

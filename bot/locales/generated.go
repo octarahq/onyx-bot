@@ -72,6 +72,10 @@ func unmarshalTrad(command string, raw []byte) (any, error) {
 		var t PingTrad
 		err := json.Unmarshal(raw, &t)
 		return t, err
+	case "translate":
+		var t TranslateTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
 	case "interaction":
 		var t InteractionTrad
 		err := json.Unmarshal(raw, &t)
@@ -182,12 +186,12 @@ func GetEightball(locale discord.Locale) EightballTrad {
 }
 
 type EmojiTrad struct {
-	Emojify_error string `json:"emojify_error"`
 	Emojify_title string `json:"emojify_title"`
 	Mix_error     string `json:"mix_error"`
 	Mix_title     string `json:"mix_title"`
 	Random_error  string `json:"random_error"`
 	Random_title  string `json:"random_title"`
+	Emojify_error string `json:"emojify_error"`
 }
 
 func GetEmoji(locale discord.Locale) EmojiTrad {
@@ -225,15 +229,15 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
-	Repo_desc    string `json:"repo_desc"`
-	Repo_license string `json:"repo_license"`
-	No_desc      string `json:"no_desc"`
-	Unknown      string `json:"unknown"`
 	User_title   string `json:"user_title"`
 	User_page    string `json:"user_page"`
+	Repo_desc    string `json:"repo_desc"`
+	Repo_license string `json:"repo_license"`
 	Repo_button  string `json:"repo_button"`
 	None         string `json:"none"`
 	Repo_title   string `json:"repo_title"`
+	No_desc      string `json:"no_desc"`
+	Unknown      string `json:"unknown"`
 }
 
 func GetGithub(locale discord.Locale) GithubTrad {
@@ -291,12 +295,12 @@ func GetMeme(locale discord.Locale) MemeTrad {
 }
 
 type NasaTrad struct {
+	Iss_position string `json:"iss_position"`
 	Iss_altitude string `json:"iss_altitude"`
 	Iss_updated  string `json:"iss_updated"`
 	Apod_title   string `json:"apod_title"`
 	Source       string `json:"source"`
 	Iss_title    string `json:"iss_title"`
-	Iss_position string `json:"iss_position"`
 }
 
 func GetNasa(locale discord.Locale) NasaTrad {
@@ -314,16 +318,16 @@ func GetNasa(locale discord.Locale) NasaTrad {
 }
 
 type NpmTrad struct {
-	Na             string `json:"na"`
-	Title          string `json:"title"`
-	Desc           string `json:"desc"`
-	Last_published string `json:"last_published"`
 	Unknown        string `json:"unknown"`
+	None           string `json:"none"`
 	Npm_page       string `json:"npm_page"`
 	Repository     string `json:"repository"`
 	Downloads      string `json:"downloads"`
+	Last_published string `json:"last_published"`
 	Not_found      string `json:"not_found"`
-	None           string `json:"none"`
+	Na             string `json:"na"`
+	Title          string `json:"title"`
+	Desc           string `json:"desc"`
 }
 
 func GetNpm(locale discord.Locale) NpmTrad {
@@ -380,11 +384,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
-	Title      string `json:"title"`
-	Definition string `json:"definition"`
 	Example    string `json:"example"`
 	Author     string `json:"author"`
 	Source     string `json:"source"`
+	Title      string `json:"title"`
+	Definition string `json:"definition"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -402,11 +406,10 @@ func GetUrban(locale discord.Locale) UrbanTrad {
 }
 
 type PingTrad struct {
+	Db_latency      string `json:"db_latency"`
+	Title           string `json:"title"`
 	Gateway_latency string `json:"gateway_latency"`
 	Rest_latency    string `json:"rest_latency"`
-	Db_latency      string `json:"db_latency"`
-	Advice          string `json:"advice"`
-	Title           string `json:"title"`
 }
 
 func GetPing(locale discord.Locale) PingTrad {
@@ -421,6 +424,24 @@ func GetPing(locale discord.Locale) PingTrad {
 		}
 	}
 	return PingTrad{}
+}
+
+type TranslateTrad struct {
+	Footer string `json:"footer"`
+}
+
+func GetTranslate(locale discord.Locale) TranslateTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["translate"].(TranslateTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["translate"].(TranslateTrad); ok {
+			return t
+		}
+	}
+	return TranslateTrad{}
 }
 
 type InteractionTrad struct {

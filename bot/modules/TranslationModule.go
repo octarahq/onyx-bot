@@ -3,6 +3,7 @@ package modules
 import (
 	"fmt"
 	"onyx/bot/core"
+	"onyx/bot/utils"
 	"strings"
 
 	"github.com/disgoorg/disgo/discord"
@@ -14,12 +15,20 @@ type TranslationSettings struct {
 	GuildID  string `gorm:"primaryKey" json:"guild_id"`
 	Enabled  bool   `gorm:"default:false" json:"enabled"`
 	Channels string `json:"channels"`
-	Lang     string `gorm:"default:'en-US'" json:"lang"`
+	Lang     string `gorm:"default:'en'" json:"lang"`
 }
 
 func (t *TranslationSettings) Validate() error {
-	if len(t.Lang) > 10 {
-		return fmt.Errorf("lang exceeds maximum length of 10 characters")
+	if t.Lang != "" {
+		valid := false
+		for _, v := range utils.TranslateLangs {
+			if t.Lang == v.Value {
+				valid = true
+			}
+		}
+		if !valid {
+			return fmt.Errorf("invalid language: %s", t.Lang)
+		}
 	}
 
 	if t.Channels != "" {
@@ -62,6 +71,15 @@ func (m *TranslationModule) Permissions() []discord.Permissions {
 }
 
 func (m *TranslationModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate) bool {
+	if e.Message.Author.Bot {
+		return false
+	}
+
+	channel, ok := e.Client().Caches.Channel(e.ChannelID)
+	if !ok || channel.Type() != discord.ChannelTypeGuildNews {
+		return false
+	}
+
 	if m.Data.Channels == "" {
 		return false
 	}
@@ -76,6 +94,48 @@ func (m *TranslationModule) HandleMessageCreate(b *core.Bot, e *events.MessageCr
 	}
 
 	if ch != e.ChannelID.String() {
+		return false
+	}
+
+	params := discord.ThreadCreateFromMessage{
+		Name:                fmt.Sprintf("Traduction %s", m.Data.Lang),
+		AutoArchiveDuration: discord.AutoArchiveDuration1w,
+	}
+
+	thread, err := e.Client().Rest.CreateThreadFromMessage(e.ChannelID, e.MessageID, params)
+	if err != nil {
+		return false
+	}
+
+	content := e.Message.Content
+
+	if len(content) > 2000 {
+		content = fmt.Sprintf("%s...", content[0:1996])
+	}
+
+	t := utils.Translate(utils.TranslateParams{
+		Query:  content,
+		Source: "auto",
+		Target: m.Data.Lang,
+	})
+
+	trad := t.TranslatedText
+	if len(trad) > 2000 {
+		trad = fmt.Sprintf("%s...", trad[0:1996])
+	}
+
+	msg := discord.NewMessageCreateV2(
+		discord.NewContainer(
+			discord.NewTextDisplay(trad),
+			discord.NewTextDisplayf("-# %s %s Translation", utils.TranslateLangs[m.Data.Lang].Flag, utils.TranslateLangs[m.Data.Lang].Name),
+			discord.NewActionRow(
+				discord.NewSecondaryButton("Translate", "translate-all-ephemeral"),
+			),
+		),
+	)
+
+	if _, err := e.Client().Rest.CreateMessage(thread.ID(), msg); err != nil {
+		fmt.Printf("Error %s\n", err.Error())
 		return false
 	}
 
