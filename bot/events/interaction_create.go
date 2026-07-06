@@ -1,10 +1,14 @@
 package events
 
 import (
+	"strings"
+
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 
 	"github.com/disgoorg/disgo/bot"
+	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 )
 
@@ -34,13 +38,34 @@ func init() {
 				return
 			}
 
-			for _, cmd := range handlers.Commands {
-				if cmd.ExecuteButton != nil {
-					cmd.ExecuteButton(b, event)
-				}
-				if cmd.ExecuteMenu != nil {
-					cmd.ExecuteMenu(b, event)
-				}
+			customID := event.Data.CustomID()
+			parts := strings.Split(customID, "-")
+			if len(parts) < 2 {
+				return
+			}
+
+			commandName := parts[0]
+			userID := parts[1]
+
+			if userID != "all" && userID != event.User().ID.String() {
+				trad := locales.GetInteraction(event.Locale())
+				event.CreateMessage(discord.MessageCreate{
+					Content: trad.Not_allowed_component,
+					Flags:   discord.MessageFlagEphemeral,
+				})
+				return
+			}
+
+			cmd, exists := handlers.Commands[commandName]
+			if !exists {
+				return
+			}
+
+			if cmd.ExecuteButton != nil {
+				cmd.ExecuteButton(b, event)
+			}
+			if cmd.ExecuteMenu != nil {
+				cmd.ExecuteMenu(b, event)
 			}
 		},
 	})
@@ -54,10 +79,31 @@ func init() {
 				return
 			}
 
-			for _, cmd := range handlers.Commands {
-				if cmd.ExecuteModal != nil {
-					cmd.ExecuteModal(b, event)
-				}
+			customID := event.Data.CustomID
+			parts := strings.Split(customID, "-")
+			if len(parts) < 2 {
+				return
+			}
+
+			commandName := parts[0]
+			userID := parts[1]
+
+			if userID != "all" && userID != event.User().ID.String() {
+				trad := locales.GetInteraction(event.Locale())
+				event.CreateMessage(discord.MessageCreate{
+					Content: trad.Not_allowed_modal,
+					Flags:   discord.MessageFlagEphemeral,
+				})
+				return
+			}
+
+			cmd, exists := handlers.Commands[commandName]
+			if !exists {
+				return
+			}
+
+			if cmd.ExecuteModal != nil {
+				cmd.ExecuteModal(b, event)
 			}
 		},
 	})
