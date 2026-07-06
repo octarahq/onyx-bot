@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"onyx/bot/core"
+	"onyx/bot/utils"
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
@@ -44,14 +45,14 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 	}
 
 	for _, mod := range b.Modules {
-		if !mod.IsEnabled() {
-			continue
-		}
-
 		if dbAware, ok := mod.(core.DatabaseAware); ok {
 			if err := dbAware.LoadData(b.DB.GormDB, guildIDStr); err != nil {
 				continue
 			}
+		}
+
+		if !mod.IsEnabled() {
+			continue
 		}
 
 		if !CheckPerms(b, mod, me) {
@@ -73,7 +74,7 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 
 func CheckPerms(b *core.Bot, module core.Module, me discord.Member) bool {
 	var missing []string
-	botPerms := b.Client.Caches.MemberPermissions(me)
+	botPerms := utils.GetMemberPermissions(b.Client, me)
 
 	if botPerms.Has(discord.PermissionAdministrator) {
 		return true
