@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "name": "ping",
+    "description": "Check bot latencies"
+  },
+  "trad": {
+    "title": "# Bot Latencies",
+    "gateway_latency": "Gateway: %d ms",
+    "rest_latency": "REST API: %d ms",
+    "db_latency": "Database: %d ms"
+  }
+}

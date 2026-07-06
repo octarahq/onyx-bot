@@ -26,7 +26,7 @@ func capitalize(s string) string {
 }
 
 func main() {
-	dir := "../../locales/en-US/commands"
+	dir := "../../locales/en-US"
 
 	var out bytes.Buffer
 

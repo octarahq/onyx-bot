@@ -68,6 +68,14 @@ func unmarshalTrad(command string, raw []byte) (any, error) {
 		var t UrbanTrad
 		err := json.Unmarshal(raw, &t)
 		return t, err
+	case "ping":
+		var t PingTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
+	case "interaction":
+		var t InteractionTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
 	default:
 		return nil, nil
 	}
@@ -131,12 +139,12 @@ func GetAscii(locale discord.Locale) AsciiTrad {
 }
 
 type ColorTrad struct {
-	Decimal string `json:"decimal"`
-	Hex     string `json:"hex"`
-	Rgb     string `json:"rgb"`
 	Hsl     string `json:"hsl"`
 	Hsv     string `json:"hsv"`
 	Cmyk    string `json:"cmyk"`
+	Decimal string `json:"decimal"`
+	Hex     string `json:"hex"`
+	Rgb     string `json:"rgb"`
 }
 
 func GetColor(locale discord.Locale) ColorTrad {
@@ -197,9 +205,9 @@ func GetEmoji(locale discord.Locale) EmojiTrad {
 }
 
 type FunfactTrad struct {
+	Title  string `json:"title"`
 	Text   string `json:"text"`
 	Source string `json:"source"`
-	Title  string `json:"title"`
 }
 
 func GetFunfact(locale discord.Locale) FunfactTrad {
@@ -217,15 +225,15 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
-	User_title   string `json:"user_title"`
-	Repo_title   string `json:"repo_title"`
-	Repo_button  string `json:"repo_button"`
-	No_desc      string `json:"no_desc"`
-	User_page    string `json:"user_page"`
 	Repo_desc    string `json:"repo_desc"`
 	Repo_license string `json:"repo_license"`
+	No_desc      string `json:"no_desc"`
 	Unknown      string `json:"unknown"`
+	User_title   string `json:"user_title"`
+	User_page    string `json:"user_page"`
+	Repo_button  string `json:"repo_button"`
 	None         string `json:"none"`
+	Repo_title   string `json:"repo_title"`
 }
 
 func GetGithub(locale discord.Locale) GithubTrad {
@@ -243,9 +251,9 @@ func GetGithub(locale discord.Locale) GithubTrad {
 }
 
 type MathTrad struct {
+	Result     string `json:"result"`
 	Title      string `json:"title"`
 	Expression string `json:"expression"`
-	Result     string `json:"result"`
 }
 
 func GetMath(locale discord.Locale) MathTrad {
@@ -306,16 +314,16 @@ func GetNasa(locale discord.Locale) NasaTrad {
 }
 
 type NpmTrad struct {
-	None           string `json:"none"`
+	Na             string `json:"na"`
+	Title          string `json:"title"`
+	Desc           string `json:"desc"`
+	Last_published string `json:"last_published"`
+	Unknown        string `json:"unknown"`
 	Npm_page       string `json:"npm_page"`
 	Repository     string `json:"repository"`
-	Na             string `json:"na"`
-	Desc           string `json:"desc"`
 	Downloads      string `json:"downloads"`
 	Not_found      string `json:"not_found"`
-	Unknown        string `json:"unknown"`
-	Title          string `json:"title"`
-	Last_published string `json:"last_published"`
+	None           string `json:"none"`
 }
 
 func GetNpm(locale discord.Locale) NpmTrad {
@@ -353,8 +361,8 @@ func GetQuote(locale discord.Locale) QuoteTrad {
 }
 
 type UpsidedownTrad struct {
-	Text  string `json:"text"`
 	Title string `json:"title"`
+	Text  string `json:"text"`
 }
 
 func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
@@ -372,11 +380,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
+	Title      string `json:"title"`
+	Definition string `json:"definition"`
 	Example    string `json:"example"`
 	Author     string `json:"author"`
 	Source     string `json:"source"`
-	Title      string `json:"title"`
-	Definition string `json:"definition"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -391,4 +399,45 @@ func GetUrban(locale discord.Locale) UrbanTrad {
 		}
 	}
 	return UrbanTrad{}
+}
+
+type PingTrad struct {
+	Gateway_latency string `json:"gateway_latency"`
+	Rest_latency    string `json:"rest_latency"`
+	Db_latency      string `json:"db_latency"`
+	Advice          string `json:"advice"`
+	Title           string `json:"title"`
+}
+
+func GetPing(locale discord.Locale) PingTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["ping"].(PingTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["ping"].(PingTrad); ok {
+			return t
+		}
+	}
+	return PingTrad{}
+}
+
+type InteractionTrad struct {
+	Not_allowed_component string `json:"not_allowed_component"`
+	Not_allowed_modal     string `json:"not_allowed_modal"`
+}
+
+func GetInteraction(locale discord.Locale) InteractionTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["interaction"].(InteractionTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["interaction"].(InteractionTrad); ok {
+			return t
+		}
+	}
+	return InteractionTrad{}
 }

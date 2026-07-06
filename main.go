@@ -23,6 +23,7 @@ import (
 
 	"github.com/disgoorg/disgo"
 	"github.com/disgoorg/disgo/bot"
+	"github.com/disgoorg/disgo/cache"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/gateway"
 	"github.com/disgoorg/disgo/rest"
@@ -78,6 +79,9 @@ func main() {
 			rest.WithDefaultAllowedMentions(discord.AllowedMentions{
 				Parse: []discord.AllowedMentionType{},
 			}),
+		),
+		bot.WithCacheConfigOpts(
+			cache.WithCaches(cache.FlagsAll),
 		),
 	)
 	if err != nil {
