@@ -21,6 +21,11 @@ func init() {
 		Handler: handleGetModuleData,
 	})
 	api.AddRoute(api.Route{
+		Method:  http.MethodGet,
+		Path:    "/dash/guilds/:guildId/modules/:module/schema",
+		Handler: handleGetModuleSchema,
+	})
+	api.AddRoute(api.Route{
 		Method:  http.MethodPatch,
 		Path:    "/dash/guilds/:guildId/modules/:module",
 		Handler: handlePatchModuleData,
@@ -131,6 +136,31 @@ func handleGetModuleData(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found", "error_code": "MODULE_DATA_NOT_FOUND"})
 	}
+}
+
+func handleGetModuleSchema(c *gin.Context) {
+	api.GuildAuthMiddleware()(c)
+	if c.IsAborted() {
+		return
+	}
+
+	api.PermissionMiddleware(discord.PermissionManageGuild)(c)
+	if c.IsAborted() {
+		return
+	}
+
+	_, _, mod, _, ok := getModuleSettingsContext(c)
+	if !ok {
+		return
+	}
+
+	provider, ok := mod.(core.UIProvider)
+	if !ok {
+		c.JSON(http.StatusNotImplemented, gin.H{"error": "module does not provide a UI schema", "error_code": "NO_SCHEMA"})
+		return
+	}
+
+	c.JSON(http.StatusOK, provider.UISchema())
 }
 
 func handleGetModuleList(c *gin.Context) {
