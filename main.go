@@ -73,6 +73,7 @@ func main() {
 				gateway.IntentGuildMessages,
 				gateway.IntentDirectMessages,
 				gateway.IntentMessageContent,
+				gateway.IntentGuildMembers,
 			),
 		),
 		bot.WithRestConfigOpts(
@@ -83,6 +84,7 @@ func main() {
 		bot.WithCacheConfigOpts(
 			cache.WithCaches(cache.FlagsAll),
 		),
+		bot.WithMemberChunkingFilter(bot.MemberChunkingFilterAll),
 	)
 	if err != nil {
 		panic(err)
