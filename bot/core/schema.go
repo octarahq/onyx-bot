@@ -19,17 +19,27 @@ type UISelectOption struct {
 	Value string `json:"value"`
 }
 
+type Variables struct {
+	Key         string `json:"key"`
+	Label       string `json:"label"`
+	Description string `json:"description,omitempty"`
+	MaxLength   int    `json:"maxLength,omitempty"`
+	Length      int    `json:"length,omitempty"`
+}
+
 type UIComponent struct {
-	Name        string           `json:"name"`
-	Label       string           `json:"label,omitempty"`
-	Description string           `json:"description,omitempty"`
-	Placeholder string           `json:"placeholder,omitempty"`
-	Type        ComponentType    `json:"type"`
-	Required    bool             `json:"required"`
-	Min         *int             `json:"min,omitempty"`
-	Max         *int             `json:"max,omitempty"`
-	Multiple    bool             `json:"multiple,omitempty"`
-	Options     []UISelectOption `json:"options,omitempty"`
+	Name         string               `json:"name"`
+	Label        string               `json:"label,omitempty"`
+	Description  string               `json:"description,omitempty"`
+	Placeholder  string               `json:"placeholder,omitempty"`
+	Type         ComponentType        `json:"type"`
+	Required     bool                 `json:"required"`
+	Min          *int                 `json:"min,omitempty"`
+	Max          *int                 `json:"max,omitempty"`
+	Multiple     bool                 `json:"multiple,omitempty"`
+	Options      []UISelectOption     `json:"options,omitempty"`
+	ChannelTypes []discord.ChannelTag `json:"channelTypes,omitempty"`
+	Variables    []Variables          `json:"variables,omitempty"`
 }
 
 type UISubModule struct {
