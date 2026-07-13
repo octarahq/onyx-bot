@@ -38,7 +38,7 @@ func Start(b *core.Bot) {
 		}
 	}
 
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(":4015"); err != nil {
 		fmt.Printf("Failed to start API server: %v\n", err)
 	}
 }
