@@ -34,4 +34,4 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 # Todo
 
 API
-| | Dashboard : add /api/auth/discord/@me/guilds
+| | Dashboard : finir la validation du PATCH des data modules
