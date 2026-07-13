@@ -6,8 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type Metadata struct {
+	Name string
+	Icon string
+}
+
 type Module interface {
-	Name() string
+	Metadata() Metadata
 	Priority() int
 	IsEnabled() bool
 	Permissions() []discord.Permissions

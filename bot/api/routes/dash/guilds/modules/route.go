@@ -90,7 +90,7 @@ func getModuleSettingsContext(c *gin.Context) (*core.Bot, string, core.Module, i
 	module := c.Param("module")
 	var mod core.Module
 	for _, m := range bot.Modules {
-		if strings.EqualFold(m.Name(), module) || strings.EqualFold(strings.TrimSuffix(m.Name(), "Module"), module) {
+		if strings.EqualFold(m.Metadata().Name, module) || strings.EqualFold(strings.TrimSuffix(m.Metadata().Name, "Module"), module) {
 			mod = m
 			break
 		}
@@ -197,7 +197,7 @@ func handleGetModuleList(c *gin.Context) {
 	modules := make([]gin.H, 0, len(bot.Modules))
 
 	for _, m := range bot.Modules {
-		moduleName := m.Name()
+		moduledata := m.Metadata()
 		active := false
 
 		if dbAware, ok := m.(core.DatabaseAware); ok {
@@ -217,8 +217,9 @@ func handleGetModuleList(c *gin.Context) {
 		}
 
 		modules = append(modules, gin.H{
-			"name":    moduleName,
+			"name":    moduledata.Name,
 			"enabled": active,
+			"icon":    moduledata.Icon,
 		})
 	}
 
@@ -319,9 +320,9 @@ func setModuleStatus(c *gin.Context, status bool) {
 		missingPerms := checkBotPermission(bot, mod, me)
 		if len(missingPerms) > 0 {
 			c.JSON(http.StatusForbidden, gin.H{
-				"error":   "The bot lacks the required permissions to enable this module.",
+				"error":      "The bot lacks the required permissions to enable this module.",
 				"error_code": "BOT_MISSING_PERMISSIONS",
-				"missing": missingPerms,
+				"missing":    missingPerms,
 			})
 			return
 		}

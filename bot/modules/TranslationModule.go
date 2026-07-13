@@ -64,7 +64,12 @@ func init() {
 	Register(&TranslationModule{})
 }
 
-func (m *TranslationModule) Name() string    { return "TranslationModule" }
+func (m *TranslationModule) Metadata() core.Metadata {
+	return core.Metadata{
+		Name: "TranslationModule",
+		Icon: "translate",
+	}
+}
 func (m *TranslationModule) Priority() int   { return 1 }
 func (m *TranslationModule) IsEnabled() bool { return m.Data.Enabled }
 func (m *TranslationModule) Permissions() []discord.Permissions {
