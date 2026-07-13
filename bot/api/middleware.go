@@ -106,9 +106,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid or expired session", "error_code": "AUTH_INVALID"})
 			return
 		}
-
+		c.Set("session", &session)
 		c.Set("user_id", session.UserID)
-
 		bot, exists := c.MustGet("bot").(*core.Bot)
 		if !exists {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
@@ -197,6 +196,7 @@ func GuildAuthMiddleware() gin.HandlerFunc {
 			apiMemberCache.Set(cacheKey, member)
 		}
 
+		c.Set("session", &session)
 		c.Set("member", &member)
 		c.Set("user_id", session.UserID)
 		c.Next()
