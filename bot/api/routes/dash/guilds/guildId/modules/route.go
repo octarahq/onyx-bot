@@ -120,13 +120,50 @@ func handleGetModuleData(c *gin.Context) {
 		return
 	}
 
-	_, _, _, dataPtr, ok := getModuleSettingsContext(c)
+	_, _, mod, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
 
+	lang := c.Query("lang")
+	headerLang := c.GetHeader("Accept-Language")
+
+	if lang == "" {
+		lang = headerLang
+		if len(lang) > 2 {
+			lang = lang[:2]
+		}
+	}
+	if lang == "" {
+		lang = string(discord.LocaleEnglishUS)
+	}
+	locale := discord.Locale(lang)
+
+	moduledata := mod.Metadata()
+	var label, description string
+	if moduledata.Label != nil {
+		label = moduledata.Label(locale)
+	}
+	if moduledata.Description != nil {
+		description = moduledata.Description(locale)
+	}
+
+	var submodules map[string]core.SubmoduleMeta
+	if moduledata.Submodules != nil {
+		submodules = moduledata.Submodules(locale)
+	}
+
 	if dataPtr != nil {
-		c.JSON(http.StatusOK, dataPtr)
+		c.JSON(http.StatusOK, gin.H{
+			"metadata": gin.H{
+				"name":        moduledata.Name,
+				"icon":        moduledata.Icon,
+				"label":       label,
+				"description": description,
+				"submodules":  submodules,
+			},
+			"data": dataPtr,
+		})
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "module data not found", "error_code": "MODULE_DATA_NOT_FOUND"})
 	}
@@ -154,7 +191,21 @@ func handleGetModuleSchema(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, provider.UISchema())
+	lang := c.Query("lang")
+	headerLang := c.GetHeader("Accept-Language")
+
+	if lang == "" {
+		lang = headerLang
+		if len(lang) > 2 {
+			lang = lang[:2]
+		}
+	}
+	if lang == "" {
+		lang = string(discord.LocaleEnglishUS)
+	}
+	locale := discord.Locale(lang)
+
+	c.JSON(http.StatusOK, provider.UISchema(locale))
 }
 
 func handlePatchModuleData(c *gin.Context) {

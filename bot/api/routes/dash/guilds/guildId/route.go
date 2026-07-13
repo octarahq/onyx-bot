@@ -100,12 +100,18 @@ func handleGetGuildInfo(c *gin.Context) {
 			description = moduledata.Description(locale)
 		}
 
+		var submodules map[string]core.SubmoduleMeta
+		if moduledata.Submodules != nil {
+			submodules = moduledata.Submodules(locale)
+		}
+
 		modules = append(modules, gin.H{
 			"name":        moduledata.Name,
 			"enabled":     active,
 			"icon":        moduledata.Icon,
 			"label":       label,
 			"description": description,
+			"submodules":  submodules,
 		})
 	}
 

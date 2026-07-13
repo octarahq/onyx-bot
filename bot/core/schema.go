@@ -1,5 +1,7 @@
 package core
 
+import "github.com/disgoorg/disgo/discord"
+
 type ComponentType string
 
 const (
@@ -41,5 +43,5 @@ type UISchema struct {
 }
 
 type UIProvider interface {
-	UISchema() UISchema
+	UISchema(locale discord.Locale) UISchema
 }

@@ -70,10 +70,21 @@ func (m *TranslationModule) Metadata() core.Metadata {
 		Name: "TranslationModule",
 		Icon: "translate",
 		Label: func(locale discord.Locale) string {
-			return locales.GetModule_TranslationModule(locale).Label
+			return locales.GetMeta(locale, "module_TranslationModule").Label
 		},
 		Description: func(locale discord.Locale) string {
-			return locales.GetModule_TranslationModule(locale).Description
+			return locales.GetMeta(locale, "module_TranslationModule").Description
+		},
+		Submodules: func(locale discord.Locale) map[string]core.SubmoduleMeta {
+			meta := locales.GetMeta(locale, "module_TranslationModule")
+			subs := make(map[string]core.SubmoduleMeta)
+			for k, v := range meta.Submodules {
+				subs[k] = core.SubmoduleMeta{
+					Label:       v.Label,
+					Description: v.Description,
+				}
+			}
+			return subs
 		},
 	}
 }
@@ -165,7 +176,7 @@ func (m *TranslationModule) LoadData(db *gorm.DB, guildID string) error {
 	return db.FirstOrCreate(&m.Data, TranslationSettings{GuildID: guildID}).Error
 }
 
-func (m *TranslationModule) UISchema() core.UISchema {
+func (m *TranslationModule) UISchema(locale discord.Locale) core.UISchema {
 	var langOptions []core.UISelectOption
 	for _, v := range utils.TranslateLangs {
 		langOptions = append(langOptions, core.UISelectOption{
@@ -176,11 +187,24 @@ func (m *TranslationModule) UISchema() core.UISchema {
 
 	maxChannels := 5
 
+	meta := locales.GetMeta(locale, "module_TranslationModule")
+	mainLabel := "Main Settings"
+	mainDesc := ""
+	if sub, ok := meta.Submodules["main"]; ok {
+		if sub.Label != "" {
+			mainLabel = sub.Label
+		}
+		if sub.Description != "" {
+			mainDesc = sub.Description
+		}
+	}
+
 	return core.UISchema{
 		SubModules: []core.UISubModule{
 			{
 				Name:  "main",
-				Label: "Main Settings",
+				Label: mainLabel,
+				Description: mainDesc,
 				Components: []core.UIComponent{
 					{
 						Name:     "lang",

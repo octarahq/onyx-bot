@@ -147,12 +147,12 @@ func GetAscii(locale discord.Locale) AsciiTrad {
 }
 
 type ColorTrad struct {
+	Hsv     string `json:"hsv"`
+	Cmyk    string `json:"cmyk"`
 	Decimal string `json:"decimal"`
 	Hex     string `json:"hex"`
 	Rgb     string `json:"rgb"`
 	Hsl     string `json:"hsl"`
-	Hsv     string `json:"hsv"`
-	Cmyk    string `json:"cmyk"`
 }
 
 func GetColor(locale discord.Locale) ColorTrad {
@@ -190,12 +190,12 @@ func GetEightball(locale discord.Locale) EightballTrad {
 }
 
 type EmojiTrad struct {
-	Emojify_title string `json:"emojify_title"`
 	Mix_error     string `json:"mix_error"`
 	Mix_title     string `json:"mix_title"`
 	Random_error  string `json:"random_error"`
 	Random_title  string `json:"random_title"`
 	Emojify_error string `json:"emojify_error"`
+	Emojify_title string `json:"emojify_title"`
 }
 
 func GetEmoji(locale discord.Locale) EmojiTrad {
@@ -233,15 +233,15 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
+	Repo_title   string `json:"repo_title"`
+	Repo_desc    string `json:"repo_desc"`
+	No_desc      string `json:"no_desc"`
+	None         string `json:"none"`
 	User_title   string `json:"user_title"`
 	User_page    string `json:"user_page"`
-	Repo_title   string `json:"repo_title"`
 	Repo_license string `json:"repo_license"`
-	No_desc      string `json:"no_desc"`
-	Unknown      string `json:"unknown"`
-	None         string `json:"none"`
-	Repo_desc    string `json:"repo_desc"`
 	Repo_button  string `json:"repo_button"`
+	Unknown      string `json:"unknown"`
 }
 
 func GetGithub(locale discord.Locale) GithubTrad {
@@ -299,12 +299,12 @@ func GetMeme(locale discord.Locale) MemeTrad {
 }
 
 type NasaTrad struct {
-	Apod_title   string `json:"apod_title"`
-	Source       string `json:"source"`
-	Iss_title    string `json:"iss_title"`
 	Iss_position string `json:"iss_position"`
 	Iss_altitude string `json:"iss_altitude"`
 	Iss_updated  string `json:"iss_updated"`
+	Apod_title   string `json:"apod_title"`
+	Source       string `json:"source"`
+	Iss_title    string `json:"iss_title"`
 }
 
 func GetNasa(locale discord.Locale) NasaTrad {
@@ -322,16 +322,16 @@ func GetNasa(locale discord.Locale) NasaTrad {
 }
 
 type NpmTrad struct {
+	Unknown        string `json:"unknown"`
 	None           string `json:"none"`
-	Npm_page       string `json:"npm_page"`
+	Repository     string `json:"repository"`
 	Na             string `json:"na"`
 	Title          string `json:"title"`
 	Desc           string `json:"desc"`
-	Last_published string `json:"last_published"`
-	Not_found      string `json:"not_found"`
-	Unknown        string `json:"unknown"`
-	Repository     string `json:"repository"`
 	Downloads      string `json:"downloads"`
+	Not_found      string `json:"not_found"`
+	Npm_page       string `json:"npm_page"`
+	Last_published string `json:"last_published"`
 }
 
 func GetNpm(locale discord.Locale) NpmTrad {
@@ -349,9 +349,9 @@ func GetNpm(locale discord.Locale) NpmTrad {
 }
 
 type QuoteTrad struct {
+	Author string `json:"author"`
 	Title  string `json:"title"`
 	Quote  string `json:"quote"`
-	Author string `json:"author"`
 }
 
 func GetQuote(locale discord.Locale) QuoteTrad {
@@ -369,8 +369,8 @@ func GetQuote(locale discord.Locale) QuoteTrad {
 }
 
 type UpsidedownTrad struct {
-	Text  string `json:"text"`
 	Title string `json:"title"`
+	Text  string `json:"text"`
 }
 
 func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
@@ -388,11 +388,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
+	Example    string `json:"example"`
+	Author     string `json:"author"`
 	Source     string `json:"source"`
 	Title      string `json:"title"`
 	Definition string `json:"definition"`
-	Example    string `json:"example"`
-	Author     string `json:"author"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -468,8 +468,6 @@ func GetInteraction(locale discord.Locale) InteractionTrad {
 }
 
 type ModuleTranslationModuleTrad struct {
-	Description string `json:"description"`
-	Label       string `json:"label"`
 }
 
 func GetModule_TranslationModule(locale discord.Locale) ModuleTranslationModuleTrad {

@@ -6,11 +6,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type SubmoduleMeta struct {
+	Label       string `json:"label"`
+	Description string `json:"description"`
+}
+
 type Metadata struct {
 	Name        string
 	Icon        string
 	Label       func(locale discord.Locale) string
 	Description func(locale discord.Locale) string
+	Submodules  func(locale discord.Locale) map[string]SubmoduleMeta
 }
 
 type Module interface {

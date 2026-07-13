@@ -16,11 +16,27 @@ var localizations = make(map[discord.Locale]map[string]any)
 
 type CommandMeta struct {
 	Name        string                 `json:"name"`
+	Label       string                 `json:"label,omitempty"`
 	Description string                 `json:"description"`
+	Submodules  map[string]CommandMeta `json:"submodules,omitempty"`
 	Options     map[string]CommandMeta `json:"options,omitempty"`
 }
 
 var Metas = make(map[discord.Locale]map[string]CommandMeta)
+
+func GetMeta(locale discord.Locale, cmd string) CommandMeta {
+	if l, ok := Metas[locale]; ok {
+		if t, ok := l[cmd]; ok {
+			return t
+		}
+	}
+	if l, ok := Metas[discord.LocaleEnglishUS]; ok {
+		if t, ok := l[cmd]; ok {
+			return t
+		}
+	}
+	return CommandMeta{}
+}
 
 type fileFormat struct {
 	Meta CommandMeta     `json:"meta"`
@@ -63,8 +79,6 @@ func Load(localesDir string) error {
 
 		var ff fileFormat
 		if err := json.Unmarshal(content, &ff); err != nil {
-			// Some files like module files might only have 'trad' and no 'meta', or the schema might differ slightly.
-			// `fileFormat` has `trad` as json.RawMessage so it should parse even if `meta` is empty.
 			return err
 		}
 
@@ -75,9 +89,13 @@ func Load(localesDir string) error {
 
 		Metas[locale][cmdName] = ff.Meta
 
-		trad, err := unmarshalTrad(cmdName, ff.Trad)
-		if err != nil {
-			return err
+		var trad any
+		if len(ff.Trad) > 0 {
+			var err error
+			trad, err = unmarshalTrad(cmdName, ff.Trad)
+			if err != nil {
+				return err
+			}
 		}
 
 		if trad != nil {
