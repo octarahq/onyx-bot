@@ -61,6 +61,7 @@ var (
 	limiters       = make(map[string]*rate.Limiter)
 	mu             sync.Mutex
 	apiMemberCache = NewExpiringCache[string, discord.Member](5 * time.Minute)
+	apiUserCache   = NewExpiringCache[string, discord.User](5 * time.Minute)
 	apiPermCache   = NewExpiringCache[string, discord.Permissions](5 * time.Minute)
 )
 
@@ -107,6 +108,34 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		c.Set("user_id", session.UserID)
+
+		bot, exists := c.MustGet("bot").(*core.Bot)
+		if !exists {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
+			return
+		}
+
+		uid, err := snowflake.Parse(session.UserID)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID", "error_code": "INVALID_USER_ID"})
+			return
+		}
+
+		var user discord.User
+		if cachedUser, ok := apiUserCache.Get(uid.String()); ok {
+			user = cachedUser
+		} else {
+			u, err := bot.Client.Rest.GetUser(uid)
+			if err != nil {
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user", "error_code": "INTERNAL_ERROR"})
+				return
+			}
+			user = *u
+			apiUserCache.Set(uid.String(), user)
+		}
+
+		c.Set("user", &user)
+
 		c.Next()
 	}
 }

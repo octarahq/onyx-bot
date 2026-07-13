@@ -11,7 +11,9 @@ import (
 	"onyx/bot/api"
 	"onyx/bot/db"
 
+	"github.com/disgoorg/disgo/discord"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 )
 
@@ -128,9 +130,8 @@ func handleCallback(c *gin.Context) {
 	c.SetCookie("oauth_state", "", -1, "/", "", false, true)
 	c.SetCookie("session_id", sessionID, 7*24*3600, "/", "", false, true)
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Success",
-	})
+	_ = godotenv.Load()
+	c.Redirect(http.StatusPermanentRedirect, os.Getenv("SITE_DASHBOARD_URL"))
 }
 
 func handleMe(c *gin.Context) {
@@ -139,10 +140,17 @@ func handleMe(c *gin.Context) {
 		return
 	}
 
-	userID := c.GetString("user_id")
+	user, exists := c.MustGet("user").(*discord.User)
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "user context not found", "error_code": "INTERNAL_ERROR"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "You are connected !",
-		"user_id": userID,
+		"id":            user.ID,
+		"username":      user.Username,
+		"discriminator": user.Discriminator,
+		"avatar":        user.Avatar,
+		"avatarURL":     user.AvatarURL(),
 	})
 }
 
