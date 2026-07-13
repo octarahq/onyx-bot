@@ -1,4 +1,4 @@
-package discord
+package auth
 
 import (
 	"crypto/rand"
