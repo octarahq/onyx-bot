@@ -23,6 +23,7 @@ type UIComponent struct {
 	Name        string           `json:"name"`
 	Label       string           `json:"label,omitempty"`
 	Description string           `json:"description,omitempty"`
+	Placeholder string           `json:"placeholder,omitempty"`
 	Type        ComponentType    `json:"type"`
 	Required    bool             `json:"required"`
 	Min         *int             `json:"min,omitempty"`

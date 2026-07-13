@@ -149,7 +149,7 @@ func handleGetModuleData(c *gin.Context) {
 	}
 
 	var submodules map[string]core.SubmoduleMeta
-	if moduledata.Submodules != nil {
+	if moduledata.Submodules != nil && c.Query("submodules") == "true" {
 		submodules = moduledata.Submodules(locale)
 	}
 
