@@ -30,3 +30,8 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 | | Bumps : Create a bump system for your server with ease.
 | | Channels Counter : Create a channel counter for your server with ease.
 | | Custom Commands : Create custom commands for your server with ease.
+
+# Todo
+
+API
+| | Dashboard : add /api/auth/discord/@me/guilds
