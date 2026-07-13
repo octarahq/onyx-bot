@@ -79,8 +79,10 @@ func handleGetGuildInfo(c *gin.Context) {
 		}
 
 		lang := c.Query("lang")
+		headerLang := c.GetHeader("Accept-Language")
+
 		if lang == "" {
-			lang = c.GetHeader("Accept-Language")
+			lang = headerLang
 			if len(lang) > 2 {
 				lang = lang[:2]
 			}
