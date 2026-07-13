@@ -7,8 +7,10 @@ import (
 )
 
 type Metadata struct {
-	Name string
-	Icon string
+	Name        string
+	Icon        string
+	Label       func(locale discord.Locale) string
+	Description func(locale discord.Locale) string
 }
 
 type Module interface {

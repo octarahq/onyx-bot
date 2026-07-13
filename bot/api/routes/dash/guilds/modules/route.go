@@ -40,12 +40,6 @@ func init() {
 		Path:    "/dash/guilds/:guildId/modules/:module",
 		Handler: handleDeleteModuleData,
 	})
-
-	api.AddRoute(api.Route{
-		Method:  http.MethodGet,
-		Path:    "/dash/guilds/:guildId/modules",
-		Handler: handleGetModuleList,
-	})
 }
 
 func checkBotPermission(b *core.Bot, module core.Module, me discord.Member) []string {
@@ -161,69 +155,6 @@ func handleGetModuleSchema(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, provider.UISchema())
-}
-
-func handleGetModuleList(c *gin.Context) {
-	api.GuildAuthMiddleware()(c)
-	if c.IsAborted() {
-		return
-	}
-
-	api.PermissionMiddleware(discord.PermissionManageGuild)(c)
-	if c.IsAborted() {
-		return
-	}
-
-	bot, exists := c.MustGet("bot").(*core.Bot)
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "bot context not found", "error_code": "INTERNAL_ERROR"})
-		return
-	}
-
-	guildId := c.Param("guildId")
-	guildIdSnowflake, err := snowflake.Parse(guildId)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid guild id", "error_code": "INVALID_GUILD_ID"})
-		return
-	}
-
-	if _, ok := bot.Client.Caches.GuildCache().Get(guildIdSnowflake); !ok {
-		if _, err := bot.Client.Rest.GetGuild(guildIdSnowflake, false); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)", "error_code": "GUILD_NOT_FOUND"})
-			return
-		}
-	}
-
-	modules := make([]gin.H, 0, len(bot.Modules))
-
-	for _, m := range bot.Modules {
-		moduledata := m.Metadata()
-		active := false
-
-		if dbAware, ok := m.(core.DatabaseAware); ok {
-			if err := dbAware.LoadData(bot.DB.GormDB, guildId); err == nil {
-				ptr := dbAware.DataPtr()
-				val := reflect.ValueOf(ptr).Elem()
-
-				if val.Kind() == reflect.Struct {
-					f := val.FieldByName("Enabled")
-					if f.IsValid() && f.Kind() == reflect.Bool {
-						active = f.Bool()
-					}
-				} else if val.Kind() == reflect.Bool {
-					active = val.Bool()
-				}
-			}
-		}
-
-		modules = append(modules, gin.H{
-			"name":    moduledata.Name,
-			"enabled": active,
-			"icon":    moduledata.Icon,
-		})
-	}
-
-	c.JSON(http.StatusOK, gin.H{"modules": modules})
 }
 
 func handlePatchModuleData(c *gin.Context) {

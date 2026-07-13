@@ -1,0 +1,6 @@
+{
+  "trad": {
+    "label": "Translator",
+    "description": "Automatically translates messages in channels or adds flag reactions to translate."
+  }
+}

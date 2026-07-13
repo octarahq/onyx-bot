@@ -42,14 +42,19 @@ func Load(localesDir string) error {
 		}
 
 		parts := strings.Split(filepath.ToSlash(relPath), "/")
-		if len(parts) < 3 {
+		var cmdName string
+		if parts[1] == "modules" && len(parts) >= 3 {
+			// locales/<locale>/modules/<module>.json
+			cmdName = "module_" + strings.TrimSuffix(parts[len(parts)-1], ".json")
+		} else if len(parts) >= 3 {
 			// locales/<locale>/commands/<category>/<cmd>.json
+			cmdName = strings.TrimSuffix(parts[len(parts)-1], ".json")
+		} else {
 			return nil
 		}
 
 		localeStr := parts[0]
 		locale := discord.Locale(localeStr)
-		cmdName := strings.TrimSuffix(parts[len(parts)-1], ".json")
 
 		content, err := ioutil.ReadFile(path)
 		if err != nil {
@@ -58,6 +63,8 @@ func Load(localesDir string) error {
 
 		var ff fileFormat
 		if err := json.Unmarshal(content, &ff); err != nil {
+			// Some files like module files might only have 'trad' and no 'meta', or the schema might differ slightly.
+			// `fileFormat` has `trad` as json.RawMessage so it should parse even if `meta` is empty.
 			return err
 		}
 

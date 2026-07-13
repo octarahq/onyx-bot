@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"onyx/bot/api"
 	"onyx/bot/core"
+	"reflect"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/snowflake/v2"
@@ -55,11 +56,63 @@ func handleGetGuildInfo(c *gin.Context) {
 		guild = rguid.Guild
 	}
 
+	modules := make([]gin.H, 0, len(bot.Modules))
+
+	for _, m := range bot.Modules {
+		moduledata := m.Metadata()
+		active := false
+
+		if dbAware, ok := m.(core.DatabaseAware); ok {
+			if err := dbAware.LoadData(bot.DB.GormDB, gid); err == nil {
+				ptr := dbAware.DataPtr()
+				val := reflect.ValueOf(ptr).Elem()
+
+				if val.Kind() == reflect.Struct {
+					f := val.FieldByName("Enabled")
+					if f.IsValid() && f.Kind() == reflect.Bool {
+						active = f.Bool()
+					}
+				} else if val.Kind() == reflect.Bool {
+					active = val.Bool()
+				}
+			}
+		}
+
+		lang := c.Query("lang")
+		if lang == "" {
+			lang = c.GetHeader("Accept-Language")
+			if len(lang) > 2 {
+				lang = lang[:2]
+			}
+		}
+		if lang == "" {
+			lang = string(discord.LocaleEnglishUS)
+		}
+		locale := discord.Locale(lang)
+
+		var label, description string
+		if moduledata.Label != nil {
+			label = moduledata.Label(locale)
+		}
+		if moduledata.Description != nil {
+			description = moduledata.Description(locale)
+		}
+
+		modules = append(modules, gin.H{
+			"name":        moduledata.Name,
+			"enabled":     active,
+			"icon":        moduledata.Icon,
+			"label":       label,
+			"description": description,
+		})
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"id":          guild.ID.String(),
 		"name":        guild.Name,
 		"iconURL":     *guild.IconURL(),
 		"memberCount": guild.MemberCount,
 		"ownerId":     guild.OwnerID.String(),
+		"modules":     modules,
 	})
 }

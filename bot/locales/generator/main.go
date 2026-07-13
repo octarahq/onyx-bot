@@ -54,8 +54,28 @@ func main() {
 			return err
 		}
 
-		cmdName := strings.TrimSuffix(info.Name(), ".json")
-		structName := capitalize(cmdName) + "Trad"
+		relPath, err := filepath.Rel(dir, path)
+		if err != nil {
+			return err
+		}
+
+		parts := strings.Split(filepath.ToSlash(relPath), "/")
+		if len(parts) == 0 {
+			return nil
+		}
+
+		baseName := strings.TrimSuffix(info.Name(), ".json")
+		
+		cmdName := baseName
+		if parts[0] == "modules" {
+			cmdName = "module_" + baseName
+		}
+
+		structPrefix := ""
+		if parts[0] == "modules" {
+			structPrefix = "Module"
+		}
+		structName := structPrefix + capitalize(baseName) + "Trad"
 
 		funcs.WriteString(fmt.Sprintf("type %s struct {\n", structName))
 		for key := range lf.Trad {

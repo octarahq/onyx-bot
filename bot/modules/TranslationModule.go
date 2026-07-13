@@ -3,6 +3,7 @@ package modules
 import (
 	"fmt"
 	"onyx/bot/core"
+	"onyx/bot/locales"
 	"onyx/bot/utils"
 	"strings"
 
@@ -68,6 +69,12 @@ func (m *TranslationModule) Metadata() core.Metadata {
 	return core.Metadata{
 		Name: "TranslationModule",
 		Icon: "translate",
+		Label: func(locale discord.Locale) string {
+			return locales.GetModule_TranslationModule(locale).Label
+		},
+		Description: func(locale discord.Locale) string {
+			return locales.GetModule_TranslationModule(locale).Description
+		},
 	}
 }
 func (m *TranslationModule) Priority() int   { return 1 }
