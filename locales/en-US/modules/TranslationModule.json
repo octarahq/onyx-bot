@@ -1,6 +1,14 @@
 {
-  "trad": {
-    "label": "Translator",
-    "description": "Automatically translates messages in channels or adds flag reactions to translate."
-  }
+  "meta": {
+    "name": "TranslationModule",
+    "label": "Auto Translator",
+    "description": "Automatically translates messages sent in a channel.",
+    "submodules": {
+      "main": {
+        "label": "Translation Settings",
+        "description": ""
+      }
+    }
+  },
+  "trad": {}
 }

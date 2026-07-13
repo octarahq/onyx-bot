@@ -1,6 +1,14 @@
 {
-  "trad": {
-    "label": "Traducteur",
-    "description": "Traduit automatiquement les messages dans les salons ou ajoute des réactions de drapeau pour traduire."
-  }
+  "meta": {
+    "name": "TranslationModule",
+    "label": "Traducteur Automatique",
+    "description": "Traduit automatiquement les messages envoyés dans un salon.",
+    "submodules": {
+      "main": {
+        "label": "Paramètres de Traduction",
+        "description": ""
+      }
+    }
+  },
+  "trad": {}
 }
