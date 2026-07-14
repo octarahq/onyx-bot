@@ -41,6 +41,12 @@ func (c *ExpiringCache[K, V]) Set(key K, value V) {
 	}
 }
 
+func (c *ExpiringCache[K, V]) Clear() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.items = make(map[K]cacheItem[V])
+}
+
 func (c *ExpiringCache[K, V]) Get(key K) (V, bool) {
 	c.mu.RLock()
 	item, found := c.items[key]
