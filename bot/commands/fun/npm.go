@@ -16,7 +16,7 @@ func init() {
 	handlers.RegisterCommand(handlers.Command{
 		Name:        "npm",
 		Description: "Get information about an NPM package",
-		Category:    "Utils",
+		Category:    "Fun",
 		Create: discord.SlashCommandCreate{
 			Name:        "npm",
 			Description: "Get information about an NPM package",
