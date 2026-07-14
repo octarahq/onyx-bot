@@ -14,24 +14,23 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 
 # Modules
 
-|X| Translation : Automatically translate messages for your announcements.
-| | Tickets : Create a ticket system for your server with ease.
-| | Moderation : Manage your server with moderation commands.
+|X| Translation : Automatically translate messages for announcements.
+| | Tickets : Let users create and manage support tickets.
+| | Moderation : Moderate your server with admin commands.
 | | Server Security : Protect your server from raids and spam.
-| | Economy : Create an economy system for your server with a virtual currency.
-| | Levels : Create a leveling system for your server with experience points and ranks.
-| | Music : Play music in your server with a music player.
-| | Giveaways : Create giveaways for your server with ease.
-| | Polls : Create polls for your server with ease.
-| | Welcome Messages : Create welcome messages for your server with ease.
-| | Logging : Log messages, edits, and deletions in your server with ease.
-| | Auto Roles : Create auto roles for your server with ease.
-| | Birthdays : Create a birthday system for your server with ease.
-| | Bumps : Create a bump system for your server with ease.
-| | Channels Counter : Create a channel counter for your server with ease.
-| | Custom Commands : Create custom commands for your server with ease.
-
-# Todo
-
-API
-| | Dashboard : finir la validation du PATCH des data modules
+| | Economy : Run a virtual currency system for your community.
+| | Levels : Award experience points and ranks to active members.
+| | Music : Play music in your server with an integrated player.
+| | Giveaways : Organize giveaways for your community.
+| | Polls : Create interactive polls for your server.
+| | Welcome Messages : Send custom welcome messages to new members.
+| | Logging : Track messages, edits, and deletions in your server.
+| | Auto Roles : Automatically assign roles to members.
+| | Birthdays : Celebrate members' birthdays with an automated system.
+| | Bumps : Automate bump reminders for your server listings.
+| | Channels Counter : Display live channel statistics in your server.
+| | Custom Commands : Create custom commands for your server.
+| | Fun : Add the wizzarding world spells and playful interactions to your server.
+| | Reminders : Set reminders.
+| | Suggestions : Collect and manage suggestions from your community.
+| | Starboard : Highlight popular messages in your server.
