@@ -2,6 +2,7 @@ package modules
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"onyx/bot/api"
 	"onyx/bot/core"
@@ -219,7 +220,7 @@ func handlePatchModuleData(c *gin.Context) {
 		return
 	}
 
-	bot, _, _, dataPtr, ok := getModuleSettingsContext(c)
+	bot, guildId, mod, dataPtr, ok := getModuleSettingsContext(c)
 	if !ok {
 		return
 	}
@@ -233,6 +234,150 @@ func handlePatchModuleData(c *gin.Context) {
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid json body", "error_code": "INVALID_PAYLOAD"})
 		return
+	}
+
+	if provider, ok := mod.(core.UIProvider); ok {
+		schema := provider.UISchema(discord.LocaleEnglishUS)
+		for _, sub := range schema.SubModules {
+			subData, ok := payload[sub.Name].(map[string]any)
+			if !ok {
+				continue
+			}
+			for _, comp := range sub.Components {
+				val, exists := subData[comp.Name]
+				if !exists {
+					if comp.Required {
+						c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is required", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+						return
+					}
+					continue
+				}
+
+				if strVal, ok := val.(string); ok {
+					if comp.Required && strVal == "" {
+						c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is required", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+						return
+					}
+
+					if comp.Type == core.ComponentTypeString || comp.Type == core.ComponentTypeTextarea {
+						if comp.Min != nil && len(strVal) < *comp.Min {
+							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too short", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+							return
+						}
+						if comp.Max != nil && len(strVal) > *comp.Max {
+							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too long", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+							return
+						}
+					}
+
+					if comp.Type == core.ComponentTypeChannel {
+						channels := []string{strVal}
+						if comp.Multiple {
+							channels = strings.Split(strVal, ",")
+						}
+
+						if comp.Max != nil && len(channels) > *comp.Max {
+							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s has too many channels", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+							return
+						}
+
+						for _, ch := range channels {
+							ch = strings.TrimSpace(ch)
+							if ch == "" {
+								continue
+							}
+
+							chSF, err := snowflake.Parse(ch)
+							if err != nil {
+								c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("invalid channel ID: %s", ch), "error_code": "VALIDATION_FAILED"})
+								return
+							}
+
+							var channelGuild discord.GuildChannel
+							var cOk bool
+							channelGuild, cOk = bot.Client.Caches.Channel(chSF)
+							if !cOk {
+								chInt, err := bot.Client.Rest.GetChannel(chSF)
+								if err != nil {
+									c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("channel %s does not exist", ch), "error_code": "VALIDATION_FAILED"})
+									return
+								}
+								var isGuild bool
+								channelGuild, isGuild = chInt.(discord.GuildChannel)
+								if !isGuild {
+									c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("channel %s is not a guild channel", ch), "error_code": "VALIDATION_FAILED"})
+									return
+								}
+							}
+
+							if channelGuild.GuildID().String() != guildId {
+								c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("channel %s is not in this server", ch), "error_code": "VALIDATION_FAILED"})
+								return
+							}
+						}
+					}
+
+					if comp.Type == core.ComponentTypeRole {
+						roles := []string{strVal}
+						if comp.Multiple {
+							roles = strings.Split(strVal, ",")
+						}
+
+						if comp.Max != nil && len(roles) > *comp.Max {
+							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s has too many roles", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+							return
+						}
+
+						guildSF, _ := snowflake.Parse(guildId)
+						for _, r := range roles {
+							r = strings.TrimSpace(r)
+							if r == "" {
+								continue
+							}
+
+							rSF, err := snowflake.Parse(r)
+							if err != nil {
+								c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("invalid role ID: %s", r), "error_code": "VALIDATION_FAILED"})
+								return
+							}
+
+							_, ok := bot.Client.Caches.Role(guildSF, rSF)
+							if !ok {
+								roleRoles, err := bot.Client.Rest.GetRoles(guildSF)
+								if err != nil {
+									c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("role %s does not exist", r), "error_code": "VALIDATION_FAILED"})
+									return
+								}
+								found := false
+								for _, gr := range roleRoles {
+									if gr.ID == rSF {
+										found = true
+										break
+									}
+								}
+								if !found {
+									c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("role %s does not exist", r), "error_code": "VALIDATION_FAILED"})
+									return
+								}
+							}
+						}
+					}
+				}
+
+				if floatVal, ok := val.(float64); ok {
+					if comp.Type == core.ComponentTypeNumber {
+						if comp.Min != nil && int(floatVal) < *comp.Min {
+							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too small", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+							return
+						}
+						if comp.Max != nil && int(floatVal) > *comp.Max {
+							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too large", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
+							return
+						}
+					}
+				}
+			}
+		}
 	}
 
 	jsonBytes, err := json.Marshal(payload)
