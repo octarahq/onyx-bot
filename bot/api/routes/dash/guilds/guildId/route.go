@@ -115,10 +115,15 @@ func handleGetGuildInfo(c *gin.Context) {
 		})
 	}
 
+	iconURL := "https://cdn.discordapp.com/embed/avatars/1.png"
+	if url := guild.IconURL(); url != nil {
+		iconURL = *url
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"id":          guild.ID.String(),
 		"name":        guild.Name,
-		"iconURL":     *guild.IconURL(),
+		"iconURL":     iconURL,
 		"memberCount": guild.MemberCount,
 		"ownerId":     guild.OwnerID.String(),
 		"modules":     modules,
