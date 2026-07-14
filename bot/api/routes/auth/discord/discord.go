@@ -23,7 +23,7 @@ import (
 
 var (
 	oauthConfig     *oauth2.Config
-	userGuildsCache = api.NewExpiringCache[string, []map[string]interface{}](2 * time.Minute)
+	UserGuildsCache = api.NewExpiringCache[string, []map[string]interface{}](2 * time.Minute)
 )
 
 func init() {
@@ -145,7 +145,7 @@ func handleCallback(c *gin.Context) {
 	c.SetCookie("session_id", sessionID, 7*24*3600, "/", "", false, true)
 
 	_ = godotenv.Load()
-	c.Redirect(http.StatusPermanentRedirect, os.Getenv("SITE_DASHBOARD_URL"))
+	c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("%s/dashboard", os.Getenv("SITE_URL")))
 }
 
 func handleMe(c *gin.Context) {
@@ -159,12 +159,17 @@ func handleMe(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "user context not found", "error_code": "INTERNAL_ERROR"})
 		return
 	}
+	avatarURL := "https://cdn.discordapp.com/embed/avatars/1.png"
+	if url := user.AvatarURL(); url != nil {
+		avatarURL = *url
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"id":            user.ID,
 		"username":      user.Username,
 		"discriminator": user.Discriminator,
 		"avatar":        user.Avatar,
-		"avatarURL":     user.AvatarURL(),
+		"avatarURL":     avatarURL,
 	})
 }
 
@@ -185,7 +190,7 @@ func handleMeGuilds(c *gin.Context) {
 		return
 	}
 
-	if cachedGuilds, ok := userGuildsCache.Get(session.UserID); ok {
+	if cachedGuilds, ok := UserGuildsCache.Get(session.UserID); ok {
 		c.JSON(http.StatusOK, cachedGuilds)
 		return
 	}
@@ -252,7 +257,7 @@ func handleMeGuilds(c *gin.Context) {
 		}
 	}
 
-	userGuildsCache.Set(session.UserID, guilds)
+	UserGuildsCache.Set(session.UserID, guilds)
 
 	c.JSON(http.StatusOK, guilds)
 }
