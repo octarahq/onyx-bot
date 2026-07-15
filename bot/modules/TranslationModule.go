@@ -23,40 +23,6 @@ type TranslationSettings struct {
 	Main    TranslationMainSettings `gorm:"embedded;embeddedPrefix:main_" json:"main"`
 }
 
-func (t *TranslationSettings) Validate() error {
-	if t.Main.Lang != "" {
-		valid := false
-		for _, v := range utils.TranslateLangs {
-			if t.Main.Lang == v.Value {
-				valid = true
-			}
-		}
-		if !valid {
-			return fmt.Errorf("invalid language: %s", t.Main.Lang)
-		}
-	}
-
-	if t.Main.Channels != "" {
-		channels := strings.Split(t.Main.Channels, ",")
-		if len(channels) > 5 {
-			return fmt.Errorf("maximum 5 channels allowed")
-		}
-
-		for _, ch := range channels {
-			ch = strings.TrimSpace(ch)
-			if len(ch) < 17 || len(ch) > 19 {
-				return fmt.Errorf("invalid channel id: '%s' must be 17-19 characters", ch)
-			}
-			for _, r := range ch {
-				if r < '0' || r > '9' {
-					return fmt.Errorf("invalid channel id: '%s' must be numeric", ch)
-				}
-			}
-		}
-	}
-	return nil
-}
-
 type TranslationModule struct {
 	Data TranslationSettings
 }
@@ -202,8 +168,8 @@ func (m *TranslationModule) UISchema(locale discord.Locale) core.UISchema {
 	return core.UISchema{
 		SubModules: []core.UISubModule{
 			{
-				Name:  "main",
-				Label: mainLabel,
+				Name:        "main",
+				Label:       mainLabel,
 				Description: mainDesc,
 				Components: []core.UIComponent{
 					{
