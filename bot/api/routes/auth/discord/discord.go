@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"onyx/bot/api"
+	"onyx/bot/constants"
 	"onyx/bot/core"
 	"onyx/bot/db"
 
@@ -163,7 +164,7 @@ func handleMe(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "user context not found", "error_code": "INTERNAL_ERROR"})
 		return
 	}
-	avatarURL := "https://cdn.discordapp.com/embed/avatars/1.png"
+	avatarURL := constants.DISCORD_DEFAULT_AVATAR_URL
 	if url := user.AvatarURL(); url != nil {
 		avatarURL = *url
 	}
@@ -247,7 +248,7 @@ func handleMeGuilds(c *gin.Context) {
 			if g.Icon != "" {
 				avatarURL = "https://cdn.discordapp.com/icons/" + g.ID + "/" + g.Icon + ".png"
 			} else {
-				avatarURL = "https://cdn.discordapp.com/embed/avatars/1.png"
+				avatarURL = constants.DISCORD_DEFAULT_AVATAR_URL
 			}
 
 			guilds = append(guilds, map[string]interface{}{
