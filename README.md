@@ -23,7 +23,7 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 | | Music : Play music in your server with an integrated player.
 | | Giveaways : Organize giveaways for your community.
 | | Polls : Create interactive polls for your server.
-| | Welcome Messages : Send custom welcome messages to new members.
+| | Welcome Messages : Send custom welcome messages to new members and invite tracker.
 | | Logging : Track messages, edits, and deletions in your server.
 | | Auto Roles : Automatically assign roles to members.
 | | Birthdays : Celebrate members' birthdays with an automated system.
@@ -34,3 +34,4 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 | | Reminders : Set reminders.
 | | Suggestions : Collect and manage suggestions from your community.
 | | Starboard : Highlight popular messages in your server.
+| | Social Notifications : Notify your server about social media updates.
