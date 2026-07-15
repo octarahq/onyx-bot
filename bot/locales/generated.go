@@ -84,6 +84,10 @@ func unmarshalTrad(command string, raw []byte) (any, error) {
 		var t ModuleTranslationModuleTrad
 		err := json.Unmarshal(raw, &t)
 		return t, err
+	case "module_WelcomeModule":
+		var t ModuleWelcomeModuleTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
 	default:
 		return nil, nil
 	}
@@ -147,12 +151,12 @@ func GetAscii(locale discord.Locale) AsciiTrad {
 }
 
 type ColorTrad struct {
-	Hsv     string `json:"hsv"`
 	Cmyk    string `json:"cmyk"`
 	Decimal string `json:"decimal"`
 	Hex     string `json:"hex"`
 	Rgb     string `json:"rgb"`
 	Hsl     string `json:"hsl"`
+	Hsv     string `json:"hsv"`
 }
 
 func GetColor(locale discord.Locale) ColorTrad {
@@ -213,9 +217,9 @@ func GetEmoji(locale discord.Locale) EmojiTrad {
 }
 
 type FunfactTrad struct {
+	Source string `json:"source"`
 	Title  string `json:"title"`
 	Text   string `json:"text"`
-	Source string `json:"source"`
 }
 
 func GetFunfact(locale discord.Locale) FunfactTrad {
@@ -233,14 +237,14 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
+	User_page    string `json:"user_page"`
 	Repo_title   string `json:"repo_title"`
 	Repo_desc    string `json:"repo_desc"`
-	No_desc      string `json:"no_desc"`
+	Repo_license string `json:"repo_license"`
 	None         string `json:"none"`
 	User_title   string `json:"user_title"`
-	User_page    string `json:"user_page"`
-	Repo_license string `json:"repo_license"`
 	Repo_button  string `json:"repo_button"`
+	No_desc      string `json:"no_desc"`
 	Unknown      string `json:"unknown"`
 }
 
@@ -299,12 +303,12 @@ func GetMeme(locale discord.Locale) MemeTrad {
 }
 
 type NasaTrad struct {
+	Iss_title    string `json:"iss_title"`
 	Iss_position string `json:"iss_position"`
 	Iss_altitude string `json:"iss_altitude"`
 	Iss_updated  string `json:"iss_updated"`
 	Apod_title   string `json:"apod_title"`
 	Source       string `json:"source"`
-	Iss_title    string `json:"iss_title"`
 }
 
 func GetNasa(locale discord.Locale) NasaTrad {
@@ -322,16 +326,16 @@ func GetNasa(locale discord.Locale) NasaTrad {
 }
 
 type NpmTrad struct {
-	Unknown        string `json:"unknown"`
-	None           string `json:"none"`
-	Repository     string `json:"repository"`
 	Na             string `json:"na"`
 	Title          string `json:"title"`
-	Desc           string `json:"desc"`
 	Downloads      string `json:"downloads"`
-	Not_found      string `json:"not_found"`
+	Unknown        string `json:"unknown"`
 	Npm_page       string `json:"npm_page"`
+	Desc           string `json:"desc"`
 	Last_published string `json:"last_published"`
+	Not_found      string `json:"not_found"`
+	None           string `json:"none"`
+	Repository     string `json:"repository"`
 }
 
 func GetNpm(locale discord.Locale) NpmTrad {
@@ -349,9 +353,9 @@ func GetNpm(locale discord.Locale) NpmTrad {
 }
 
 type QuoteTrad struct {
+	Quote  string `json:"quote"`
 	Author string `json:"author"`
 	Title  string `json:"title"`
-	Quote  string `json:"quote"`
 }
 
 func GetQuote(locale discord.Locale) QuoteTrad {
@@ -388,11 +392,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
+	Definition string `json:"definition"`
 	Example    string `json:"example"`
 	Author     string `json:"author"`
 	Source     string `json:"source"`
 	Title      string `json:"title"`
-	Definition string `json:"definition"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -482,4 +486,21 @@ func GetModule_TranslationModule(locale discord.Locale) ModuleTranslationModuleT
 		}
 	}
 	return ModuleTranslationModuleTrad{}
+}
+
+type ModuleWelcomeModuleTrad struct {
+}
+
+func GetModule_WelcomeModule(locale discord.Locale) ModuleWelcomeModuleTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["module_WelcomeModule"].(ModuleWelcomeModuleTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["module_WelcomeModule"].(ModuleWelcomeModuleTrad); ok {
+			return t
+		}
+	}
+	return ModuleWelcomeModuleTrad{}
 }

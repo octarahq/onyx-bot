@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "name": "WelcomeModule",
+    "label": "Bienvenue",
+    "description": "Envoyez un message de bienvenue lorsqu'un membre rejoint le serveur, ou un message d'au revoir lorsqu'il le quitte.",
+    "submodules": {
+      "join": {
+        "label": "Paramètres d'Arrivée",
+        "description": "Configurez le message envoyé lorsqu'un nouveau membre rejoint le serveur.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Le salon où le message sera envoyé." },
+          "content": {
+            "label": "Contenu du Message",
+            "options": {
+              "user.id": { "label": "ID Utilisateur", "description": "L'ID de l'utilisateur." },
+              "user.mention": { "label": "Mention Utilisateur", "description": "Mentionne l'utilisateur." },
+              "user.name": { "label": "Nom d'Utilisateur", "description": "Le nom d'utilisateur du membre." },
+              "server.name": { "label": "Nom du Serveur", "description": "Le nom du serveur." },
+              "server.member_count": { "label": "Nombre de Membres", "description": "Le nombre de membres dans le serveur." }
+            }
+          },
+          "mentionMember": { "label": "Mentionner le Membre" }
+        }
+      },
+      "leave": {
+        "label": "Paramètres de Départ",
+        "description": "Configurez le message envoyé lorsqu'un membre quitte le serveur.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Le salon où le message sera envoyé." },
+          "content": {
+            "label": "Contenu du Message",
+            "options": {
+              "user.id": { "label": "ID Utilisateur", "description": "L'ID de l'utilisateur." },
+              "user.name": { "label": "Nom d'Utilisateur", "description": "Le nom d'utilisateur du membre." },
+              "server.name": { "label": "Nom du Serveur", "description": "Le nom du serveur." },
+              "server.member_count": { "label": "Nombre de Membres", "description": "Le nombre de membres dans le serveur." }
+            }
+          },
+          "mentionMember": { "label": "Mentionner le Membre" }
+        }
+      }
+    }
+  },
+  "trad": {}
+}

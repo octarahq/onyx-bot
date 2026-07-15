@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "name": "WelcomeModule",
+    "label": "Welcome",
+    "description": "Send a welcome message when a member joins the server, or a goodbye message when they leave.",
+    "submodules": {
+      "join": {
+        "label": "Join Settings",
+        "description": "Configure the message sent when a new member joins the server.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "The channel where the message will be sent." },
+          "content": {
+            "label": "Message Content",
+            "options": {
+              "user.id": { "label": "User ID", "description": "The ID of the user." },
+              "user.mention": { "label": "User Mention", "description": "Mentions the user." },
+              "user.name": { "label": "User Name", "description": "The username of the user." },
+              "server.name": { "label": "Server Name", "description": "The name of the server." },
+              "server.member_count": { "label": "Member Count", "description": "The number of members in the server." }
+            }
+          },
+          "mentionMember": { "label": "Mention Member" }
+        }
+      },
+      "leave": {
+        "label": "Leave Settings",
+        "description": "Configure the message sent when a member leaves the server.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "The channel where the message will be sent." },
+          "content": {
+            "label": "Message Content",
+            "options": {
+              "user.id": { "label": "User ID", "description": "The ID of the user." },
+              "user.name": { "label": "User Name", "description": "The username of the user." },
+              "server.name": { "label": "Server Name", "description": "The name of the server." },
+              "server.member_count": { "label": "Member Count", "description": "The number of members in the server." }
+            }
+          },
+          "mentionMember": { "label": "Mention Member" }
+        }
+      }
+    }
+  },
+  "trad": {}
+}
