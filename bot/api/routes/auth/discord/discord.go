@@ -128,6 +128,10 @@ func handleCallback(c *gin.Context) {
 	sessionID := hex.EncodeToString(sessionBytes)
 
 	dbInstance := c.MustGet("db").(*db.DB)
+
+	dbInstance.GormDB.Where("expires_at <= ?", time.Now()).Delete(&db.Session{})
+	dbInstance.GormDB.Where("user_id = ?", user.ID).Delete(&db.Session{})
+
 	newSession := db.Session{
 		SessionID:   sessionID,
 		UserID:      user.ID,
