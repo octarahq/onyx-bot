@@ -27,6 +27,11 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 	switch e := event.(type) {
 	case *events.MessageCreate:
 		guildID = e.GuildID
+	case *events.GuildMemberJoin:
+		guildID = &e.GuildID
+	case *events.GuildMemberLeave:
+		guildID = &e.GuildID
+
 	}
 
 	if guildID == nil {
@@ -63,6 +68,18 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 		case *events.MessageCreate:
 			if handler, ok := mod.(core.OnMessageCreate); ok {
 				if handler.HandleMessageCreate(b, e) {
+					return true
+				}
+			}
+		case *events.GuildMemberJoin:
+			if handler, ok := mod.(core.OnGuildMemberJoin); ok {
+				if handler.HandleGuildMemberJoin(b, e) {
+					return true
+				}
+			}
+		case *events.GuildMemberLeave:
+			if handler, ok := mod.(core.OnGuildMemberLeave); ok {
+				if handler.HandleGuildMemberLeave(b, e) {
 					return true
 				}
 			}

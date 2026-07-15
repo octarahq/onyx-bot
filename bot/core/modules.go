@@ -36,6 +36,14 @@ type OnMessageCreate interface {
 	HandleMessageCreate(b *Bot, event *events.MessageCreate) bool
 }
 
+type OnGuildMemberJoin interface {
+	HandleGuildMemberJoin(b *Bot, event *events.GuildMemberJoin) bool
+}
+
+type OnGuildMemberLeave interface {
+	HandleGuildMemberLeave(b *Bot, event *events.GuildMemberLeave) bool
+}
+
 type OnReady interface {
 	HandleReady(b *Bot, event *events.Ready) bool
 }
