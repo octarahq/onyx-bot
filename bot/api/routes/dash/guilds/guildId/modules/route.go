@@ -243,10 +243,18 @@ func handlePatchModuleData(c *gin.Context) {
 			if !ok {
 				continue
 			}
+
+			isEnabled := true
+			if enabledVal, hasEnabled := subData["enabled"]; hasEnabled {
+				if bVal, ok := enabledVal.(bool); ok {
+					isEnabled = bVal
+				}
+			}
+
 			for _, comp := range sub.Components {
 				val, exists := subData[comp.Name]
 				if !exists {
-					if comp.Required {
+					if comp.Required && isEnabled {
 						c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is required", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 						return
 					}
@@ -254,7 +262,7 @@ func handlePatchModuleData(c *gin.Context) {
 				}
 
 				if strVal, ok := val.(string); ok {
-					if comp.Required && strVal == "" {
+					if comp.Required && strVal == "" && isEnabled {
 						c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is required", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 						return
 					}
