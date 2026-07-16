@@ -12,6 +12,7 @@ const (
 	ComponentTypeChannel  ComponentType = "channel"
 	ComponentTypeRole     ComponentType = "role"
 	ComponentTypeTextarea ComponentType = "textarea"
+	ComponentTypeList     ComponentType = "list"
 )
 
 type UISelectOption struct {
@@ -40,6 +41,7 @@ type UIComponent struct {
 	Options      []UISelectOption      `json:"options,omitempty"`
 	ChannelTypes []discord.ChannelType `json:"channelTypes,omitempty"`
 	Variables    []Variables           `json:"variables,omitempty"`
+	ListType     string                `json:"listType,omitempty"`
 }
 
 type UISubModule struct {
