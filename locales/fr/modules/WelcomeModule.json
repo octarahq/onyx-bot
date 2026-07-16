@@ -43,5 +43,14 @@
       }
     }
   },
-  "trad": {}
+  "trad": {
+    "card_t1": "Bienvenue",
+    "card_t2": "sur le serveur",
+    "embed_title": "## Un membre vient de nous rejoindre",
+    "embed_footer": "Nous sommes désormais %d membres.",
+    "leave_card_t1": "Au revoir",
+    "leave_card_t2": "du serveur",
+    "leave_embed_title": "## Un membre vient de nous quitter",
+    "leave_embed_footer": "Nous sommes désormais %d membres."
+  }
 }

@@ -194,12 +194,12 @@ func GetEightball(locale discord.Locale) EightballTrad {
 }
 
 type EmojiTrad struct {
+	Emojify_error string `json:"emojify_error"`
+	Emojify_title string `json:"emojify_title"`
 	Mix_error     string `json:"mix_error"`
 	Mix_title     string `json:"mix_title"`
 	Random_error  string `json:"random_error"`
 	Random_title  string `json:"random_title"`
-	Emojify_error string `json:"emojify_error"`
-	Emojify_title string `json:"emojify_title"`
 }
 
 func GetEmoji(locale discord.Locale) EmojiTrad {
@@ -237,15 +237,15 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
-	User_page    string `json:"user_page"`
-	Repo_title   string `json:"repo_title"`
 	Repo_desc    string `json:"repo_desc"`
-	Repo_license string `json:"repo_license"`
-	None         string `json:"none"`
-	User_title   string `json:"user_title"`
 	Repo_button  string `json:"repo_button"`
 	No_desc      string `json:"no_desc"`
 	Unknown      string `json:"unknown"`
+	None         string `json:"none"`
+	User_page    string `json:"user_page"`
+	Repo_title   string `json:"repo_title"`
+	Repo_license string `json:"repo_license"`
+	User_title   string `json:"user_title"`
 }
 
 func GetGithub(locale discord.Locale) GithubTrad {
@@ -283,9 +283,9 @@ func GetMath(locale discord.Locale) MathTrad {
 }
 
 type MemeTrad struct {
+	Author     string `json:"author"`
 	Title      string `json:"title"`
 	Meme_title string `json:"meme_title"`
-	Author     string `json:"author"`
 }
 
 func GetMeme(locale discord.Locale) MemeTrad {
@@ -326,15 +326,15 @@ func GetNasa(locale discord.Locale) NasaTrad {
 }
 
 type NpmTrad struct {
-	Na             string `json:"na"`
 	Title          string `json:"title"`
 	Downloads      string `json:"downloads"`
+	Not_found      string `json:"not_found"`
 	Unknown        string `json:"unknown"`
-	Npm_page       string `json:"npm_page"`
+	None           string `json:"none"`
+	Na             string `json:"na"`
 	Desc           string `json:"desc"`
 	Last_published string `json:"last_published"`
-	Not_found      string `json:"not_found"`
-	None           string `json:"none"`
+	Npm_page       string `json:"npm_page"`
 	Repository     string `json:"repository"`
 }
 
@@ -392,11 +392,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
-	Definition string `json:"definition"`
-	Example    string `json:"example"`
 	Author     string `json:"author"`
 	Source     string `json:"source"`
 	Title      string `json:"title"`
+	Definition string `json:"definition"`
+	Example    string `json:"example"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -453,8 +453,8 @@ func GetTranslate(locale discord.Locale) TranslateTrad {
 }
 
 type InteractionTrad struct {
-	Not_allowed_component string `json:"not_allowed_component"`
 	Not_allowed_modal     string `json:"not_allowed_modal"`
+	Not_allowed_component string `json:"not_allowed_component"`
 }
 
 func GetInteraction(locale discord.Locale) InteractionTrad {
@@ -489,6 +489,14 @@ func GetModule_TranslationModule(locale discord.Locale) ModuleTranslationModuleT
 }
 
 type ModuleWelcomeModuleTrad struct {
+	Embed_title        string `json:"embed_title"`
+	Embed_footer       string `json:"embed_footer"`
+	Leave_card_t1      string `json:"leave_card_t1"`
+	Leave_card_t2      string `json:"leave_card_t2"`
+	Leave_embed_title  string `json:"leave_embed_title"`
+	Leave_embed_footer string `json:"leave_embed_footer"`
+	Card_t1            string `json:"card_t1"`
+	Card_t2            string `json:"card_t2"`
 }
 
 func GetModule_WelcomeModule(locale discord.Locale) ModuleWelcomeModuleTrad {
