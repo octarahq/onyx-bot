@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "name": "ChannelCounter",
+    "label": "Channel Counter",
+    "description": "Display server statistics in channel names.",
+    "submodules": {
+      "membercounter": {
+        "label": "Total Members Counter",
+        "description": "Displays total member count in a channel.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "Select the channel to display this counter." },
+          "nameconv": { 
+            "label": "Channel Name Format", 
+            "description": "Use {count} to display the number.",
+            "options": {
+              "count": { "label": "Count", "description": "The number to display." }
+            }
+          }
+        }
+      },
+      "humanscounter": {
+        "label": "Humans Counter",
+        "description": "Displays total human count in a channel.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "Select the channel to display this counter." },
+          "nameconv": { 
+            "label": "Channel Name Format", 
+            "description": "Use {count} to display the number.",
+            "options": {
+              "count": { "label": "Count", "description": "The number to display." }
+            }
+          }
+        }
+      },
+      "botscounter": {
+        "label": "Bots Counter",
+        "description": "Displays total bot count in a channel.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "Select the channel to display this counter." },
+          "nameconv": { 
+            "label": "Channel Name Format", 
+            "description": "Use {count} to display the number.",
+            "options": {
+              "count": { "label": "Count", "description": "The number to display." }
+            }
+          }
+        }
+      },
+      "channelscounter": {
+        "label": "Channels Counter",
+        "description": "Displays total channel count in a channel.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "Select the channel to display this counter." },
+          "nameconv": { 
+            "label": "Channel Name Format", 
+            "description": "Use {count} to display the number.",
+            "options": {
+              "count": { "label": "Count", "description": "The number to display." }
+            }
+          }
+        }
+      },
+      "rolescounter": {
+        "label": "Roles Counter",
+        "description": "Displays total role count in a channel.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "Select the channel to display this counter." },
+          "nameconv": { 
+            "label": "Channel Name Format", 
+            "description": "Use {count} to display the number.",
+            "options": {
+              "count": { "label": "Count", "description": "The number to display." }
+            }
+          }
+        }
+      },
+      "statuscounter": {
+        "label": "Rotating Status Channel",
+        "description": "Configures a channel whose name rotates to display server stats.",
+        "options": {
+          "enabled": { "label": "Enabled" },
+          "channel": { "label": "Channel", "description": "Select the channel to display this rotating status." },
+          "interval": { "label": "Rotation Interval (Minutes)", "description": "How often the status changes (1 minute to 1 week)." },
+          "names": { 
+            "label": "Rotating Statuses", 
+            "description": "List of statuses. Support variables: {member_count}, {humans_count}, {bots_count}, {channels_count}, {roles_count}.",
+            "options": {
+              "member_count": { "label": "Member Count", "description": "Total members in the server" },
+              "humans_count": { "label": "Humans Count", "description": "Total humans in the server" },
+              "bots_count": { "label": "Bots Count", "description": "Total bots in the server" },
+              "channels_count": { "label": "Channels Count", "description": "Total channels in the server" },
+              "roles_count": { "label": "Roles Count", "description": "Total roles in the server" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

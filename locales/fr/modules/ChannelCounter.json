@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "name": "ChannelCounter",
+    "label": "Compteur de Salons",
+    "description": "Affiche les statistiques du serveur dans des noms de salons.",
+    "submodules": {
+      "membercounter": {
+        "label": "Compteur de Membres (Total)",
+        "description": "Affiche le nombre total de membres dans un salon.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Sélectionnez le salon qui affichera ce compteur." },
+          "nameconv": { 
+            "label": "Format du nom de salon", 
+            "description": "Utilisez {count} pour afficher le nombre.",
+            "options": {
+              "count": { "label": "Compteur", "description": "Le nombre à afficher." }
+            }
+          }
+        }
+      },
+      "humanscounter": {
+        "label": "Compteur d'Humains",
+        "description": "Affiche le nombre d'humains dans un salon.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Sélectionnez le salon qui affichera ce compteur." },
+          "nameconv": { 
+            "label": "Format du nom de salon", 
+            "description": "Utilisez {count} pour afficher le nombre.",
+            "options": {
+              "count": { "label": "Compteur", "description": "Le nombre à afficher." }
+            }
+          }
+        }
+      },
+      "botscounter": {
+        "label": "Compteur de Bots",
+        "description": "Affiche le nombre de bots dans un salon.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Sélectionnez le salon qui affichera ce compteur." },
+          "nameconv": { 
+            "label": "Format du nom de salon", 
+            "description": "Utilisez {count} pour afficher le nombre.",
+            "options": {
+              "count": { "label": "Compteur", "description": "Le nombre à afficher." }
+            }
+          }
+        }
+      },
+      "channelscounter": {
+        "label": "Compteur de Salons",
+        "description": "Affiche le nombre total de salons dans un salon.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Sélectionnez le salon qui affichera ce compteur." },
+          "nameconv": { 
+            "label": "Format du nom de salon", 
+            "description": "Utilisez {count} pour afficher le nombre.",
+            "options": {
+              "count": { "label": "Compteur", "description": "Le nombre à afficher." }
+            }
+          }
+        }
+      },
+      "rolescounter": {
+        "label": "Compteur de Rôles",
+        "description": "Affiche le nombre total de rôles dans un salon.",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Sélectionnez le salon qui affichera ce compteur." },
+          "nameconv": { 
+            "label": "Format du nom de salon", 
+            "description": "Utilisez {count} pour afficher le nombre.",
+            "options": {
+              "count": { "label": "Compteur", "description": "Le nombre à afficher." }
+            }
+          }
+        }
+      },
+      "statuscounter": {
+        "label": "Salon à Statut Rotatif",
+        "description": "Configure un salon dont le nom change à un intervalle précis (rotation).",
+        "options": {
+          "enabled": { "label": "Activé" },
+          "channel": { "label": "Salon", "description": "Sélectionnez le salon qui affichera ce statut rotatif." },
+          "interval": { "label": "Intervalle de Rotation (Minutes)", "description": "À quelle fréquence le salon change de nom (1 minute à 1 semaine)." },
+          "names": { 
+            "label": "Statuts Rotatifs", 
+            "description": "Liste des noms de salon. Variables supportées : {member_count}, {humans_count}, {bots_count}, {channels_count}, {roles_count}.",
+            "options": {
+              "member_count": { "label": "Nombre de Membres", "description": "Le nombre total de membres" },
+              "humans_count": { "label": "Nombre d'Humains", "description": "Le nombre d'humains" },
+              "bots_count": { "label": "Nombre de Bots", "description": "Le nombre de bots" },
+              "channels_count": { "label": "Nombre de Salons", "description": "Le nombre de salons" },
+              "roles_count": { "label": "Nombre de Rôles", "description": "Le nombre de rôles" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

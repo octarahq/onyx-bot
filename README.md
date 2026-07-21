@@ -28,7 +28,7 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 | | Auto Roles : Automatically assign roles to members.
 | | Birthdays : Celebrate members' birthdays with an automated system.
 | | Bumps : Automate bump reminders for your server listings.
-| | Channels Counter : Display live channel statistics in your server.
+|X| Channels Counter : Display live channel statistics in your server.
 | | Custom Commands : Create custom commands for your server.
 | | Fun : Add playful interactions to your server.
 | | Wizarding World : Add a magical experience to your server with wizarding spells.
