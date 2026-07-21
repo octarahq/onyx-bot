@@ -42,6 +42,9 @@ type UIComponent struct {
 	ChannelTypes []discord.ChannelType `json:"channelTypes,omitempty"`
 	Variables    []Variables           `json:"variables,omitempty"`
 	ListType     string                `json:"listType,omitempty"`
+	ItemMin      *int                  `json:"itemMin,omitempty"`
+	ItemMax      *int                  `json:"itemMax,omitempty"`
+	UniqueGroup  string                `json:"uniqueGroup,omitempty"`
 }
 
 type UISubModule struct {
