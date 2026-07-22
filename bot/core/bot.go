@@ -2,6 +2,7 @@ package core
 
 import (
 	"onyx/bot/db"
+	"time"
 
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
@@ -35,4 +36,6 @@ type Bot struct {
 	Events   []Event
 
 	Modules []Module
+
+	ConnectedSince time.Time
 }

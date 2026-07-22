@@ -25,6 +25,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/cache"
 	"github.com/disgoorg/disgo/discord"
+	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/gateway"
 	"github.com/disgoorg/disgo/rest"
 	"github.com/joho/godotenv"
@@ -66,7 +67,12 @@ func main() {
 		}
 	}
 
+	var connectedSince = time.Now()
+
 	client, err := disgo.New(token,
+		bot.WithEventListenerFunc(func(e *events.Ready) {
+			connectedSince = time.Now()
+		}),
 		bot.WithGatewayConfigOpts(
 			gateway.WithIntents(
 				gateway.IntentGuilds,
@@ -91,6 +97,7 @@ func main() {
 	}
 
 	coreBot.Client = client
+	coreBot.ConnectedSince = connectedSince
 
 	handlers.SetupEvents(coreBot)
 
