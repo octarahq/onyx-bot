@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "name": "bot",
+    "description": "Get bot info"
+  },
+  "trad": {
+    "title": "## Hi, I'm %s ✨",
+    "description": "I'm a powerful, multi-purpose Discord bot designed to meet all your server's needs! What sets me apart? I am **100% Free** and **Open Source** 🤖\n\nInvite me today, and I'll be thrilled to enhance your community!",
+    "details_title": "### 📊 Details",
+    "version_onyx": "Onyx Version: `%s`",
+    "last_boot": "Online since: **%s**",
+    "programming_title": "### 💻 Programming",
+    "versions": "Go Version: `%s` | Disgo Version: `%s`",
+    "db_size": "Database Size: `%s`",
+    "website": "Website 🌐",
+    "invite_me": "Invite Me ➕",
+    "error_self_user": "An error occurred while retrieving bot information.",
+    "stats_title": "### 📈 Stats",
+    "stats": "Servers: `%d` | Users: `%d` | Commands: `%d`"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "name": "bot",
+    "description": "Obtenir les informations du bot"
+  },
+  "trad": {
+    "title": "## Bonjour, je suis %s ✨",
+    "description": "Je suis un bot Discord multifonction conçu pour répondre à tous les besoins de votre serveur ! Ma force ? Je suis **100% Gratuit** et **Open Source** 🤖\n\nAjoutez-moi dès maintenant, je serai ravi d'améliorer votre communauté !",
+    "details_title": "### 📊 Détails",
+    "version_onyx": "Version d'Onyx : `%s`",
+    "last_boot": "En ligne depuis le : **%s**",
+    "programming_title": "### 💻 Programmation",
+    "versions": "Version Go : `%s` | Version Disgo : `%s`",
+    "db_size": "Taille de la base de données : `%s`",
+    "website": "Site Web 🌐",
+    "invite_me": "M'inviter ➕",
+    "error_self_user": "Une erreur est survenue lors de la récupération des informations du bot.",
+    "stats_title": "### 📈 Statistiques",
+    "stats": "Serveurs : `%d` | Utilisateurs : `%d` | Commandes : `%d`"
+  }
+}
