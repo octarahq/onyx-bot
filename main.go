@@ -32,7 +32,7 @@ import (
 )
 
 func main() {
-	var version = "0.1.1"
+	var version = "1.0.0"
 	_ = godotenv.Load()
 	if err := locales.Load("locales"); err != nil {
 		fmt.Printf("Warning: failed to load locales: %v\n", err)
