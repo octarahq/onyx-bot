@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"onyx/bot/api"
 	"onyx/bot/core"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -39,7 +38,7 @@ func handleStatus(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"version":  os.Getenv("VERSION"),
+		"version":  bot.Version,
 		"servers":  bot.Client.Caches.GuildsLen(),
 		"users":    bot.Client.Caches.MembersAllLen(),
 		"commands": len(bot.Commands),

@@ -55,7 +55,7 @@ func BuildBotInfoMessage(b *core.Bot, client *bot.Client, locale discord.Locale)
 				discord.NewTextDisplay(t.Description),
 			).WithAccessory(discord.NewThumbnail(self.EffectiveAvatarURL())),
 			discord.NewTextDisplay(t.Details_title),
-			discord.NewTextDisplayf(t.Version_onyx, os.Getenv("VERSION")),
+			discord.NewTextDisplayf(t.Version_onyx, b.Version),
 			discord.NewTextDisplayf(t.Last_boot, utils.GenerateTimestamp(int(b.ConnectedSince.Unix()), utils.TimestampLongDate)),
 			discord.NewSeparator(discord.SeparatorSpacingSizeLarge),
 			discord.NewTextDisplay(t.Programming_title),

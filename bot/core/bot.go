@@ -38,4 +38,5 @@ type Bot struct {
 	Modules []Module
 
 	ConnectedSince time.Time
+	Version        string
 }

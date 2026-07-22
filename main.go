@@ -32,6 +32,7 @@ import (
 )
 
 func main() {
+	var version = "0.1.1"
 	_ = godotenv.Load()
 	if err := locales.Load("locales"); err != nil {
 		fmt.Printf("Warning: failed to load locales: %v\n", err)
@@ -59,6 +60,7 @@ func main() {
 		Commands: handlers.Commands,
 		Events:   handlers.Events,
 		Modules:  modules.RegisteredModules,
+		Version:  version,
 	}
 
 	for _, mod := range coreBot.Modules {
