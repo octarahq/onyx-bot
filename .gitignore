@@ -3,3 +3,5 @@ bot.db
 onyx
 bot/modules/TestModule.txt
 todo.md
+# Orion CLI
+.orion/
