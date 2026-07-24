@@ -88,6 +88,10 @@ func unmarshalTrad(command string, raw []byte) (any, error) {
 		var t ModuleChannelCounterTrad
 		err := json.Unmarshal(raw, &t)
 		return t, err
+	case "module_LoggingModule":
+		var t ModuleLoggingModuleTrad
+		err := json.Unmarshal(raw, &t)
+		return t, err
 	case "module_TranslationModule":
 		var t ModuleTranslationModuleTrad
 		err := json.Unmarshal(raw, &t)
@@ -159,12 +163,12 @@ func GetAscii(locale discord.Locale) AsciiTrad {
 }
 
 type ColorTrad struct {
+	Cmyk    string `json:"cmyk"`
+	Decimal string `json:"decimal"`
 	Hex     string `json:"hex"`
 	Rgb     string `json:"rgb"`
 	Hsl     string `json:"hsl"`
 	Hsv     string `json:"hsv"`
-	Cmyk    string `json:"cmyk"`
-	Decimal string `json:"decimal"`
 }
 
 func GetColor(locale discord.Locale) ColorTrad {
@@ -182,9 +186,9 @@ func GetColor(locale discord.Locale) ColorTrad {
 }
 
 type EightballTrad struct {
+	Title    string `json:"title"`
 	Question string `json:"question"`
 	Answer   string `json:"answer"`
-	Title    string `json:"title"`
 }
 
 func GetEightball(locale discord.Locale) EightballTrad {
@@ -202,12 +206,12 @@ func GetEightball(locale discord.Locale) EightballTrad {
 }
 
 type EmojiTrad struct {
-	Mix_title     string `json:"mix_title"`
-	Random_error  string `json:"random_error"`
-	Random_title  string `json:"random_title"`
 	Emojify_error string `json:"emojify_error"`
 	Emojify_title string `json:"emojify_title"`
 	Mix_error     string `json:"mix_error"`
+	Mix_title     string `json:"mix_title"`
+	Random_error  string `json:"random_error"`
+	Random_title  string `json:"random_title"`
 }
 
 func GetEmoji(locale discord.Locale) EmojiTrad {
@@ -245,15 +249,15 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
-	Repo_license string `json:"repo_license"`
-	No_desc      string `json:"no_desc"`
-	None         string `json:"none"`
+	User_page    string `json:"user_page"`
+	Repo_desc    string `json:"repo_desc"`
 	Repo_button  string `json:"repo_button"`
 	Unknown      string `json:"unknown"`
 	User_title   string `json:"user_title"`
-	User_page    string `json:"user_page"`
 	Repo_title   string `json:"repo_title"`
-	Repo_desc    string `json:"repo_desc"`
+	Repo_license string `json:"repo_license"`
+	No_desc      string `json:"no_desc"`
+	None         string `json:"none"`
 }
 
 func GetGithub(locale discord.Locale) GithubTrad {
@@ -291,9 +295,9 @@ func GetMath(locale discord.Locale) MathTrad {
 }
 
 type MemeTrad struct {
+	Author     string `json:"author"`
 	Title      string `json:"title"`
 	Meme_title string `json:"meme_title"`
-	Author     string `json:"author"`
 }
 
 func GetMeme(locale discord.Locale) MemeTrad {
@@ -311,12 +315,12 @@ func GetMeme(locale discord.Locale) MemeTrad {
 }
 
 type NasaTrad struct {
-	Source       string `json:"source"`
 	Iss_title    string `json:"iss_title"`
 	Iss_position string `json:"iss_position"`
 	Iss_altitude string `json:"iss_altitude"`
 	Iss_updated  string `json:"iss_updated"`
 	Apod_title   string `json:"apod_title"`
+	Source       string `json:"source"`
 }
 
 func GetNasa(locale discord.Locale) NasaTrad {
@@ -335,13 +339,13 @@ func GetNasa(locale discord.Locale) NasaTrad {
 
 type NpmTrad struct {
 	Not_found      string `json:"not_found"`
-	Unknown        string `json:"unknown"`
-	None           string `json:"none"`
-	Npm_page       string `json:"npm_page"`
 	Repository     string `json:"repository"`
 	Title          string `json:"title"`
 	Desc           string `json:"desc"`
 	Downloads      string `json:"downloads"`
+	Unknown        string `json:"unknown"`
+	None           string `json:"none"`
+	Npm_page       string `json:"npm_page"`
 	Na             string `json:"na"`
 	Last_published string `json:"last_published"`
 }
@@ -400,11 +404,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
-	Source     string `json:"source"`
 	Title      string `json:"title"`
 	Definition string `json:"definition"`
 	Example    string `json:"example"`
 	Author     string `json:"author"`
+	Source     string `json:"source"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -422,19 +426,19 @@ func GetUrban(locale discord.Locale) UrbanTrad {
 }
 
 type BotTrad struct {
-	Invite_me         string `json:"invite_me"`
-	Error_self_user   string `json:"error_self_user"`
 	Title             string `json:"title"`
-	Description       string `json:"description"`
 	Details_title     string `json:"details_title"`
 	Version_onyx      string `json:"version_onyx"`
-	Versions          string `json:"versions"`
-	Website           string `json:"website"`
-	Stats_title       string `json:"stats_title"`
-	Stats             string `json:"stats"`
 	Last_boot         string `json:"last_boot"`
 	Programming_title string `json:"programming_title"`
 	Db_size           string `json:"db_size"`
+	Invite_me         string `json:"invite_me"`
+	Stats             string `json:"stats"`
+	Description       string `json:"description"`
+	Versions          string `json:"versions"`
+	Website           string `json:"website"`
+	Error_self_user   string `json:"error_self_user"`
+	Stats_title       string `json:"stats_title"`
 }
 
 func GetBot(locale discord.Locale) BotTrad {
@@ -452,10 +456,10 @@ func GetBot(locale discord.Locale) BotTrad {
 }
 
 type PingTrad struct {
-	Db_latency      string `json:"db_latency"`
-	Title           string `json:"title"`
 	Gateway_latency string `json:"gateway_latency"`
 	Rest_latency    string `json:"rest_latency"`
+	Db_latency      string `json:"db_latency"`
+	Title           string `json:"title"`
 }
 
 func GetPing(locale discord.Locale) PingTrad {
@@ -526,6 +530,281 @@ func GetModule_ChannelCounter(locale discord.Locale) ModuleChannelCounterTrad {
 	return ModuleChannelCounterTrad{}
 }
 
+type ModuleLoggingModuleTrad struct {
+	ThreadCreate  ModuleLoggingModuleTrad_ThreadCreate  `json:"threadCreate"`
+	BanAdd        ModuleLoggingModuleTrad_BanAdd        `json:"banAdd"`
+	EmojiUpdate   ModuleLoggingModuleTrad_EmojiUpdate   `json:"emojiUpdate"`
+	EmojiDelete   ModuleLoggingModuleTrad_EmojiDelete   `json:"emojiDelete"`
+	ThreadUpdate  ModuleLoggingModuleTrad_ThreadUpdate  `json:"threadUpdate"`
+	GuildUpdate   ModuleLoggingModuleTrad_GuildUpdate   `json:"guildUpdate"`
+	ChannelCreate ModuleLoggingModuleTrad_ChannelCreate `json:"channelCreate"`
+	ChannelUpdate ModuleLoggingModuleTrad_ChannelUpdate `json:"channelUpdate"`
+	RoleUpdate    ModuleLoggingModuleTrad_RoleUpdate    `json:"roleUpdate"`
+	BanRemove     ModuleLoggingModuleTrad_BanRemove     `json:"banRemove"`
+	StickerCreate ModuleLoggingModuleTrad_StickerCreate `json:"stickerCreate"`
+	StickerDelete ModuleLoggingModuleTrad_StickerDelete `json:"stickerDelete"`
+	InviteDelete  ModuleLoggingModuleTrad_InviteDelete  `json:"inviteDelete"`
+	ChannelDelete ModuleLoggingModuleTrad_ChannelDelete `json:"channelDelete"`
+	RoleDelete    ModuleLoggingModuleTrad_RoleDelete    `json:"roleDelete"`
+	MemberLeave   ModuleLoggingModuleTrad_MemberLeave   `json:"memberLeave"`
+	StickerUpdate ModuleLoggingModuleTrad_StickerUpdate `json:"stickerUpdate"`
+	ThreadDelete  ModuleLoggingModuleTrad_ThreadDelete  `json:"threadDelete"`
+	EmojiCreate   ModuleLoggingModuleTrad_EmojiCreate   `json:"emojiCreate"`
+	RoleCreate    ModuleLoggingModuleTrad_RoleCreate    `json:"roleCreate"`
+	MemberJoin    ModuleLoggingModuleTrad_MemberJoin    `json:"memberJoin"`
+	MemberUpdate  ModuleLoggingModuleTrad_MemberUpdate  `json:"memberUpdate"`
+	InviteCreate  ModuleLoggingModuleTrad_InviteCreate  `json:"inviteCreate"`
+}
+
+type ModuleLoggingModuleTrad_GuildUpdate struct {
+	Title  string                                     `json:"title"`
+	States ModuleLoggingModuleTrad_GuildUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_GuildUpdate_States struct {
+	Description       string `json:"description"`
+	VerificationLevel string `json:"verificationLevel"`
+	Icon              string `json:"icon"`
+	Banner            string `json:"banner"`
+	Name              string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_ChannelCreate struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_ChannelCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ChannelCreate_States struct {
+	Type string `json:"type"`
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_ChannelUpdate struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_ChannelUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ChannelUpdate_States struct {
+	RateLimitPerUser string `json:"rateLimitPerUser"`
+	Name             string `json:"name"`
+	Topic            string `json:"topic"`
+	Nsfw             string `json:"nsfw"`
+}
+
+type ModuleLoggingModuleTrad_RoleUpdate struct {
+	Title  string                                    `json:"title"`
+	States ModuleLoggingModuleTrad_RoleUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_RoleUpdate_States struct {
+	Hoist       string `json:"hoist"`
+	Mentionable string `json:"mentionable"`
+	Permissions string `json:"permissions"`
+	Name        string `json:"name"`
+	Color       string `json:"color"`
+}
+
+type ModuleLoggingModuleTrad_BanRemove struct {
+	Title  string                                   `json:"title"`
+	States ModuleLoggingModuleTrad_BanRemove_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_BanRemove_States struct {
+	User string `json:"user"`
+}
+
+type ModuleLoggingModuleTrad_StickerCreate struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_StickerCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_StickerCreate_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_StickerDelete struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_StickerDelete_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_StickerDelete_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_InviteDelete struct {
+	States ModuleLoggingModuleTrad_InviteDelete_States `json:"states"`
+	Title  string                                      `json:"title"`
+}
+
+type ModuleLoggingModuleTrad_InviteDelete_States struct {
+	Code string `json:"code"`
+}
+
+type ModuleLoggingModuleTrad_ChannelDelete struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_ChannelDelete_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ChannelDelete_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_RoleDelete struct {
+	Title  string                                    `json:"title"`
+	States ModuleLoggingModuleTrad_RoleDelete_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_RoleDelete_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_MemberLeave struct {
+	Title  string                                     `json:"title"`
+	States ModuleLoggingModuleTrad_MemberLeave_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_MemberLeave_States struct {
+	User string `json:"user"`
+}
+
+type ModuleLoggingModuleTrad_StickerUpdate struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_StickerUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_StickerUpdate_States struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleLoggingModuleTrad_ThreadDelete struct {
+	Title  string                                      `json:"title"`
+	States ModuleLoggingModuleTrad_ThreadDelete_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ThreadDelete_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_EmojiCreate struct {
+	States ModuleLoggingModuleTrad_EmojiCreate_States `json:"states"`
+	Title  string                                     `json:"title"`
+}
+
+type ModuleLoggingModuleTrad_EmojiCreate_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_RoleCreate struct {
+	Title  string                                    `json:"title"`
+	States ModuleLoggingModuleTrad_RoleCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_RoleCreate_States struct {
+	Name  string `json:"name"`
+	Color string `json:"color"`
+}
+
+type ModuleLoggingModuleTrad_MemberJoin struct {
+	Title  string                                    `json:"title"`
+	States ModuleLoggingModuleTrad_MemberJoin_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_MemberJoin_States struct {
+	User           string `json:"user"`
+	AccountCreated string `json:"accountCreated"`
+}
+
+type ModuleLoggingModuleTrad_MemberUpdate struct {
+	States ModuleLoggingModuleTrad_MemberUpdate_States `json:"states"`
+	Title  string                                      `json:"title"`
+}
+
+type ModuleLoggingModuleTrad_MemberUpdate_States struct {
+	Roles    string `json:"roles"`
+	Avatar   string `json:"avatar"`
+	User     string `json:"user"`
+	Nickname string `json:"nickname"`
+}
+
+type ModuleLoggingModuleTrad_InviteCreate struct {
+	Title  string                                      `json:"title"`
+	States ModuleLoggingModuleTrad_InviteCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_InviteCreate_States struct {
+	MaxUses string `json:"maxUses"`
+	MaxAge  string `json:"maxAge"`
+	Code    string `json:"code"`
+	Channel string `json:"channel"`
+	Inviter string `json:"inviter"`
+}
+
+type ModuleLoggingModuleTrad_ThreadCreate struct {
+	Title  string                                      `json:"title"`
+	States ModuleLoggingModuleTrad_ThreadCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ThreadCreate_States struct {
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+	Parent string `json:"parent"`
+}
+
+type ModuleLoggingModuleTrad_BanAdd struct {
+	Title  string                                `json:"title"`
+	States ModuleLoggingModuleTrad_BanAdd_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_BanAdd_States struct {
+	User   string `json:"user"`
+	Reason string `json:"reason"`
+}
+
+type ModuleLoggingModuleTrad_EmojiUpdate struct {
+	Title  string                                     `json:"title"`
+	States ModuleLoggingModuleTrad_EmojiUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_EmojiUpdate_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_EmojiDelete struct {
+	States ModuleLoggingModuleTrad_EmojiDelete_States `json:"states"`
+	Title  string                                     `json:"title"`
+}
+
+type ModuleLoggingModuleTrad_EmojiDelete_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_ThreadUpdate struct {
+	States ModuleLoggingModuleTrad_ThreadUpdate_States `json:"states"`
+	Title  string                                      `json:"title"`
+}
+
+type ModuleLoggingModuleTrad_ThreadUpdate_States struct {
+	Archived            string `json:"archived"`
+	Locked              string `json:"locked"`
+	AutoArchiveDuration string `json:"autoArchiveDuration"`
+	Name                string `json:"name"`
+}
+
+func GetModule_LoggingModule(locale discord.Locale) ModuleLoggingModuleTrad {
+	if l, ok := localizations[locale]; ok {
+		if t, ok := l["module_LoggingModule"].(ModuleLoggingModuleTrad); ok {
+			return t
+		}
+	}
+	if l, ok := localizations[discord.LocaleEnglishUS]; ok {
+		if t, ok := l["module_LoggingModule"].(ModuleLoggingModuleTrad); ok {
+			return t
+		}
+	}
+	return ModuleLoggingModuleTrad{}
+}
+
 type ModuleTranslationModuleTrad struct {
 }
 
@@ -544,14 +823,14 @@ func GetModule_TranslationModule(locale discord.Locale) ModuleTranslationModuleT
 }
 
 type ModuleWelcomeModuleTrad struct {
-	Card_t2            string `json:"card_t2"`
-	Embed_title        string `json:"embed_title"`
-	Embed_footer       string `json:"embed_footer"`
 	Leave_card_t1      string `json:"leave_card_t1"`
 	Leave_card_t2      string `json:"leave_card_t2"`
 	Leave_embed_title  string `json:"leave_embed_title"`
 	Leave_embed_footer string `json:"leave_embed_footer"`
 	Card_t1            string `json:"card_t1"`
+	Card_t2            string `json:"card_t2"`
+	Embed_title        string `json:"embed_title"`
+	Embed_footer       string `json:"embed_footer"`
 }
 
 func GetModule_WelcomeModule(locale discord.Locale) ModuleWelcomeModuleTrad {

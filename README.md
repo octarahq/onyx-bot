@@ -24,7 +24,7 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 | | Giveaways : Organize giveaways for your community.
 | | Polls : Create interactive polls for your server.
 |X| Welcome Messages : Send custom welcome messages to new members and invite tracker.
-| | Logging : Track messages, edits, and deletions in your server.
+|X| Logging : Track messages, edits, and deletions in your server.
 | | Auto Roles : Automatically assign roles to members.
 | | Birthdays : Celebrate members' birthdays with an automated system.
 | | Bumps : Automate bump reminders for your server listings.

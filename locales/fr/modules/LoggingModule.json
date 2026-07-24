@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "name": "LoggingModule",
+    "label": "Module de Logs",
+    "description": "Un module pour enregistrer toutes les actions du serveur.",
+    "submodules": {
+      "main": {
+        "label": "Paramètres Principaux",
+        "description": "Configurez le salon pour les logs généraux.",
+        "options": {
+          "enabled": {
+            "label": "Activé"
+          },
+          "channel": {
+            "label": "Salon",
+            "description": "Le salon où les logs seront envoyés."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "guildUpdate": {
+      "title": "Le serveur a été modifié",
+      "states": {
+        "name": "Nom",
+        "description": "Description",
+        "verificationLevel": "Niveau de vérification",
+        "icon": "Icône modifiée :",
+        "banner": "Bannière modifiée :"
+      }
+    },
+    "channelCreate": {
+      "title": "Salon Créé",
+      "states": {
+        "name": "Nom",
+        "type": "Type"
+      }
+    },
+    "channelUpdate": {
+      "title": "Salon Modifié",
+      "states": {
+        "name": "Nom",
+        "topic": "Sujet",
+        "nsfw": "NSFW",
+        "rateLimitPerUser": "Mode lent"
+      }
+    },
+    "channelDelete": {
+      "title": "Salon Supprimé",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "roleCreate": {
+      "title": "Rôle Créé",
+      "states": {
+        "name": "Nom",
+        "color": "Couleur"
+      }
+    },
+    "roleUpdate": {
+      "title": "Rôle Modifié",
+      "states": {
+        "name": "Nom",
+        "color": "Couleur",
+        "hoist": "Affiché séparément",
+        "mentionable": "Mentionnable",
+        "permissions": "Permissions"
+      }
+    },
+    "roleDelete": {
+      "title": "Rôle Supprimé",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "memberJoin": {
+      "title": "Membre Rejoint",
+      "states": {
+        "user": "Utilisateur",
+        "accountCreated": "Compte Créé"
+      }
+    },
+    "memberUpdate": {
+      "title": "Membre Modifié",
+      "states": {
+        "user": "Utilisateur",
+        "nickname": "Surnom",
+        "roles": "Rôles",
+        "avatar": "Avatar modifié :"
+      }
+    },
+    "memberLeave": {
+      "title": "Membre Parti",
+      "states": {
+        "user": "Utilisateur"
+      }
+    },
+    "banAdd": {
+      "title": "Membre Banni",
+      "states": {
+        "user": "Utilisateur",
+        "reason": "Raison"
+      }
+    },
+    "banRemove": {
+      "title": "Membre Débanni",
+      "states": {
+        "user": "Utilisateur"
+      }
+    },
+    "emojiCreate": {
+      "title": "Emoji Créé",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "emojiUpdate": {
+      "title": "Emoji Modifié",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "emojiDelete": {
+      "title": "Emoji Supprimé",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "stickerCreate": {
+      "title": "Autocollant Créé",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "stickerUpdate": {
+      "title": "Autocollant Modifié",
+      "states": {
+        "name": "Nom",
+        "description": "Description"
+      }
+    },
+    "stickerDelete": {
+      "title": "Autocollant Supprimé",
+      "states": {
+        "name": "Nom"
+      }
+    },
+    "inviteCreate": {
+      "title": "Invitation Créée",
+      "states": {
+        "code": "Code",
+        "channel": "Salon",
+        "inviter": "Inviteur",
+        "maxUses": "Utilisations Max",
+        "maxAge": "Âge Max"
+      }
+    },
+    "inviteDelete": {
+      "title": "Invitation Supprimée",
+      "states": {
+        "code": "Code"
+      }
+    },
+    "threadCreate": {
+      "title": "Fil de discussion Créé",
+      "states": {
+        "name": "Nom",
+        "type": "Type",
+        "parent": "Salon Parent"
+      }
+    },
+    "threadUpdate": {
+      "title": "Fil de discussion Modifié",
+      "states": {
+        "name": "Nom",
+        "archived": "Archivé",
+        "locked": "Verrouillé",
+        "autoArchiveDuration": "Durée d'Auto-Archivage"
+      }
+    },
+    "threadDelete": {
+      "title": "Fil de discussion Supprimé",
+      "states": {
+        "name": "Nom"
+      }
+    }
+  }
+}
