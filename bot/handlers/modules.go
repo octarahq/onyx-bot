@@ -25,13 +25,190 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 	var guildID *snowflake.ID
 
 	switch e := event.(type) {
-	case *events.MessageCreate:
+	case *events.ApplicationCommandInteractionCreate:
+		guildID = e.GuildID()
+	case *events.AutoModerationActionExecution:
+		guildID = &e.GuildID
+	case *events.AutoModerationRuleCreate:
+		guildID = &e.GuildID
+	case *events.AutoModerationRuleDelete:
+		guildID = &e.GuildID
+	case *events.AutoModerationRuleUpdate:
+		guildID = &e.GuildID
+	case *events.AutocompleteInteractionCreate:
+		guildID = e.GuildID()
+	case *events.ComponentInteractionCreate:
+		guildID = e.GuildID()
+	case *events.EmojiCreate:
+		guildID = &e.GuildID
+	case *events.EmojiDelete:
+		guildID = &e.GuildID
+	case *events.EmojiUpdate:
+		guildID = &e.GuildID
+	case *events.EmojisUpdate:
+		guildID = &e.GuildID
+	case *events.EntitlementCreate:
 		guildID = e.GuildID
+	case *events.EntitlementDelete:
+		guildID = e.GuildID
+	case *events.EntitlementUpdate:
+		guildID = e.GuildID
+	case *events.GuildAuditLogEntryCreate:
+		guildID = &e.GuildID
+	case *events.GuildAvailable:
+		guildID = &e.GuildID
+	case *events.GuildBan:
+		guildID = &e.GuildID
+	case *events.GuildChannelCreate:
+		guildID = &e.GuildID
+	case *events.GuildChannelDelete:
+		guildID = &e.GuildID
+	case *events.GuildChannelPinsUpdate:
+		guildID = &e.GuildID
+	case *events.GuildChannelUpdate:
+		guildID = &e.GuildID
+	case *events.GuildIntegrationsUpdate:
+		guildID = &e.GuildID
+	case *events.GuildJoin:
+		guildID = &e.GuildID
+	case *events.GuildLeave:
+		guildID = &e.GuildID
 	case *events.GuildMemberJoin:
 		guildID = &e.GuildID
 	case *events.GuildMemberLeave:
 		guildID = &e.GuildID
-
+	case *events.GuildMemberTypingStart:
+		guildID = &e.GuildID
+	case *events.GuildMemberUpdate:
+		guildID = &e.GuildID
+	case *events.GuildMessageCreate:
+		guildID = &e.GuildID
+	case *events.GuildMessageDelete:
+		guildID = &e.GuildID
+	case *events.GuildMessagePollVoteAdd:
+		guildID = &e.GuildID
+	case *events.GuildMessagePollVoteRemove:
+		guildID = &e.GuildID
+	case *events.GuildMessageReactionAdd:
+		guildID = &e.GuildID
+	case *events.GuildMessageReactionRemove:
+		guildID = &e.GuildID
+	case *events.GuildMessageReactionRemoveAll:
+		guildID = &e.GuildID
+	case *events.GuildMessageReactionRemoveEmoji:
+		guildID = &e.GuildID
+	case *events.GuildMessageUpdate:
+		guildID = &e.GuildID
+	case *events.GuildScheduledEventCreate:
+		guildID = &e.GuildScheduled.GuildID
+	case *events.GuildScheduledEventDelete:
+		guildID = &e.GuildScheduled.GuildID
+	case *events.GuildScheduledEventUpdate:
+		guildID = &e.GuildScheduled.GuildID
+	case *events.GuildScheduledEventUserAdd:
+		guildID = &e.GuildID
+	case *events.GuildScheduledEventUserRemove:
+		guildID = &e.GuildID
+	case *events.GuildSoundboardSoundCreate:
+		guildID = e.GuildID
+	case *events.GuildSoundboardSoundDelete:
+		guildID = &e.GuildID
+	case *events.GuildSoundboardSoundUpdate:
+		guildID = e.GuildID
+	case *events.GuildSoundboardSoundsUpdate:
+		guildID = &e.GuildID
+	case *events.GuildUnavailable:
+		guildID = &e.GuildID
+	case *events.GuildUnban:
+		guildID = &e.GuildID
+	case *events.GuildUpdate:
+		guildID = &e.GuildID
+	case *events.GuildVoiceChannelEffectSend:
+		guildID = &e.GuildID
+	case *events.IntegrationCreate:
+		guildID = &e.GuildID
+	case *events.IntegrationDelete:
+		guildID = &e.GuildID
+	case *events.IntegrationUpdate:
+		guildID = &e.GuildID
+	case *events.InteractionCreate:
+		guildID = e.GuildID()
+	case *events.InviteCreate:
+		guildID = e.GuildID
+	case *events.InviteDelete:
+		guildID = e.GuildID
+	case *events.MessageCreate:
+		guildID = e.GuildID
+	case *events.MessageDelete:
+		guildID = e.GuildID
+	case *events.MessagePollVoteAdd:
+		guildID = e.GuildID
+	case *events.MessagePollVoteRemove:
+		guildID = e.GuildID
+	case *events.MessageReactionAdd:
+		guildID = e.GuildID
+	case *events.MessageReactionRemove:
+		guildID = e.GuildID
+	case *events.MessageReactionRemoveAll:
+		guildID = e.GuildID
+	case *events.MessageReactionRemoveEmoji:
+		guildID = e.GuildID
+	case *events.MessageUpdate:
+		guildID = e.GuildID
+	case *events.ModalSubmitInteractionCreate:
+		guildID = e.GuildID()
+	case *events.PresenceUpdate:
+		guildID = &e.GuildID
+	case *events.RoleCreate:
+		guildID = &e.GuildID
+	case *events.RoleDelete:
+		guildID = &e.GuildID
+	case *events.RoleUpdate:
+		guildID = &e.GuildID
+	case *events.SoundboardSounds:
+		guildID = &e.GuildID
+	case *events.StageInstanceCreate:
+		guildID = &e.StageInstance.GuildID
+	case *events.StageInstanceDelete:
+		guildID = &e.StageInstance.GuildID
+	case *events.StageInstanceUpdate:
+		guildID = &e.StageInstance.GuildID
+	case *events.StickerCreate:
+		guildID = &e.GuildID
+	case *events.StickerDelete:
+		guildID = &e.GuildID
+	case *events.StickerUpdate:
+		guildID = &e.GuildID
+	case *events.StickersUpdate:
+		guildID = &e.GuildID
+	case *events.ThreadCreate:
+		guildID = &e.GuildID
+	case *events.ThreadDelete:
+		guildID = &e.GuildID
+	case *events.ThreadHide:
+		guildID = &e.GuildID
+	case *events.ThreadMemberAdd:
+		guildID = &e.GuildID
+	case *events.ThreadMemberRemove:
+		guildID = &e.GuildID
+	case *events.ThreadMemberUpdate:
+		guildID = &e.GuildID
+	case *events.ThreadShow:
+		guildID = &e.GuildID
+	case *events.ThreadUpdate:
+		guildID = &e.GuildID
+	case *events.UserActivityStart:
+		guildID = &e.GuildID
+	case *events.UserActivityStop:
+		guildID = &e.GuildID
+	case *events.UserActivityUpdate:
+		guildID = &e.GuildID
+	case *events.UserTypingStart:
+		guildID = e.GuildID
+	case *events.VoiceServerUpdate:
+		guildID = &e.GuildID
+	case *events.WebhooksUpdate:
+		guildID = &e.GuildId
 	}
 
 	if guildID == nil {
@@ -749,7 +926,7 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 					return true
 				}
 			}
-	}
+		}
 	}
 
 	return false
