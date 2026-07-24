@@ -65,7 +65,7 @@ func main() {
 		}
 
 		baseName := strings.TrimSuffix(info.Name(), ".json")
-		
+
 		cmdName := baseName
 		if parts[0] == "modules" {
 			cmdName = "module_" + baseName
@@ -77,11 +77,28 @@ func main() {
 		}
 		structName := structPrefix + capitalize(baseName) + "Trad"
 
-		funcs.WriteString(fmt.Sprintf("type %s struct {\n", structName))
-		for key := range lf.Trad {
-			funcs.WriteString(fmt.Sprintf("\t%s string `json:\"%s\"`\n", capitalize(key), key))
+		var writeStruct func(name string, m map[string]interface{})
+		writeStruct = func(name string, m map[string]interface{}) {
+			funcs.WriteString(fmt.Sprintf("type %s struct {\n", name))
+			for k, v := range m {
+				if _, ok := v.(map[string]interface{}); ok {
+					subStructName := name + "_" + capitalize(k)
+					funcs.WriteString(fmt.Sprintf("\t%s %s `json:\"%s\"`\n", capitalize(k), subStructName, k))
+				} else {
+					funcs.WriteString(fmt.Sprintf("\t%s string `json:\"%s\"`\n", capitalize(k), k))
+				}
+			}
+			funcs.WriteString("}\n\n")
+
+			for k, v := range m {
+				if subMap, ok := v.(map[string]interface{}); ok {
+					subStructName := name + "_" + capitalize(k)
+					writeStruct(subStructName, subMap)
+				}
+			}
 		}
-		funcs.WriteString("}\n\n")
+
+		writeStruct(structName, lf.Trad)
 
 		funcs.WriteString(fmt.Sprintf("func Get%s(locale discord.Locale) %s {\n", capitalize(cmdName), structName))
 		funcs.WriteString(fmt.Sprintf("\tif l, ok := localizations[locale]; ok {\n"))
