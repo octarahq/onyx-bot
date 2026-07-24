@@ -1,0 +1,787 @@
+{
+  "meta": {
+    "name": "WizzardModule",
+    "label": "Wizzarding World",
+    "description": "Module to cast Harry Potter spells.",
+    "submodules": {
+      "main": {
+        "label": "Main Settings",
+        "description": "General spell configuration.",
+        "options": {
+          "prefix": {
+            "label": "Spell Prefix",
+            "description": "Prefix used before spell name (e.g., !avadakedavra)"
+          }
+        }
+      },
+      "translations": {
+        "label": "Translations",
+        "description": "Customize module error messages.",
+        "options": {
+          "no_permission": {
+            "label": "Message - No Permission",
+            "description": "Sent when user or bot lacks permission."
+          },
+          "missing_args": {
+            "label": "Message - Missing Arguments",
+            "description": "Sent when arguments are missing (e.g., mention)."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "spells": {
+      "aberto": {
+        "name": "Aberto",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques.",
+        "success": "🪄 **Aberto** successfully cast!",
+        "fail": "❌ **Aberto** failed."
+      },
+      "accio": {
+        "name": "Accio",
+        "description": "[FR] Du verbe latin accire, accio signifierait « je fais venir à moi ».",
+        "success": "🪄 **Accio** successfully cast!",
+        "fail": "❌ **Accio** failed."
+      },
+      "aguamenti": {
+        "name": "Aguamenti",
+        "description": "[FR] Aguamenti est dérivé de l'espagnol agua qui signifie « eau » et du latin mens (menti au datif) qui signifie « l'esprit », ce qui ferait d'aguamenti une invocation à « l'esprit de l'eau ».",
+        "success": "🪄 **Aguamenti** successfully cast!",
+        "fail": "❌ **Aguamenti** failed."
+      },
+      "alohomora": {
+        "name": "Alohomora",
+        "description": "[FR] Selon Blandine Le Callet, auteure du livre Le monde antique de Harry Potter, Alohomora pourrait être dérivé du mot hawaïen aloha, qui signifierait à la fois « bonjour » et « au revoir », et du latin mora qui signifie « l'obstacle ».",
+        "success": "🪄 **Alohomora** successfully cast!",
+        "fail": "❌ **Alohomora** failed."
+      },
+      "amplificatum": {
+        "name": "Amplificatum",
+        "description": "[FR] Il augmente la taille de l'objet ou de l'animal visé, a priori, il semblerait qu'il s'agisse du sortilège de gavage ou d’empiffrement (dont auraient bénéficié les citrouilles de Hagrid dans Harry Potter et la Chambre des secrets).",
+        "success": "🪄 **Amplificatum** successfully cast!",
+        "fail": "❌ **Amplificatum** failed."
+      },
+      "anapneo": {
+        "name": "Anapneo",
+        "description": "[FR] Néologisme grec issu du préfixe ana- qui signifie « de nouveau » et pneô qui signifie « je respire ».",
+        "success": "🪄 **Anapneo** successfully cast!",
+        "fail": "❌ **Anapneo** failed."
+      },
+      "aparecium": {
+        "name": "Aparecium",
+        "description": "[FR] Il révèle une éventuelle écriture invisible.",
+        "success": "🪄 **Aparecium** successfully cast!",
+        "fail": "❌ **Aparecium** failed."
+      },
+      "apparevestigium": {
+        "name": "Appare vestigium",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Appare vestigium** successfully cast!",
+        "fail": "❌ **Appare vestigium** failed."
+      },
+      "araniaexumai": {
+        "name": "Arania exumai",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Chambre des Secrets.",
+        "success": "🪄 **Arania exumai** successfully cast!",
+        "fail": "❌ **Arania exumai** failed."
+      },
+      "arrestomomentum": {
+        "name": "Arresto momentum",
+        "description": "[FR] Sortilège spécifique aux films Harry Potter.",
+        "success": "🪄 **Arresto momentum** successfully cast!",
+        "fail": "❌ **Arresto momentum** failed."
+      },
+      "ascendio": {
+        "name": "Ascendio",
+        "description": "[FR] Dérivé du latin ascendo (« je monte »), du verbe ascendere.",
+        "success": "🪄 **Ascendio** successfully cast!",
+        "fail": "❌ **Ascendio** failed."
+      },
+      "assurdiato": {
+        "name": "Assurdiato",
+        "description": "[FR] Dérivé du verbe latin surdare (« rendre sourd ») pour la version française.",
+        "success": "🪄 **Assurdiato** successfully cast!",
+        "fail": "❌ **Assurdiato** failed."
+      },
+      "avadakedavra": {
+        "name": "Avada Kedavra",
+        "description": "[FR] Il tue instantanément la personne visée.",
+        "success": "🪄 **Avada Kedavra** successfully cast!",
+        "fail": "❌ **Avada Kedavra** failed."
+      },
+      "avensegium": {
+        "name": "Avensegium",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Avensegium** successfully cast!",
+        "fail": "❌ **Avensegium** failed."
+      },
+      "avis": {
+        "name": "Avis",
+        "description": "[FR] Signifie « l'oiseau » en latin.",
+        "success": "🪄 **Avis** successfully cast!",
+        "fail": "❌ **Avis** failed."
+      },
+      "bloclang": {
+        "name": "Bloclang",
+        "description": "[FR] Ce maléfice sert à faire lâcher prise ou à ouvrir des liens (par exemple des menottes).",
+        "success": "🪄 **Bloclang** successfully cast!",
+        "fail": "❌ **Bloclang** failed."
+      },
+      "bombardamaxima": {
+        "name": "Bombarda (maxima)",
+        "description": "[FR] Sortilège spécifique aux films Harry Potter.",
+        "success": "🪄 **Bombarda (maxima)** successfully cast!",
+        "fail": "❌ **Bombarda (maxima)** failed."
+      },
+      "brachialigo": {
+        "name": "Brachialigo",
+        "description": "[FR] Sortilège spécifique à la pièce de théâtre Harry Potter et l'Enfant maudit.",
+        "success": "🪄 **Brachialigo** successfully cast!",
+        "fail": "❌ **Brachialigo** failed."
+      },
+      "brachiumemendo": {
+        "name": "Brachium emendo",
+        "description": "[FR] Du latin brachium (« le bras ») et emendare (« guérir », « rectifier », « redresser »).",
+        "success": "🪄 **Brachium emendo** successfully cast!",
+        "fail": "❌ **Brachium emendo** failed."
+      },
+      "caveinimicum": {
+        "name": "Cave inimicum",
+        "description": "[FR] Vient de l'impératif du verbe latin cavere, signifiant « prendre garde à », et de l'accusatif d'inimicus, qui signifie « l'ennemi ».",
+        "success": "🪄 **Cave inimicum** successfully cast!",
+        "fail": "❌ **Cave inimicum** failed."
+      },
+      "circumrota": {
+        "name": "Circumrota",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Circumrota** successfully cast!",
+        "fail": "❌ **Circumrota** failed."
+      },
+      "capaciousextremis": {
+        "name": "Capacious extremis",
+        "description": "[FR] Ce sortilège augmente la capacité de stockage d'un objet.",
+        "success": "🪄 **Capacious extremis** successfully cast!",
+        "fail": "❌ **Capacious extremis** failed."
+      },
+      "cistemaperio": {
+        "name": "Cistem aperio",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Chambre des secrets.",
+        "success": "🪄 **Cistem aperio** successfully cast!",
+        "fail": "❌ **Cistem aperio** failed."
+      },
+      "collaporta": {
+        "name": "Collaporta",
+        "description": "[FR] Il permet de fermer et de verrouiller une porte, produisant un bruit de succion.",
+        "success": "🪄 **Collaporta** successfully cast!",
+        "fail": "❌ **Collaporta** failed."
+      },
+      "confringo": {
+        "name": "Confringo",
+        "description": "[FR] Forme conjuguée à la première personne du verbe latin confringere (« briser »).",
+        "success": "🪄 **Confringo** successfully cast!",
+        "fail": "❌ **Confringo** failed."
+      },
+      "confundo": {
+        "name": "Confundo",
+        "description": "[FR] Signifie en latin « je trouble », « je mélange » ou « je confonds », du verbe confundere.",
+        "success": "🪄 **Confundo** successfully cast!",
+        "fail": "❌ **Confundo** failed."
+      },
+      "slugvomitingcharm": {
+        "name": "Slug-vomiting Charm",
+        "description": "[FR] Il déclenche un cri si une personne pénètre dans la zone protégée par le sort.",
+        "success": "🪄 **Slug-vomiting Charm** successfully cast!",
+        "fail": "❌ **Slug-vomiting Charm** failed."
+      },
+      "defodio": {
+        "name": "Defodio",
+        "description": "[FR] Issu du verbe latin fodere (« creuser »), associé au préfixe de qui en renforce le sens.",
+        "success": "🪄 **Defodio** successfully cast!",
+        "fail": "❌ **Defodio** failed."
+      },
+      "deprimo": {
+        "name": "Deprimo",
+        "description": "[FR] Du verbe latin deprimere (« creuser »).",
+        "success": "🪄 **Deprimo** successfully cast!",
+        "fail": "❌ **Deprimo** failed."
+      },
+      "dentesaugmento": {
+        "name": "Dentesaugmento",
+        "description": "[FR] Il fait pousser de façon démesurée les dents de la personne visée jusqu'à annulation du maléfice.",
+        "success": "🪄 **Dentesaugmento** successfully cast!",
+        "fail": "❌ **Dentesaugmento** failed."
+      },
+      "destructum": {
+        "name": "Destructum",
+        "description": "[FR] Participe passé du verbe latin destruere (« détruire »).",
+        "success": "🪄 **Destructum** successfully cast!",
+        "fail": "❌ **Destructum** failed."
+      },
+      "diffindo": {
+        "name": "Diffindo",
+        "description": "[FR] Conjugaison à la première personne du singulier du verbe latin diffindere, qui signifie « fendre », « casser » ou « diviser ».",
+        "success": "🪄 **Diffindo** successfully cast!",
+        "fail": "❌ **Diffindo** failed."
+      },
+      "dissendium": {
+        "name": "Dissendium",
+        "description": "[FR] Terme inventé par J.",
+        "success": "🪄 **Dissendium** successfully cast!",
+        "fail": "❌ **Dissendium** failed."
+      },
+      "duro": {
+        "name": "Duro",
+        "description": "[FR] Issu du mot latin durus (« dur »).",
+        "success": "🪄 **Duro** successfully cast!",
+        "fail": "❌ **Duro** failed."
+      },
+      "emancipare": {
+        "name": "Emancipare",
+        "description": "[FR] Sortilège spécifique à la pièce de théâtre Harry Potter et l'Enfant maudit.",
+        "success": "🪄 **Emancipare** successfully cast!",
+        "fail": "❌ **Emancipare** failed."
+      },
+      "endoloris": {
+        "name": "Endoloris",
+        "description": "[FR] Le sortilège Doloris, déclenché par la formule Endoloris (Crucio en anglais), fait ressentir une insupportable douleur à l'être visé (personne ou animal).",
+        "success": "🪄 **Endoloris** successfully cast!",
+        "fail": "❌ **Endoloris** failed."
+      },
+      "enervatum": {
+        "name": "Enervatum",
+        "description": "[FR] Le terme traduit en français par Jean-François Ménard, Enervatum (dans la version originale Rennervate), est un dérivé du verbe latin enervare qui est composé de nervus (« le nerf », « le muscle », « le tendon ») et du préfixe privatif e-.",
+        "success": "🪄 **Enervatum** successfully cast!",
+        "fail": "❌ **Enervatum** failed."
+      },
+      "episkey": {
+        "name": "Episkey",
+        "description": "[FR] Episkey est un dérivé du verbe grec episkeuazein, signifiant « réparer » ou « restaurer ».",
+        "success": "🪄 **Episkey** successfully cast!",
+        "fail": "❌ **Episkey** failed."
+      },
+      "erigo": {
+        "name": "Erigo",
+        "description": "[FR] Erigo (Erecto en version anglaise) est la conjugaison en latin et à la première personne du verbe erigere (« dresser », « élever » ou « ériger »).",
+        "success": "🪄 **Erigo** successfully cast!",
+        "fail": "❌ **Erigo** failed."
+      },
+      "evanesco": {
+        "name": "Evanesco",
+        "description": "[FR] Evanesco, du verbe latin evanescere, signifie « je disparais » ou « je fais disparaître ».",
+        "success": "🪄 **Evanesco** successfully cast!",
+        "fail": "❌ **Evanesco** failed."
+      },
+      "evertestatum": {
+        "name": "Everte statum",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Chambre des Secrets.",
+        "success": "🪄 **Everte statum** successfully cast!",
+        "fail": "❌ **Everte statum** failed."
+      },
+      "expectopatronum": {
+        "name": "Expecto Patronum",
+        "description": "[FR] Sortilège spécifique aux films Harry Potter.",
+        "success": "🪄 **Expecto Patronum** successfully cast!",
+        "fail": "❌ **Expecto Patronum** failed."
+      },
+      "expelliarmus": {
+        "name": "Expelliarmus",
+        "description": "[FR] Composé du verbe latin expellere (« chasser », « éloigner ») et du mot latin armus (« l'arme »).",
+        "success": "🪄 **Expelliarmus** successfully cast!",
+        "fail": "❌ **Expelliarmus** failed."
+      },
+      "expulso": {
+        "name": "Expulso",
+        "description": "[FR] Composé des mots latins ex (« hors de ») et pulso (« je pousse », « je frappe », « je heurte »).",
+        "success": "🪄 **Expulso** successfully cast!",
+        "fail": "❌ **Expulso** failed."
+      },
+      "fenestra": {
+        "name": "Fenestra",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques.",
+        "success": "🪄 **Fenestra** successfully cast!",
+        "fail": "❌ **Fenestra** failed."
+      },
+      "failamalle": {
+        "name": "Failamalle",
+        "description": "[FR] Il range les objets visés.",
+        "success": "🪄 **Failamalle** successfully cast!",
+        "fail": "❌ **Failamalle** failed."
+      },
+      "ferula": {
+        "name": "Ferula",
+        "description": "[FR] Signifie « la baguette » en latin.",
+        "success": "🪄 **Ferula** successfully cast!",
+        "fail": "❌ **Ferula** failed."
+      },
+      "fiantoduri": {
+        "name": "Fianto Duri",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et les Reliques de la Mort, partie 2.",
+        "success": "🪄 **Fianto Duri** successfully cast!",
+        "fail": "❌ **Fianto Duri** failed."
+      },
+      "fidelitas": {
+        "name": "Fidelitas",
+        "description": "[FR] Il neutralise l'emprise de certains sortilèges sur un objet ou une personne.",
+        "success": "🪄 **Fidelitas** successfully cast!",
+        "fail": "❌ **Fidelitas** failed."
+      },
+      "finiteincantatem": {
+        "name": "Finite Incantatem",
+        "description": "[FR] Finite est la forme impérative du verbe latin finire, et signifie « faites cesser », « arrêtez ».",
+        "success": "🪄 **Finite Incantatem** successfully cast!",
+        "fail": "❌ **Finite Incantatem** failed."
+      },
+      "flambios": {
+        "name": "Flambios",
+        "description": "[FR] Cette traduction française est composée du verbe « flamber », dérivé du verbe latin flammare (« enflammer », « flamboyer »).",
+        "success": "🪄 **Flambios** successfully cast!",
+        "fail": "❌ **Flambios** failed."
+      },
+      "fulgari": {
+        "name": "Fulgari",
+        "description": "[FR] Sortilège spécifique à la pièce de théâtre Harry Potter et l'Enfant maudit.",
+        "success": "🪄 **Fulgari** successfully cast!",
+        "fail": "❌ **Fulgari** failed."
+      },
+      "furunculus": {
+        "name": "Furunculus",
+        "description": "[FR] Signifie « le furoncle » en latin.",
+        "success": "🪄 **Furunculus** successfully cast!",
+        "fail": "❌ **Furunculus** failed."
+      },
+      "gemino": {
+        "name": "Gemino",
+        "description": "[FR] Issu du verbe latin geminare, Gemino signifie « je dédouble ».",
+        "success": "🪄 **Gemino** successfully cast!",
+        "fail": "❌ **Gemino** failed."
+      },
+      "glisseo": {
+        "name": "Glisseo",
+        "description": "[FR] Glisseo (identique dans la version originale) est dérivé du verbe français « glisser », auquel J.",
+        "success": "🪄 **Glisseo** successfully cast!",
+        "fail": "❌ **Glisseo** failed."
+      },
+      "harmonianecterepassus": {
+        "name": "Harmonia nectere passus",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et le Prince de Sang-Mêlé.",
+        "success": "🪄 **Harmonia nectere passus** successfully cast!",
+        "fail": "❌ **Harmonia nectere passus** failed."
+      },
+      "hominumrevelio": {
+        "name": "Hominum revelio",
+        "description": "[FR] Hominum est une forme fantaisiste du mot latin homo (hominis au génitif), qui signifie « l'homme ».",
+        "success": "🪄 **Hominum revelio** successfully cast!",
+        "fail": "❌ **Hominum revelio** failed."
+      },
+      "homomorphus": {
+        "name": "Homomorphus",
+        "description": "[FR] Composé, en français comme en version originale, du mot latin homo (« l'homme ») et du mot grec morphê signifiant « la forme ».",
+        "success": "🪄 **Homomorphus** successfully cast!",
+        "fail": "❌ **Homomorphus** failed."
+      },
+      "impedimenta": {
+        "name": "Impedimenta",
+        "description": "[FR] Dérivé du mot latin impedimentum (« ce qui empêche », ou « l'entrave »), du verbe impedire (« entraver », « embarrasser »).",
+        "success": "🪄 **Impedimenta** successfully cast!",
+        "fail": "❌ **Impedimenta** failed."
+      },
+      "impero": {
+        "name": "Impero",
+        "description": "[FR] Imperium, qui signifie en latin « l'autorité », « le pouvoir » ou « l'empire », a pour formule Impero, qui signifie « j'ordonne », « j'oblige » ou « je force à ».",
+        "success": "🪄 **Impero** successfully cast!",
+        "fail": "❌ **Impero** failed."
+      },
+      "immobulus": {
+        "name": "Immobulus",
+        "description": "[FR] Sortilège spécifique aux films Harry Potter et la Chambre des secrets et Harry Potter et le Prisonnier d'Azkaban.",
+        "success": "🪄 **Immobulus** successfully cast!",
+        "fail": "❌ **Immobulus** failed."
+      },
+      "impervius": {
+        "name": "Impervius",
+        "description": "[FR] Impervius, qui signifie en latin « inaccessible », « impénétrable », a pour effet de repousser les substances comme l'eau d'une surface.",
+        "success": "🪄 **Impervius** successfully cast!",
+        "fail": "❌ **Impervius** failed."
+      },
+      "incarcerem": {
+        "name": "Incarcerem",
+        "description": "[FR] Composé du mot latin in (« dans ») et de carcerem, l’accusatif du mot latin carcer qui signifie « la prison ».",
+        "success": "🪄 **Incarcerem** successfully cast!",
+        "fail": "❌ **Incarcerem** failed."
+      },
+      "incendio": {
+        "name": "Incendio",
+        "description": "[FR] Formé à partir du latin incendo qui signifie « j'incendie », « j'allume » (du verbe incendere).",
+        "success": "🪄 **Incendio** successfully cast!",
+        "fail": "❌ **Incendio** failed."
+      },
+      "lacarnuminflammari": {
+        "name": "Lacarnum inflammari",
+        "description": "[FR] Sortilège spécifique au film Harry Potter à l'école des sorciers.",
+        "success": "🪄 **Lacarnum inflammari** successfully cast!",
+        "fail": "❌ **Lacarnum inflammari** failed."
+      },
+      "legilimens": {
+        "name": "Legilimens",
+        "description": "[FR] Le terme anglais legilimency est un néologisme formé à partir du verbe legere en latin, qui signifie « lire », et du mot mens (mentis au génitif) qui signifie « l'esprit ».",
+        "success": "🪄 **Legilimens** successfully cast!",
+        "fail": "❌ **Legilimens** failed."
+      },
+      "levicorpus": {
+        "name": "Levicorpus",
+        "description": "[FR] Composé de l'adjectif latin levis (« léger ») et de corpus (« le corps »).",
+        "success": "🪄 **Levicorpus** successfully cast!",
+        "fail": "❌ **Levicorpus** failed."
+      },
+      "liberacorpus": {
+        "name": "Liberacorpus",
+        "description": "[FR] Composé de l'impératif du verbe latin liberare (« libérer ») et de corpus (« le corps »).",
+        "success": "🪄 **Liberacorpus** successfully cast!",
+        "fail": "❌ **Liberacorpus** failed."
+      },
+      "locomotorbarda": {
+        "name": "Locomotor Barda",
+        "description": "[FR] Dérivé des mots latin locus (« le lieu », « l'endroit ») et motor, dérivé du verbe movere, qui signifie « bouger ».",
+        "success": "🪄 **Locomotor Barda** successfully cast!",
+        "fail": "❌ **Locomotor Barda** failed."
+      },
+      "locomotormortis": {
+        "name": "Locomotor Mortis",
+        "description": "[FR] Dérivé des mots latin locus (« le lieu », « l'endroit ») et motor, dérivé du verbe movere, qui signifie « bouger ».",
+        "success": "🪄 **Locomotor Mortis** successfully cast!",
+        "fail": "❌ **Locomotor Mortis** failed."
+      },
+      "locomotorwibbly": {
+        "name": "Locomotor Wibbly",
+        "description": "[FR] Dérivé du mot latin lumen qui signifie « lumière ».",
+        "success": "🪄 **Locomotor Wibbly** successfully cast!",
+        "fail": "❌ **Locomotor Wibbly** failed."
+      },
+      "meteorribilisrecanto": {
+        "name": "Meteorribilis Recanto",
+        "description": "[FR] Meteorribilis Recanto (Meteolojinx recanto en version originale) permet d'arrêter une intempérie magique due à un sortilège atmosphérique défaillant.",
+        "success": "🪄 **Meteorribilis Recanto** successfully cast!",
+        "fail": "❌ **Meteorribilis Recanto** failed."
+      },
+      "mobiliarbus": {
+        "name": "Mobiliarbus",
+        "description": "[FR] La formule se compose des mots latins mobilis (« mobile ») et arbor, « l'arbre ».",
+        "success": "🪄 **Mobiliarbus** successfully cast!",
+        "fail": "❌ **Mobiliarbus** failed."
+      },
+      "mobilicorpus": {
+        "name": "Mobilicorpus",
+        "description": "[FR] La formule se compose des mots latins mobilis (« mobile ») et corpus, « le corps ».",
+        "success": "🪄 **Mobilicorpus** successfully cast!",
+        "fail": "❌ **Mobilicorpus** failed."
+      },
+      "molliare": {
+        "name": "Molliare",
+        "description": "[FR] Sortilège spécifique à la pièce de théâtre Harry Potter et l'Enfant maudit.",
+        "success": "🪄 **Molliare** successfully cast!",
+        "fail": "❌ **Molliare** failed."
+      },
+      "morsmordre": {
+        "name": "Morsmordre",
+        "description": "[FR] Il permet aux mangemorts de faire apparaître la Marque des Ténèbres.",
+        "success": "🪄 **Morsmordre** successfully cast!",
+        "fail": "❌ **Morsmordre** failed."
+      },
+      "mutinlutinmalinpesti": {
+        "name": "Mutinlutin Malinpesti",
+        "description": "[FR] Formule magique destinée à arrêter les lutins de Cornouailles, selon Gilderoy Lockhart.",
+        "success": "🪄 **Mutinlutin Malinpesti** successfully cast!",
+        "fail": "❌ **Mutinlutin Malinpesti** failed."
+      },
+      "nebulus": {
+        "name": "Nebulus",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Nebulus** successfully cast!",
+        "fail": "❌ **Nebulus** failed."
+      },
+      "nox": {
+        "name": "Nox",
+        "description": "[FR] Il permet d'annuler le sortilège Lumos.",
+        "success": "🪄 **Nox** successfully cast!",
+        "fail": "❌ **Nox** failed."
+      },
+      "obscuro": {
+        "name": "Obscuro",
+        "description": "[FR] Rend la personne ou l'objet visé noir ou l’empêche de voir.",
+        "success": "🪄 **Obscuro** successfully cast!",
+        "fail": "❌ **Obscuro** failed."
+      },
+      "oppugno": {
+        "name": "Oppugno",
+        "description": "[FR] Il ordonne à de petits oiseaux préalablement créés de foncer et d'attaquer une cible.",
+        "success": "🪄 **Oppugno** successfully cast!",
+        "fail": "❌ **Oppugno** failed."
+      },
+      "orchideus": {
+        "name": "Orchideus",
+        "description": "[FR] Il fait apparaître un bouquet de fleurs.",
+        "success": "🪄 **Orchideus** successfully cast!",
+        "fail": "❌ **Orchideus** failed."
+      },
+      "oscausi": {
+        "name": "Oscausi",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Oscausi** successfully cast!",
+        "fail": "❌ **Oscausi** failed."
+      },
+      "oubliettes": {
+        "name": "Oubliettes",
+        "description": "[FR] Sortilège d'amnésie, il efface ou modifie la mémoire d'une personne.",
+        "success": "🪄 **Oubliettes** successfully cast!",
+        "fail": "❌ **Oubliettes** failed."
+      },
+      "partistemporus": {
+        "name": "Partis Temporus",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et le Prince de Sang-Mêlé.",
+        "success": "🪄 **Partis Temporus** successfully cast!",
+        "fail": "❌ **Partis Temporus** failed."
+      },
+      "periculum": {
+        "name": "Periculum",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Coupe de Feu.",
+        "success": "🪄 **Periculum** successfully cast!",
+        "fail": "❌ **Periculum** failed."
+      },
+      "petrificustotalus": {
+        "name": "Petrificus Totalus",
+        "description": "[FR] Il immobilise et raidit totalement la personne visée.",
+        "success": "🪄 **Petrificus Totalus** successfully cast!",
+        "fail": "❌ **Petrificus Totalus** failed."
+      },
+      "piertotumlocomotor": {
+        "name": "Piertotum Locomotor",
+        "description": "[FR] Sortilège qui anime les statues et armures.",
+        "success": "🪄 **Piertotum Locomotor** successfully cast!",
+        "fail": "❌ **Piertotum Locomotor** failed."
+      },
+      "portus": {
+        "name": "Portus",
+        "description": "[FR] Il transforme un objet en Portoloin.",
+        "success": "🪄 **Portus** successfully cast!",
+        "fail": "❌ **Portus** failed."
+      },
+      "priorincanto": {
+        "name": "Prior Incanto",
+        "description": "[FR] Il révèle le ou les derniers sorts, sortilèges ou maléfices jetés par une baguette.",
+        "success": "🪄 **Prior Incanto** successfully cast!",
+        "fail": "❌ **Prior Incanto** failed."
+      },
+      "prioriincantatum": {
+        "name": "Priori Incantatum",
+        "description": "[FR] Peut se lancer automatiquement lorsque deux baguettes magiques possédant — ce qui est fort rare — le même élément constitutif interne sont forcées par leur propriétaire de s'opposer en duel.",
+        "success": "🪄 **Priori Incantatum** successfully cast!",
+        "fail": "❌ **Priori Incantatum** failed."
+      },
+      "protego": {
+        "name": "Protego",
+        "description": "[FR] Permet de métamorphoser un Scrout à Pétard en canard en caoutchouc en présence d'eau.",
+        "success": "🪄 **Protego** successfully cast!",
+        "fail": "❌ **Protego** failed."
+      },
+      "protegodiabolica": {
+        "name": "Protego Diabolica",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Protego Diabolica** successfully cast!",
+        "fail": "❌ **Protego Diabolica** failed."
+      },
+      "protegototalum": {
+        "name": "Protego Totalum",
+        "description": "[FR] Ce sortilège de protection vise à protéger quelque chose de grand, comme une tente, une maison.",
+        "success": "🪄 **Protego Totalum** successfully cast!",
+        "fail": "❌ **Protego Totalum** failed."
+      },
+      "protegohorribilis": {
+        "name": "Protego Horribilis",
+        "description": "[FR] Ce sortilège de protection vise à protéger quelque chose de très grand comme un château ou un terrain.",
+        "success": "🪄 **Protego Horribilis** successfully cast!",
+        "fail": "❌ **Protego Horribilis** failed."
+      },
+      "protegomaxima": {
+        "name": "Protego Maxima",
+        "description": "[FR] Variante de Protego Horribilis.",
+        "success": "🪄 **Protego Maxima** successfully cast!",
+        "fail": "❌ **Protego Maxima** failed."
+      },
+      "recurvite": {
+        "name": "Recurvite",
+        "description": "[FR] Ce sort nettoie, comme son nom l'indique, avec rapidité.",
+        "success": "🪄 **Recurvite** successfully cast!",
+        "fail": "❌ **Recurvite** failed."
+      },
+      "reducto": {
+        "name": "Reducto",
+        "description": "[FR] Sortilège de réduction, il réduit la taille, le volume d'un objet.",
+        "success": "🪄 **Reducto** successfully cast!",
+        "fail": "❌ **Reducto** failed."
+      },
+      "reparo": {
+        "name": "Reparo",
+        "description": "[FR] Sortilège de réparation, il permet de réparer un objet.",
+        "success": "🪄 **Reparo** successfully cast!",
+        "fail": "❌ **Reparo** failed."
+      },
+      "repellomoldum": {
+        "name": "Repello Moldum",
+        "description": "[FR] Sortilège de repousse-moldu, il permet d'éloigner les moldus d'une zone.",
+        "success": "🪄 **Repello Moldum** successfully cast!",
+        "fail": "❌ **Repello Moldum** failed."
+      },
+      "repelloinimicium": {
+        "name": "Repello Inimicium",
+        "description": "[FR] Permet de repousser ou d'éliminer (selon la puissance du sortilège) les ennemis de l'auteur du sort pénétrant dans une zone définie par ce dernier.",
+        "success": "🪄 **Repello Inimicium** successfully cast!",
+        "fail": "❌ **Repello Inimicium** failed."
+      },
+      "reverte": {
+        "name": "Reverte",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Reverte** successfully cast!",
+        "fail": "❌ **Reverte** failed."
+      },
+      "revigor": {
+        "name": "Revigor",
+        "description": "[FR] Il redonne un peu d'énergie à la cible faible, étourdie ou inconsciente.",
+        "success": "🪄 **Revigor** successfully cast!",
+        "fail": "❌ **Revigor** failed."
+      },
+      "revelio": {
+        "name": "Revelio",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques.",
+        "success": "🪄 **Revelio** successfully cast!",
+        "fail": "❌ **Revelio** failed."
+      },
+      "rictusempra": {
+        "name": "Rictusempra",
+        "description": "[FR] Maléfice de chatouillis, il provoque chez la cible une envie de rire incontrôlable.",
+        "success": "🪄 **Rictusempra** successfully cast!",
+        "fail": "❌ **Rictusempra** failed."
+      },
+      "riddikulus": {
+        "name": "Riddikulus",
+        "description": "[FR] Ce sortilège est utile pour vaincre un épouvantard.",
+        "success": "🪄 **Riddikulus** successfully cast!",
+        "fail": "❌ **Riddikulus** failed."
+      },
+      "salveomaleficia": {
+        "name": "Salveo Maleficia",
+        "description": "[FR] C'est un sortilège de protection qui protège des maléfices, des surfaces et permet de rendre invisible sa position (Hermione s'en sert dans Harry Potter et les Reliques de la Mort).",
+        "success": "🪄 **Salveo Maleficia** successfully cast!",
+        "fail": "❌ **Salveo Maleficia** failed."
+      },
+      "sectumsempra": {
+        "name": "Sectumsempra",
+        "description": "[FR] Il crée de profondes entailles dans le corps de la personne visée, qui peut très rapidement se vider de son sang.",
+        "success": "🪄 **Sectumsempra** successfully cast!",
+        "fail": "❌ **Sectumsempra** failed."
+      },
+      "serpensortia": {
+        "name": "Serpensortia",
+        "description": "[FR] Il fait émerger un serpent au bout de la baguette.",
+        "success": "🪄 **Serpensortia** successfully cast!",
+        "fail": "❌ **Serpensortia** failed."
+      },
+      "silencio": {
+        "name": "Silencio",
+        "description": "[FR] Une personne touchée par ce sortilège devient incapable d'émettre le moindre son.",
+        "success": "🪄 **Silencio** successfully cast!",
+        "fail": "❌ **Silencio** failed."
+      },
+      "sonorus": {
+        "name": "Sonorus",
+        "description": "[FR] Il augmente considérablement la puissance et la portée de la voix.",
+        "success": "🪄 **Sonorus** successfully cast!",
+        "fail": "❌ **Sonorus** failed."
+      },
+      "surdinam": {
+        "name": "Surdinam",
+        "description": "[FR] Il permet d'annuler Sonorus.",
+        "success": "🪄 **Surdinam** successfully cast!",
+        "fail": "❌ **Surdinam** failed."
+      },
+      "surgito": {
+        "name": "Surgito",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Surgito** successfully cast!",
+        "fail": "❌ **Surgito** failed."
+      },
+      "specialisrevelio": {
+        "name": "Specialis Revelio",
+        "description": "[FR] Il permet de connaître les composants d'une potion.",
+        "success": "🪄 **Specialis Revelio** successfully cast!",
+        "fail": "❌ **Specialis Revelio** failed."
+      },
+      "speropatronum": {
+        "name": "Spero Patronum",
+        "description": "[FR] Ce sortilège est spécifique à la version en français des romans et équivaut au sort Expecto Patronum (version originale et cinématographique).",
+        "success": "🪄 **Spero Patronum** successfully cast!",
+        "fail": "❌ **Spero Patronum** failed."
+      },
+      "stupefix": {
+        "name": "Stupefix",
+        "description": "[FR] La cible entre dans un état second très semblable à un coma.",
+        "success": "🪄 **Stupefix** successfully cast!",
+        "fail": "❌ **Stupefix** failed."
+      },
+      "tarentallegra": {
+        "name": "Tarentallegra",
+        "description": "[FR] Les jambes de la personne visée se mettent à s'agiter de manière incontrôlable.",
+        "success": "🪄 **Tarentallegra** successfully cast!",
+        "fail": "❌ **Tarentallegra** failed."
+      },
+      "tergeo": {
+        "name": "Tergeo",
+        "description": "[FR] Il nettoie la cible visée (enlève notamment le sang séché).",
+        "success": "🪄 **Tergeo** successfully cast!",
+        "fail": "❌ **Tergeo** failed."
+      },
+      "ventus": {
+        "name": "Ventus",
+        "description": "[FR] Sortilège spécifique au film Les Animaux fantastiques : Les Crimes de Grindelwald.",
+        "success": "🪄 **Ventus** successfully cast!",
+        "fail": "❌ **Ventus** failed."
+      },
+      "veraverto": {
+        "name": "Vera Verto",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Chambre des Secrets.",
+        "success": "🪄 **Vera Verto** successfully cast!",
+        "fail": "❌ **Vera Verto** failed."
+      },
+      "viperaevanesca": {
+        "name": "Vipera Evanesca",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Chambre des Secrets.",
+        "success": "🪄 **Vipera Evanesca** successfully cast!",
+        "fail": "❌ **Vipera Evanesca** failed."
+      },
+      "volateascendere": {
+        "name": "Volate Ascendere",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et la Chambre des Secrets.",
+        "success": "🪄 **Volate Ascendere** successfully cast!",
+        "fail": "❌ **Volate Ascendere** failed."
+      },
+      "vulnerasanentur": {
+        "name": "Vulnera Sanentur",
+        "description": "[FR] Sortilège spécifique au film Harry Potter et le Prince de Sang-Mêlé.",
+        "success": "🪄 **Vulnera Sanentur** successfully cast!",
+        "fail": "❌ **Vulnera Sanentur** failed."
+      },
+      "waddiwasi": {
+        "name": "Waddiwasi",
+        "description": "[FR] Il permet de déplacer quelque chose à la vitesse d'une balle de fusil.",
+        "success": "🪄 **Waddiwasi** successfully cast!",
+        "fail": "❌ **Waddiwasi** failed."
+      },
+      "wingardiumleviosa": {
+        "name": "Wingardium leviosa",
+        "description": "[FR] Il permet de faire léviter des objets et de les déplacer à l'envie.",
+        "success": "🪄 **Wingardium leviosa** successfully cast!",
+        "fail": "❌ **Wingardium leviosa** failed."
+      }
+    }
+  }
+}
