@@ -14,28 +14,28 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 
 # Modules
 
-|X| Translation : Automatically translate messages for announcements.
-| | Tickets : Let users create and manage support tickets.
-| | Moderation : Moderate your server with admin commands.
-| | Server Security : Protect your server from raids and spam.
-| | Economy : Run a virtual currency system for your community.
-| | Levels : Award experience points and ranks to active members.
-| | Music : Play music in your server with an integrated player.
-| | Giveaways : Organize giveaways for your community.
-| | Polls : Create interactive polls for your server.
-|X| Welcome Messages : Send custom welcome messages to new members and invite tracker.
-|X| Logging : Track messages, edits, and deletions in your server.
-| | Auto Roles : Automatically assign roles to members.
-| | Birthdays : Celebrate members' birthdays with an automated system.
-| | Bumps : Automate bump reminders for your server listings.
-|X| Channels Counter : Display live channel statistics in your server.
-| | Custom Commands : Create custom commands for your server.
-| | Fun : Add playful interactions to your server.
-| | Wizarding World : Add a magical experience to your server with wizarding spells.
-| | Infinite Counter : Create a counter that can be incremented infinitely.
-| | Reminders : Set reminders.
-| | Suggestions : Collect and manage suggestions from your community.
-| | Starboard : Highlight popular messages in your server.
-| | Social Notifications : Notify your server about social media updates.
-| | Partenerships : Manage and search partnerships with other servers.
-| | Forms : Create forms for your community.
+|X| Translation : Automatically translate messages for announcements.<br>
+| | Tickets : Let users create and manage support tickets.<br>
+| | Moderation : Moderate your server with admin commands.<br>
+| | Server Security : Protect your server from raids and spam.<br>
+| | Economy : Run a virtual currency system for your community.<br>
+| | Levels : Award experience points and ranks to active members.<br>
+| | Music : Play music in your server with an integrated player.<br>
+| | Giveaways : Organize giveaways for your community.<br>
+| | Polls : Create interactive polls for your server.<br>
+|X| Welcome Messages : Send custom welcome messages to new members and invite tracker.<br>
+|X| Logging : Track messages, edits, and deletions in your server.<br>
+| | Auto Roles : Automatically assign roles to members.<br>
+| | Birthdays : Celebrate members' birthdays with an automated system.<br>
+| | Bumps : Automate bump reminders for your server listings.<br>
+|X| Channels Counter : Display live channel statistics in your server.<br>
+| | Custom Commands : Create custom commands for your server.<br>
+| | Fun : Add playful interactions to your server.<br>
+| | Wizarding World : Add a magical experience to your server with wizarding spells.<br>
+| | Infinite Counter : Create a counter that can be incremented infinitely.<br>
+| | Reminders : Set reminders.<br>
+| | Suggestions : Collect and manage suggestions from your community.<br>
+| | Starboard : Highlight popular messages in your server.<br>
+| | Social Notifications : Notify your server about social media updates.<br>
+| | Partenerships : Manage and search partnerships with other servers.<br>
+| | Forms : Create forms for your community.<br>
