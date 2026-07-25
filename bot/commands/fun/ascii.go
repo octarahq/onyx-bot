@@ -1,6 +1,7 @@
-package commands
+package fun
 
 import (
+	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/handlers"
 	"onyx/bot/locales"
@@ -82,7 +83,7 @@ func init() {
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
 						discord.NewTextDisplay("# "+trad.Title),
-						discord.NewTextDisplay(res.Text),
+						discord.NewTextDisplayf("```%s```", res.Text),
 					),
 				)
 
@@ -90,16 +91,12 @@ func init() {
 				text, _ := cmd.OptString("text")
 				font, _ := cmd.OptString("font")
 
-				var fontPtr *plume.GetAsciiImageParamsFont
-				if font != "" {
-					f := plume.GetAsciiImageParamsFont(font)
-					fontPtr = &f
-				}
+				f := plume.GetAsciiImageParamsFont(font)
 
-				req, _ := plume.NewGetAsciiImageRequest("https://plume.voctal.dev/api", &plume.GetAsciiImageParams{
-					Text: text,
-					Font: fontPtr,
-				})
+				url := fmt.Sprintf("https://plume.voctal.dev/api/ascii-image?text=%s", text)
+				if font != "" {
+					url = fmt.Sprintf("%s&font=%s", url, f)
+				}
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
@@ -107,7 +104,7 @@ func init() {
 						discord.NewMediaGallery(
 							discord.MediaGalleryItem{
 								Media: discord.UnfurledMediaItem{
-									URL: req.URL.String(),
+									URL: url,
 								},
 							},
 						),

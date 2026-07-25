@@ -1,0 +1,787 @@
+{
+  "meta": {
+    "name": "WizzardModule",
+    "label": "Wizzarding World",
+    "description": "Module to cast Harry Potter spells.",
+    "submodules": {
+      "main": {
+        "label": "Main Settings",
+        "description": "General spell configuration.",
+        "options": {
+          "prefix": {
+            "label": "Spell Prefix",
+            "description": "Prefix used before spell name (e.g., !avadakedavra)"
+          }
+        }
+      },
+      "translations": {
+        "label": "Translations",
+        "description": "Customize module error messages.",
+        "options": {
+          "no_permission": {
+            "label": "Message - No Permission",
+            "description": "Sent when user or bot lacks permission."
+          },
+          "missing_args": {
+            "label": "Message - Missing Arguments",
+            "description": "Sent when arguments are missing (e.g., mention)."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "spells": {
+      "aberto": {
+        "name": "Aberto",
+        "description": "Spell specific to the Fantastic Beasts film.",
+        "success": "🪄 **Aberto** successfully cast!",
+        "fail": "❌ **Aberto** failed."
+      },
+      "accio": {
+        "name": "Accio",
+        "description": "From the Latin verb accire, accio would mean “I make someone come to me”.",
+        "success": "🪄 **Accio** successfully cast!",
+        "fail": "❌ **Accio** failed."
+      },
+      "aguamenti": {
+        "name": "Aguamenti",
+        "description": "Aguamenti is derived from the Spanish agua meaning \"water\" and the Latin mens (menti in the dative case) meaning \"spirit\", which would make aguamenti an invocation of the \"spirit of water\".",
+        "success": "🪄 **Aguamenti** successfully cast!",
+        "fail": "❌ **Aguamenti** failed."
+      },
+      "alohomora": {
+        "name": "Alohomora",
+        "description": "According to Blandine Le Callet, author of the book The Ancient World of Harry Potter, Alohomora may be derived from the Hawaiian word aloha, which means both \"hello\" and \"goodbye\", and the Latin mora which means \"obstacle\".",
+        "success": "🪄 **Alohomora** successfully cast!",
+        "fail": "❌ **Alohomora** failed."
+      },
+      "amplificatum": {
+        "name": "Amplificatum",
+        "description": "It increases the size of the object or animal targeted, a priori, it would seem that it is the force-feeding or stuffing spell (from which Hagrid's pumpkins in Harry Potter and the Chamber of Secrets would have benefited).",
+        "success": "🪄 **Amplificatum** successfully cast!",
+        "fail": "❌ **Amplificatum** failed."
+      },
+      "anapneo": {
+        "name": "Anapneo",
+        "description": "Greek neologism from the prefix ana- which means “again” and pneô which means “I breathe”.",
+        "success": "🪄 **Anapneo** successfully cast!",
+        "fail": "❌ **Anapneo** failed."
+      },
+      "aparecium": {
+        "name": "Aparecium",
+        "description": "It reveals possible invisible writing.",
+        "success": "🪄 **Aparecium** successfully cast!",
+        "fail": "❌ **Aparecium** failed."
+      },
+      "apparevestigium": {
+        "name": "Appare vestigium",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Appare vestigium** successfully cast!",
+        "fail": "❌ **Appare vestigium** failed."
+      },
+      "araniaexumai": {
+        "name": "Arania exumai",
+        "description": "Spell specific to the film Harry Potter and the Chamber of Secrets.",
+        "success": "🪄 **Arania exumai** successfully cast!",
+        "fail": "❌ **Arania exumai** failed."
+      },
+      "arrestomomentum": {
+        "name": "Arresto momentum",
+        "description": "Spell specific to the Harry Potter films.",
+        "success": "🪄 **Arresto momentum** successfully cast!",
+        "fail": "❌ **Arresto momentum** failed."
+      },
+      "ascendio": {
+        "name": "Ascendio",
+        "description": "Derived from the Latin ascendo (“I ascend”), from the verb ascendere.",
+        "success": "🪄 **Ascendio** successfully cast!",
+        "fail": "❌ **Ascendio** failed."
+      },
+      "assurdiato": {
+        "name": "Assurdiato",
+        "description": "Derived from the Latin verb surdare (“to make deaf”) for the French version.",
+        "success": "🪄 **Assurdiato** successfully cast!",
+        "fail": "❌ **Assurdiato** failed."
+      },
+      "avadakedavra": {
+        "name": "Avada Kedavra",
+        "description": "It instantly kills the targeted person.",
+        "success": "🪄 **Avada Kedavra** successfully cast!",
+        "fail": "❌ **Avada Kedavra** failed."
+      },
+      "avensegium": {
+        "name": "Avensegium",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Avensegium** successfully cast!",
+        "fail": "❌ **Avensegium** failed."
+      },
+      "avis": {
+        "name": "Avis",
+        "description": "Means “bird” in Latin.",
+        "success": "🪄 **Avis** successfully cast!",
+        "fail": "❌ **Avis** failed."
+      },
+      "bloclang": {
+        "name": "Bloclang",
+        "description": "This curse is used to make people let go or open bonds (for example handcuffs).",
+        "success": "🪄 **Bloclang** successfully cast!",
+        "fail": "❌ **Bloclang** failed."
+      },
+      "bombardamaxima": {
+        "name": "Bombarda (maxima)",
+        "description": "Spell specific to the Harry Potter films.",
+        "success": "🪄 **Bombarda (maxima)** successfully cast!",
+        "fail": "❌ **Bombarda (maxima)** failed."
+      },
+      "brachialigo": {
+        "name": "Brachialigo",
+        "description": "Spell specific to the play Harry Potter and the Cursed Child.",
+        "success": "🪄 **Brachialigo** successfully cast!",
+        "fail": "❌ **Brachialigo** failed."
+      },
+      "brachiumemendo": {
+        "name": "Brachium emendo",
+        "description": "From the Latin brachium (“the arm”) and emendare (“heal”, “rectify”, “straighten”).",
+        "success": "🪄 **Brachium emendo** successfully cast!",
+        "fail": "❌ **Brachium emendo** failed."
+      },
+      "caveinimicum": {
+        "name": "Cave inimicum",
+        "description": "Comes from the imperative of the Latin verb cavere, meaning “to take care of,” and the accusative of inimicus, meaning “the enemy.”",
+        "success": "🪄 **Cave inimicum** successfully cast!",
+        "fail": "❌ **Cave inimicum** failed."
+      },
+      "circumrota": {
+        "name": "Circumrota",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Circumrota** successfully cast!",
+        "fail": "❌ **Circumrota** failed."
+      },
+      "capaciousextremis": {
+        "name": "Capacious extremis",
+        "description": "This spell increases the storage capacity of an item.",
+        "success": "🪄 **Capacious extremis** successfully cast!",
+        "fail": "❌ **Capacious extremis** failed."
+      },
+      "cistemaperio": {
+        "name": "Cistem aperio",
+        "description": "Spell specific to the film Harry Potter and the Chamber of Secrets.",
+        "success": "🪄 **Cistem aperio** successfully cast!",
+        "fail": "❌ **Cistem aperio** failed."
+      },
+      "collaporta": {
+        "name": "Collaporta",
+        "description": "It allows you to close and lock a door, producing a sucking sound.",
+        "success": "🪄 **Collaporta** successfully cast!",
+        "fail": "❌ **Collaporta** failed."
+      },
+      "confringo": {
+        "name": "Confringo",
+        "description": "First person conjugated form of the Latin verb confringere (“to break”).",
+        "success": "🪄 **Confringo** successfully cast!",
+        "fail": "❌ **Confringo** failed."
+      },
+      "confundo": {
+        "name": "Confundo",
+        "description": "Means in Latin “I trouble”, “I mix” or “I confuse”, from the verb confundere.",
+        "success": "🪄 **Confundo** successfully cast!",
+        "fail": "❌ **Confundo** failed."
+      },
+      "slugvomitingcharm": {
+        "name": "Slug-vomiting Charm",
+        "description": "It triggers a scream if a person enters the area protected by the spell.",
+        "success": "🪄 **Slug-vomiting Charm** successfully cast!",
+        "fail": "❌ **Slug-vomiting Charm** failed."
+      },
+      "defodio": {
+        "name": "Defodio",
+        "description": "From the Latin verb fodere (“to dig”), associated with the prefix de qui reinforces the meaning.",
+        "success": "🪄 **Defodio** successfully cast!",
+        "fail": "❌ **Defodio** failed."
+      },
+      "deprimo": {
+        "name": "Deprimo",
+        "description": "From the Latin verb deprimere (“to dig”).",
+        "success": "🪄 **Deprimo** successfully cast!",
+        "fail": "❌ **Deprimo** failed."
+      },
+      "dentesaugmento": {
+        "name": "Dentesaugmento",
+        "description": "It causes the target person's teeth to grow excessively until the curse is canceled.",
+        "success": "🪄 **Dentesaugmento** successfully cast!",
+        "fail": "❌ **Dentesaugmento** failed."
+      },
+      "destructum": {
+        "name": "Destructum",
+        "description": "Past participle of the Latin verb destruere (“to destroy”).",
+        "success": "🪄 **Destructum** successfully cast!",
+        "fail": "❌ **Destructum** failed."
+      },
+      "diffindo": {
+        "name": "Diffindo",
+        "description": "First person singular conjugation of the Latin verb diffindere, meaning “to split,” “to break,” or “to divide.”",
+        "success": "🪄 **Diffindo** successfully cast!",
+        "fail": "❌ **Diffindo** failed."
+      },
+      "dissendium": {
+        "name": "Dissendium",
+        "description": "Term coined by J.",
+        "success": "🪄 **Dissendium** successfully cast!",
+        "fail": "❌ **Dissendium** failed."
+      },
+      "duro": {
+        "name": "Duro",
+        "description": "From the Latin word durus (“hard”).",
+        "success": "🪄 **Duro** successfully cast!",
+        "fail": "❌ **Duro** failed."
+      },
+      "emancipare": {
+        "name": "Emancipare",
+        "description": "Spell specific to the play Harry Potter and the Cursed Child.",
+        "success": "🪄 **Emancipare** successfully cast!",
+        "fail": "❌ **Emancipare** failed."
+      },
+      "endoloris": {
+        "name": "Endoloris",
+        "description": "The Crucio spell, triggered by the Crucio formula, causes the targeted being (person or animal) to feel unbearable pain.",
+        "success": "🪄 **Endoloris** successfully cast!",
+        "fail": "❌ **Endoloris** failed."
+      },
+      "enervatum": {
+        "name": "Enervatum",
+        "description": "The term translated into French by Jean-François Ménard, Enervatum (in the original version Rennervate), is a derivative of the Latin verb enervare which is composed of nervus (“the nerve”, “the muscle”, “the tendon”) and the privative prefix e-.",
+        "success": "🪄 **Enervatum** successfully cast!",
+        "fail": "❌ **Enervatum** failed."
+      },
+      "episkey": {
+        "name": "Episkey",
+        "description": "Episkey is a derivative of the Greek verb episkeuazein, meaning “to repair” or “to restore.”",
+        "success": "🪄 **Episkey** successfully cast!",
+        "fail": "❌ **Episkey** failed."
+      },
+      "erigo": {
+        "name": "Erigo",
+        "description": "Erigo (Erecto in English) is the Latin and first person conjugation of the verb erigere (\"to raise\", \"to raise\" or \"to erect\").",
+        "success": "🪄 **Erigo** successfully cast!",
+        "fail": "❌ **Erigo** failed."
+      },
+      "evanesco": {
+        "name": "Evanesco",
+        "description": "Evanesco, from the Latin verb evanescere, means “I disappear” or “I make disappear.”",
+        "success": "🪄 **Evanesco** successfully cast!",
+        "fail": "❌ **Evanesco** failed."
+      },
+      "evertestatum": {
+        "name": "Everte statum",
+        "description": "Spell specific to the film Harry Potter and the Chamber of Secrets.",
+        "success": "🪄 **Everte statum** successfully cast!",
+        "fail": "❌ **Everte statum** failed."
+      },
+      "expectopatronum": {
+        "name": "Expecto Patronum",
+        "description": "Spell specific to the Harry Potter films.",
+        "success": "🪄 **Expecto Patronum** successfully cast!",
+        "fail": "❌ **Expecto Patronum** failed."
+      },
+      "expelliarmus": {
+        "name": "Expelliarmus",
+        "description": "Composed of the Latin verb expellere (“to drive away”, “to drive away”) and the Latin word armus (“the weapon”).",
+        "success": "🪄 **Expelliarmus** successfully cast!",
+        "fail": "❌ **Expelliarmus** failed."
+      },
+      "expulso": {
+        "name": "Expulso",
+        "description": "Composed of the Latin words ex (“out of”) and pulso (“I push,” “I strike,” “I collide”).",
+        "success": "🪄 **Expulso** successfully cast!",
+        "fail": "❌ **Expulso** failed."
+      },
+      "fenestra": {
+        "name": "Fenestra",
+        "description": "Spell specific to the Fantastic Beasts film.",
+        "success": "🪄 **Fenestra** successfully cast!",
+        "fail": "❌ **Fenestra** failed."
+      },
+      "failamalle": {
+        "name": "Failamalle",
+        "description": "He puts away the targeted objects.",
+        "success": "🪄 **Failamalle** successfully cast!",
+        "fail": "❌ **Failamalle** failed."
+      },
+      "ferula": {
+        "name": "Ferula",
+        "description": "Means “the wand” in Latin.",
+        "success": "🪄 **Ferula** successfully cast!",
+        "fail": "❌ **Ferula** failed."
+      },
+      "fiantoduri": {
+        "name": "Fianto Duri",
+        "description": "Spell specific to the film Harry Potter and the Deathly Hallows, part 2.",
+        "success": "🪄 **Fianto Duri** successfully cast!",
+        "fail": "❌ **Fianto Duri** failed."
+      },
+      "fidelitas": {
+        "name": "Fidelitas",
+        "description": "It neutralizes the influence of certain spells on an object or a person.",
+        "success": "🪄 **Fidelitas** successfully cast!",
+        "fail": "❌ **Fidelitas** failed."
+      },
+      "finiteincantatem": {
+        "name": "Finite Incantatem",
+        "description": "Finite is the imperative form of the Latin verb finire, and means “to cause to cease”, “to stop”.",
+        "success": "🪄 **Finite Incantatem** successfully cast!",
+        "fail": "❌ **Finite Incantatem** failed."
+      },
+      "flambios": {
+        "name": "Flambios",
+        "description": "This French translation is composed of the verb “flamber”, derived from the Latin verb flammare (“to ignite”, “to flamboyate”).",
+        "success": "🪄 **Flambios** successfully cast!",
+        "fail": "❌ **Flambios** failed."
+      },
+      "fulgari": {
+        "name": "Fulgari",
+        "description": "Spell specific to the play Harry Potter and the Cursed Child.",
+        "success": "🪄 **Fulgari** successfully cast!",
+        "fail": "❌ **Fulgari** failed."
+      },
+      "furunculus": {
+        "name": "Furunculus",
+        "description": "Means “boil” in Latin.",
+        "success": "🪄 **Furunculus** successfully cast!",
+        "fail": "❌ **Furunculus** failed."
+      },
+      "gemino": {
+        "name": "Gemino",
+        "description": "Coming from the Latin verb geminare, Gemino means “I split”.",
+        "success": "🪄 **Gemino** successfully cast!",
+        "fail": "❌ **Gemino** failed."
+      },
+      "glisseo": {
+        "name": "Glisseo",
+        "description": "Glisseo (same in the original version) is derived from the French verb \"glisser\", to which J.",
+        "success": "🪄 **Glisseo** successfully cast!",
+        "fail": "❌ **Glisseo** failed."
+      },
+      "harmonianecterepassus": {
+        "name": "Harmonia nectere passus",
+        "description": "Spell specific to the film Harry Potter and the Half-Blood Prince.",
+        "success": "🪄 **Harmonia nectere passus** successfully cast!",
+        "fail": "❌ **Harmonia nectere passus** failed."
+      },
+      "hominumrevelio": {
+        "name": "Hominum revelio",
+        "description": "Hominum is a fanciful form of the Latin word homo (genitive hominis), meaning “man.”",
+        "success": "🪄 **Hominum revelio** successfully cast!",
+        "fail": "❌ **Hominum revelio** failed."
+      },
+      "homomorphus": {
+        "name": "Homomorphus",
+        "description": "Composed, in French as in the original version, of the Latin word homo (“man”) and the Greek word morphê meaning “form”.",
+        "success": "🪄 **Homomorphus** successfully cast!",
+        "fail": "❌ **Homomorphus** failed."
+      },
+      "impedimenta": {
+        "name": "Impedimenta",
+        "description": "Derived from the Latin word impedimentum (“that which prevents”, or “hinders”), from the verb impedire (“to hinder”, “to embarrass”).",
+        "success": "🪄 **Impedimenta** successfully cast!",
+        "fail": "❌ **Impedimenta** failed."
+      },
+      "impero": {
+        "name": "Impero",
+        "description": "Imperium, which in Latin means \"authority\", \"power\" or \"empire\", has the formula Impero, which means \"I order\", \"I oblige\" or \"I force\".",
+        "success": "🪄 **Impero** successfully cast!",
+        "fail": "❌ **Impero** failed."
+      },
+      "immobulus": {
+        "name": "Immobulus",
+        "description": "Spell specific to the films Harry Potter and the Chamber of Secrets and Harry Potter and the Prisoner of Azkaban.",
+        "success": "🪄 **Immobulus** successfully cast!",
+        "fail": "❌ **Immobulus** failed."
+      },
+      "impervius": {
+        "name": "Impervius",
+        "description": "Impervius, which in Latin means \"inaccessible\", \"impenetrable\", has the effect of repelling substances such as water from a surface.",
+        "success": "🪄 **Impervius** successfully cast!",
+        "fail": "❌ **Impervius** failed."
+      },
+      "incarcerem": {
+        "name": "Incarcerem",
+        "description": "Composed of the Latin word in (“in”) and carcerem, the accusative of the Latin word carcer which means “prison”.",
+        "success": "🪄 **Incarcerem** successfully cast!",
+        "fail": "❌ **Incarcerem** failed."
+      },
+      "incendio": {
+        "name": "Incendio",
+        "description": "Formed from the Latin incendo which means “I set fire”, “I light” (from the verb incendere).",
+        "success": "🪄 **Incendio** successfully cast!",
+        "fail": "❌ **Incendio** failed."
+      },
+      "lacarnuminflammari": {
+        "name": "Lacarnum inflammari",
+        "description": "Spell specific to the film Harry Potter and the Philosopher's Stone.",
+        "success": "🪄 **Lacarnum inflammari** successfully cast!",
+        "fail": "❌ **Lacarnum inflammari** failed."
+      },
+      "legilimens": {
+        "name": "Legilimens",
+        "description": "The English term legilimency is a neologism formed from the Latin verb legere, which means \"to read\", and the word mens (mentis in the genitive case) which means \"the mind\".",
+        "success": "🪄 **Legilimens** successfully cast!",
+        "fail": "❌ **Legilimens** failed."
+      },
+      "levicorpus": {
+        "name": "Levicorpus",
+        "description": "Composed of the Latin adjective levis (“light”) and corpus (“the body”).",
+        "success": "🪄 **Levicorpus** successfully cast!",
+        "fail": "❌ **Levicorpus** failed."
+      },
+      "liberacorpus": {
+        "name": "Liberacorpus",
+        "description": "Composed of the imperative of the Latin verb liberare (“to liberate”) and corpus (“the body”).",
+        "success": "🪄 **Liberacorpus** successfully cast!",
+        "fail": "❌ **Liberacorpus** failed."
+      },
+      "locomotorbarda": {
+        "name": "Locomotor Barda",
+        "description": "Derived from the Latin words locus (“the place”, “the place”) and motor, derived from the verb movere, meaning “to move”.",
+        "success": "🪄 **Locomotor Barda** successfully cast!",
+        "fail": "❌ **Locomotor Barda** failed."
+      },
+      "locomotormortis": {
+        "name": "Locomotor Mortis",
+        "description": "Derived from the Latin words locus (“the place”, “the place”) and motor, derived from the verb movere, meaning “to move”.",
+        "success": "🪄 **Locomotor Mortis** successfully cast!",
+        "fail": "❌ **Locomotor Mortis** failed."
+      },
+      "locomotorwibbly": {
+        "name": "Locomotor Wibbly",
+        "description": "Derived from the Latin word lumen meaning “light.”",
+        "success": "🪄 **Locomotor Wibbly** successfully cast!",
+        "fail": "❌ **Locomotor Wibbly** failed."
+      },
+      "meteorribilisrecanto": {
+        "name": "Meteorribilis Recanto",
+        "description": "Meteorribilis Recanto (Meteolojinx recanto in the original version) allows you to stop magical bad weather due to a faulty atmospheric spell.",
+        "success": "🪄 **Meteorribilis Recanto** successfully cast!",
+        "fail": "❌ **Meteorribilis Recanto** failed."
+      },
+      "mobiliarbus": {
+        "name": "Mobiliarbus",
+        "description": "The formula consists of the Latin words mobilis (“mobile”) and arbor, “tree”.",
+        "success": "🪄 **Mobiliarbus** successfully cast!",
+        "fail": "❌ **Mobiliarbus** failed."
+      },
+      "mobilicorpus": {
+        "name": "Mobilicorpus",
+        "description": "The formula consists of the Latin words mobilis (“mobile”) and corpus, “the body”.",
+        "success": "🪄 **Mobilicorpus** successfully cast!",
+        "fail": "❌ **Mobilicorpus** failed."
+      },
+      "molliare": {
+        "name": "Molliare",
+        "description": "Spell specific to the play Harry Potter and the Cursed Child.",
+        "success": "🪄 **Molliare** successfully cast!",
+        "fail": "❌ **Molliare** failed."
+      },
+      "morsmordre": {
+        "name": "Morsmordre",
+        "description": "It allows Death Eaters to summon the Dark Mark.",
+        "success": "🪄 **Morsmordre** successfully cast!",
+        "fail": "❌ **Morsmordre** failed."
+      },
+      "mutinlutinmalinpesti": {
+        "name": "Mutinlutin Malinpesti",
+        "description": "Magic formula intended to stop Cornish leprechauns, according to Gilderoy Lockhart.",
+        "success": "🪄 **Mutinlutin Malinpesti** successfully cast!",
+        "fail": "❌ **Mutinlutin Malinpesti** failed."
+      },
+      "nebulus": {
+        "name": "Nebulus",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Nebulus** successfully cast!",
+        "fail": "❌ **Nebulus** failed."
+      },
+      "nox": {
+        "name": "Nox",
+        "description": "It allows you to cancel the Lumos spell.",
+        "success": "🪄 **Nox** successfully cast!",
+        "fail": "❌ **Nox** failed."
+      },
+      "obscuro": {
+        "name": "Obscuro",
+        "description": "Turns the targeted person or object black or prevents them from seeing.",
+        "success": "🪄 **Obscuro** successfully cast!",
+        "fail": "❌ **Obscuro** failed."
+      },
+      "oppugno": {
+        "name": "Oppugno",
+        "description": "He orders small, previously created birds to swoop down and attack a target.",
+        "success": "🪄 **Oppugno** successfully cast!",
+        "fail": "❌ **Oppugno** failed."
+      },
+      "orchideus": {
+        "name": "Orchideus",
+        "description": "He brings out a bouquet of flowers.",
+        "success": "🪄 **Orchideus** successfully cast!",
+        "fail": "❌ **Orchideus** failed."
+      },
+      "oscausi": {
+        "name": "Oscausi",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Oscausi** successfully cast!",
+        "fail": "❌ **Oscausi** failed."
+      },
+      "oubliettes": {
+        "name": "Oubliettes",
+        "description": "An amnesia spell, it erases or modifies a person's memory.",
+        "success": "🪄 **Oubliettes** successfully cast!",
+        "fail": "❌ **Oubliettes** failed."
+      },
+      "partistemporus": {
+        "name": "Partis Temporus",
+        "description": "Spell specific to the film Harry Potter and the Half-Blood Prince.",
+        "success": "🪄 **Partis Temporus** successfully cast!",
+        "fail": "❌ **Partis Temporus** failed."
+      },
+      "periculum": {
+        "name": "Periculum",
+        "description": "Spell specific to the film Harry Potter and the Goblet of Fire.",
+        "success": "🪄 **Periculum** successfully cast!",
+        "fail": "❌ **Periculum** failed."
+      },
+      "petrificustotalus": {
+        "name": "Petrificus Totalus",
+        "description": "It completely immobilizes and stiffens the targeted person.",
+        "success": "🪄 **Petrificus Totalus** successfully cast!",
+        "fail": "❌ **Petrificus Totalus** failed."
+      },
+      "piertotumlocomotor": {
+        "name": "Piertotum Locomotor",
+        "description": "Spell that animates statues and armor.",
+        "success": "🪄 **Piertotum Locomotor** successfully cast!",
+        "fail": "❌ **Piertotum Locomotor** failed."
+      },
+      "portus": {
+        "name": "Portus",
+        "description": "It transforms an object into a Portkey.",
+        "success": "🪄 **Portus** successfully cast!",
+        "fail": "❌ **Portus** failed."
+      },
+      "priorincanto": {
+        "name": "Prior Incanto",
+        "description": "It reveals the last spell(s), spells or curses cast by a wand.",
+        "success": "🪄 **Prior Incanto** successfully cast!",
+        "fail": "❌ **Prior Incanto** failed."
+      },
+      "prioriincantatum": {
+        "name": "Priori Incantatum",
+        "description": "Can be launched automatically when two magic wands possessing - which is very rare - the same internal constituent element are forced by their owner to oppose each other in a duel.",
+        "success": "🪄 **Priori Incantatum** successfully cast!",
+        "fail": "❌ **Priori Incantatum** failed."
+      },
+      "protego": {
+        "name": "Protego",
+        "description": "Allows you to transform a Firecracker Scrout into a rubber duck in the presence of water.",
+        "success": "🪄 **Protego** successfully cast!",
+        "fail": "❌ **Protego** failed."
+      },
+      "protegodiabolica": {
+        "name": "Protego Diabolica",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Protego Diabolica** successfully cast!",
+        "fail": "❌ **Protego Diabolica** failed."
+      },
+      "protegototalum": {
+        "name": "Protego Totalum",
+        "description": "This protection spell aims to protect something large, like a tent, a house.",
+        "success": "🪄 **Protego Totalum** successfully cast!",
+        "fail": "❌ **Protego Totalum** failed."
+      },
+      "protegohorribilis": {
+        "name": "Protego Horribilis",
+        "description": "This protection spell aims to protect something very large like a castle or land.",
+        "success": "🪄 **Protego Horribilis** successfully cast!",
+        "fail": "❌ **Protego Horribilis** failed."
+      },
+      "protegomaxima": {
+        "name": "Protego Maxima",
+        "description": "Variant of Protego Horribilis.",
+        "success": "🪄 **Protego Maxima** successfully cast!",
+        "fail": "❌ **Protego Maxima** failed."
+      },
+      "recurvite": {
+        "name": "Recurvite",
+        "description": "This spell cleans, as its name suggests, quickly.",
+        "success": "🪄 **Recurvite** successfully cast!",
+        "fail": "❌ **Recurvite** failed."
+      },
+      "reducto": {
+        "name": "Reducto",
+        "description": "Reduction spell, it reduces the size, volume of an object.",
+        "success": "🪄 **Reducto** successfully cast!",
+        "fail": "❌ **Reducto** failed."
+      },
+      "reparo": {
+        "name": "Reparo",
+        "description": "Repair spell, it allows you to repair an object.",
+        "success": "🪄 **Reparo** successfully cast!",
+        "fail": "❌ **Reparo** failed."
+      },
+      "repellomoldum": {
+        "name": "Repello Moldum",
+        "description": "Muggle repellent spell, it allows you to keep muggles away from an area.",
+        "success": "🪄 **Repello Moldum** successfully cast!",
+        "fail": "❌ **Repello Moldum** failed."
+      },
+      "repelloinimicium": {
+        "name": "Repello Inimicium",
+        "description": "Allows you to repel or eliminate (depending on the power of the spell) the enemies of the author of the spell entering an area defined by the latter.",
+        "success": "🪄 **Repello Inimicium** successfully cast!",
+        "fail": "❌ **Repello Inimicium** failed."
+      },
+      "reverte": {
+        "name": "Reverte",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Reverte** successfully cast!",
+        "fail": "❌ **Reverte** failed."
+      },
+      "revigor": {
+        "name": "Revigor",
+        "description": "It restores some energy to the weak, stunned or unconscious target.",
+        "success": "🪄 **Revigor** successfully cast!",
+        "fail": "❌ **Revigor** failed."
+      },
+      "revelio": {
+        "name": "Revelio",
+        "description": "Spell specific to the Fantastic Beasts film.",
+        "success": "🪄 **Revelio** successfully cast!",
+        "fail": "❌ **Revelio** failed."
+      },
+      "rictusempra": {
+        "name": "Rictusempra",
+        "description": "A tickle curse, it causes the target to have an uncontrollable urge to laugh.",
+        "success": "🪄 **Rictusempra** successfully cast!",
+        "fail": "❌ **Rictusempra** failed."
+      },
+      "riddikulus": {
+        "name": "Riddikulus",
+        "description": "This spell is useful for defeating a boggart.",
+        "success": "🪄 **Riddikulus** successfully cast!",
+        "fail": "❌ **Riddikulus** failed."
+      },
+      "salveomaleficia": {
+        "name": "Salveo Maleficia",
+        "description": "It is a protective spell that protects against curses, surfaces and makes one's position invisible (Hermione uses it in Harry Potter and the Deathly Hallows).",
+        "success": "🪄 **Salveo Maleficia** successfully cast!",
+        "fail": "❌ **Salveo Maleficia** failed."
+      },
+      "sectumsempra": {
+        "name": "Sectumsempra",
+        "description": "It creates deep cuts in the target's body, which can very quickly bleed out.",
+        "success": "🪄 **Sectumsempra** successfully cast!",
+        "fail": "❌ **Sectumsempra** failed."
+      },
+      "serpensortia": {
+        "name": "Serpensortia",
+        "description": "He makes a snake emerge at the end of the wand.",
+        "success": "🪄 **Serpensortia** successfully cast!",
+        "fail": "❌ **Serpensortia** failed."
+      },
+      "silencio": {
+        "name": "Silencio",
+        "description": "A person affected by this spell becomes incapable of emitting the slightest sound.",
+        "success": "🪄 **Silencio** successfully cast!",
+        "fail": "❌ **Silencio** failed."
+      },
+      "sonorus": {
+        "name": "Sonorus",
+        "description": "It significantly increases the power and range of the voice.",
+        "success": "🪄 **Sonorus** successfully cast!",
+        "fail": "❌ **Sonorus** failed."
+      },
+      "surdinam": {
+        "name": "Surdinam",
+        "description": "It allows you to cancel Sonorus.",
+        "success": "🪄 **Surdinam** successfully cast!",
+        "fail": "❌ **Surdinam** failed."
+      },
+      "surgito": {
+        "name": "Surgito",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Surgito** successfully cast!",
+        "fail": "❌ **Surgito** failed."
+      },
+      "specialisrevelio": {
+        "name": "Specialis Revelio",
+        "description": "It allows you to know the components of a potion.",
+        "success": "🪄 **Specialis Revelio** successfully cast!",
+        "fail": "❌ **Specialis Revelio** failed."
+      },
+      "speropatronum": {
+        "name": "Spero Patronum",
+        "description": "This spell is specific to the French version of the novels and is equivalent to the Expecto Patronum spell (original and cinematographic version).",
+        "success": "🪄 **Spero Patronum** successfully cast!",
+        "fail": "❌ **Spero Patronum** failed."
+      },
+      "stupefix": {
+        "name": "Stupefix",
+        "description": "The target enters a very coma-like daze.",
+        "success": "🪄 **Stupefix** successfully cast!",
+        "fail": "❌ **Stupefix** failed."
+      },
+      "tarentallegra": {
+        "name": "Tarentallegra",
+        "description": "The target's legs begin to shake uncontrollably.",
+        "success": "🪄 **Tarentallegra** successfully cast!",
+        "fail": "❌ **Tarentallegra** failed."
+      },
+      "tergeo": {
+        "name": "Tergeo",
+        "description": "It cleans the intended target (removes in particular dried blood).",
+        "success": "🪄 **Tergeo** successfully cast!",
+        "fail": "❌ **Tergeo** failed."
+      },
+      "ventus": {
+        "name": "Ventus",
+        "description": "Spell specific to the film Fantastic Beasts: The Crimes of Grindelwald.",
+        "success": "🪄 **Ventus** successfully cast!",
+        "fail": "❌ **Ventus** failed."
+      },
+      "veraverto": {
+        "name": "Vera Verto",
+        "description": "Spell specific to the film Harry Potter and the Chamber of Secrets.",
+        "success": "🪄 **Vera Verto** successfully cast!",
+        "fail": "❌ **Vera Verto** failed."
+      },
+      "viperaevanesca": {
+        "name": "Vipera Evanesca",
+        "description": "Spell specific to the film Harry Potter and the Chamber of Secrets.",
+        "success": "🪄 **Vipera Evanesca** successfully cast!",
+        "fail": "❌ **Vipera Evanesca** failed."
+      },
+      "volateascendere": {
+        "name": "Volate Ascendere",
+        "description": "Spell specific to the film Harry Potter and the Chamber of Secrets.",
+        "success": "🪄 **Volate Ascendere** successfully cast!",
+        "fail": "❌ **Volate Ascendere** failed."
+      },
+      "vulnerasanentur": {
+        "name": "Vulnera Sanentur",
+        "description": "Spell specific to the film Harry Potter and the Half-Blood Prince.",
+        "success": "🪄 **Vulnera Sanentur** successfully cast!",
+        "fail": "❌ **Vulnera Sanentur** failed."
+      },
+      "waddiwasi": {
+        "name": "Waddiwasi",
+        "description": "It allows you to move something at the speed of a bullet.",
+        "success": "🪄 **Waddiwasi** successfully cast!",
+        "fail": "❌ **Waddiwasi** failed."
+      },
+      "wingardiumleviosa": {
+        "name": "Wingardium leviosa",
+        "description": "It allows you to levitate objects and move them as you wish.",
+        "success": "🪄 **Wingardium leviosa** successfully cast!",
+        "fail": "❌ **Wingardium leviosa** failed."
+      }
+    }
+  }
+}

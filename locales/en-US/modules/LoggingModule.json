@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "name": "LoggingModule",
+    "label": "Logging Module",
+    "description": "A module for logging all dashboard components.",
+    "submodules": {
+      "main": {
+        "label": "Main Settings",
+        "description": "Configure the general logs channel.",
+        "options": {
+          "enabled": {
+            "label": "Enabled"
+          },
+          "channel": {
+            "label": "Channel",
+            "description": "The channel where logs will be sent."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "guildUpdate": {
+      "title": "Guild Updated",
+      "states": {
+        "name": "Name",
+        "description": "Description",
+        "verificationLevel": "Verification Level",
+        "icon": "Icon changed:",
+        "banner": "Banner changed:"
+      }
+    },
+    "channelCreate": {
+      "title": "Channel Created",
+      "states": {
+        "name": "Name",
+        "type": "Type"
+      }
+    },
+    "channelUpdate": {
+      "title": "Channel Updated",
+      "states": {
+        "name": "Name",
+        "topic": "Topic",
+        "nsfw": "NSFW",
+        "rateLimitPerUser": "Slowmode"
+      }
+    },
+    "channelDelete": {
+      "title": "Channel Deleted",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "roleCreate": {
+      "title": "Role Created",
+      "states": {
+        "name": "Name",
+        "color": "Color"
+      }
+    },
+    "roleUpdate": {
+      "title": "Role Updated",
+      "states": {
+        "name": "Name",
+        "color": "Color",
+        "hoist": "Display separately",
+        "mentionable": "Mentionable",
+        "permissions": "Permissions"
+      }
+    },
+    "roleDelete": {
+      "title": "Role Deleted",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "memberJoin": {
+      "title": "Member Joined",
+      "states": {
+        "user": "User",
+        "accountCreated": "Account Created"
+      }
+    },
+    "memberUpdate": {
+      "title": "Member Updated",
+      "states": {
+        "user": "User",
+        "nickname": "Nickname",
+        "roles": "Roles",
+        "avatar": "Avatar changed:"
+      }
+    },
+    "memberLeave": {
+      "title": "Member Left",
+      "states": {
+        "user": "User"
+      }
+    },
+    "banAdd": {
+      "title": "Member Banned",
+      "states": {
+        "user": "User",
+        "reason": "Reason"
+      }
+    },
+    "banRemove": {
+      "title": "Member Unbanned",
+      "states": {
+        "user": "User"
+      }
+    },
+    "emojiCreate": {
+      "title": "Emoji Created",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "emojiUpdate": {
+      "title": "Emoji Updated",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "emojiDelete": {
+      "title": "Emoji Deleted",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "stickerCreate": {
+      "title": "Sticker Created",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "stickerUpdate": {
+      "title": "Sticker Updated",
+      "states": {
+        "name": "Name",
+        "description": "Description"
+      }
+    },
+    "stickerDelete": {
+      "title": "Sticker Deleted",
+      "states": {
+        "name": "Name"
+      }
+    },
+    "inviteCreate": {
+      "title": "Invite Created",
+      "states": {
+        "code": "Code",
+        "channel": "Channel",
+        "inviter": "Inviter",
+        "maxUses": "Max Uses",
+        "maxAge": "Max Age"
+      }
+    },
+    "inviteDelete": {
+      "title": "Invite Deleted",
+      "states": {
+        "code": "Code"
+      }
+    },
+    "threadCreate": {
+      "title": "Thread Created",
+      "states": {
+        "name": "Name",
+        "type": "Type",
+        "parent": "Parent Channel"
+      }
+    },
+    "threadUpdate": {
+      "title": "Thread Updated",
+      "states": {
+        "name": "Name",
+        "archived": "Archived",
+        "locked": "Locked",
+        "autoArchiveDuration": "Auto Archive Duration"
+      }
+    },
+    "threadDelete": {
+      "title": "Thread Deleted",
+      "states": {
+        "name": "Name"
+      }
+    }
+  }
+}

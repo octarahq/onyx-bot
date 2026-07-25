@@ -7,6 +7,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/disgoorg/snowflake/v2"
 )
 
 type Command struct {
@@ -39,4 +40,16 @@ type Bot struct {
 
 	ConnectedSince time.Time
 	Version        string
+}
+
+func (b *Bot) SendMessage(cid string, msg discord.MessageCreate) {
+	scid, err := snowflake.Parse(cid)
+	if err != nil {
+		return
+	}
+
+	_, err = b.Client.Rest.CreateMessage(scid, msg)
+	if err != nil {
+		return
+	}
 }
