@@ -17,7 +17,7 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 - [x] Translation : Automatically translate messages for announcements.
 - [ ] Tickets : Let users create and manage support tickets.
 - [ ] Moderation : Moderate your server with admin commands.
-- [ ] Server Security : Protect your server from raids and spam.
+- [x] Server Security : Protect your server from raids and spam.
 - [ ] Economy : Run a virtual currency system for your community.
 - [ ] Levels : Award experience points and ranks to active members.
 - [ ] Music : Play music in your server with an integrated player.
