@@ -14,7 +14,7 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 
 # Modules
 
-|X| Translation : Automatically translate messages for announcements.<br>
+|x| Translation : Automatically translate messages for announcements.<br>
 | | Tickets : Let users create and manage support tickets.<br>
 | | Moderation : Moderate your server with admin commands.<br>
 | | Server Security : Protect your server from raids and spam.<br>
@@ -23,15 +23,15 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 | | Music : Play music in your server with an integrated player.<br>
 | | Giveaways : Organize giveaways for your community.<br>
 | | Polls : Create interactive polls for your server.<br>
-|X| Welcome Messages : Send custom welcome messages to new members and invite tracker.<br>
-|X| Logging : Track messages, edits, and deletions in your server.<br>
+|x| Welcome Messages : Send custom welcome messages to new members and invite tracker.<br>
+|x| Logging : Track messages, edits, and deletions in your server.<br>
 | | Auto Roles : Automatically assign roles to members.<br>
 | | Birthdays : Celebrate members' birthdays with an automated system.<br>
 | | Bumps : Automate bump reminders for your server listings.<br>
-|X| Channels Counter : Display live channel statistics in your server.<br>
+|x| Channels Counter : Display live channel statistics in your server.<br>
 | | Custom Commands : Create custom commands for your server.<br>
 | | Fun : Add playful interactions to your server.<br>
-| | Wizarding World : Add a magical experience to your server with wizarding spells.<br>
+|x| Wizarding World : Add a magical experience to your server with wizarding spells.<br>
 | | Infinite Counter : Create a counter that can be incremented infinitely.<br>
 | | Reminders : Set reminders.<br>
 | | Suggestions : Collect and manage suggestions from your community.<br>
