@@ -1,4 +1,4 @@
-package commands
+package fun
 
 import (
 	"onyx/bot/core"
@@ -46,7 +46,7 @@ func init() {
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplay("# " + trad.Iss_title),
+						discord.NewTextDisplay("# "+trad.Iss_title),
 						discord.NewTextDisplayf(trad.Iss_position+"\n"+trad.Iss_altitude+"\n("+trad.Iss_updated+" <t:%d:R>)", res.Latitude, res.Longitude, res.Altitude, res.Velocity, int64(res.Timestamp)),
 						discord.NewMediaGallery(
 							discord.MediaGalleryItem{
@@ -62,7 +62,7 @@ func init() {
 
 				msg = discord.NewMessageCreateV2(
 					discord.NewContainer(
-						discord.NewTextDisplay("# " + trad.Apod_title),
+						discord.NewTextDisplay("# "+trad.Apod_title),
 						discord.NewTextDisplayf("### %s", res.Title),
 						discord.NewTextDisplayf("> %s", res.Explanation),
 						discord.NewMediaGallery(
