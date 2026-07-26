@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "name": "SafetyModule",
+    "label": "Safety",
+    "description": "Protect your server with our anti-raid, anti-spam, anti-nuke and captcha tools.",
+    "submodules": {
+      "antiraid": {
+        "label": "Anti-Raid",
+        "description": "Anti-raid protection configuration.",
+        "options": {
+          "alt_detector": {
+            "label": "Alt Detector",
+            "description": "Enables alt account detection."
+          },
+          "anti_bot": {
+            "label": "Anti-Bot",
+            "description": "Enables protection against bot addition."
+          },
+          "anti_massjoin_level": {
+            "label": "Anti-Mass Join Level",
+            "description": "Defines the protection level against mass joins.",
+            "options": {
+              "0": { "label": "Disabled (Do nothing)" },
+              "1": { "label": "Soft (Block send permissions for @everyone)" },
+              "2": { "label": "Medium (Activate maximum verification mode)" },
+              "3": { "label": "High (Quarantine then kick at raid end)" }
+            }
+          }
+        }
+      },
+      "antispam": {
+        "label": "Anti-Spam",
+        "description": "Anti-spam protection configuration.",
+        "options": {
+          "anti_spam": {
+            "label": "Anti-Spam Level",
+            "description": "Defines the protection level against message spam.",
+            "options": {
+              "0": { "label": "Disabled (Do nothing)" },
+              "1": { "label": "Soft (Block duplicate content in < 5s)" },
+              "2": { "label": "Medium (Block 2 messages in < 2s)" },
+              "3": { "label": "High (Block duplicate content if 2 consecutive messages)" }
+            }
+          },
+          "quarentine_role": {
+            "label": "Quarantine Role",
+            "description": "The role assigned to quarantined users."
+          },
+          "anti_phising": {
+            "label": "Anti-Phishing",
+            "description": "Enables phishing detection (blacklist + levenshtein)."
+          },
+          "anti_invite": {
+            "label": "Block Invite Links",
+            "description": "Blocks invite links to other servers."
+          },
+          "anti_mention": {
+            "label": "Anti-Mention",
+            "description": "Prevents mass mentions."
+          },
+          "anti_mass_emoji": {
+            "label": "Anti-Mass Emoji",
+            "description": "Blocks excessive use of emojis."
+          },
+          "anti_zalgo": {
+            "label": "Anti-Zalgo",
+            "description": "Filters Zalgo text (corrupted text)."
+          },
+          "ignored_channels": {
+            "label": "Ignored Channels / Categories",
+            "description": "List of channels or categories exempted from anti-spam (comma separated)."
+          }
+        }
+      },
+      "antinuke": {
+        "label": "Anti-Nuke",
+        "description": "Anti-nuke configuration.",
+        "options": {
+          "anti_mass_kick": {
+            "label": "Anti Mass Kick/Ban",
+            "description": "Blocks mass kicks and bans."
+          },
+          "anti_mass_channel_delete": {
+            "label": "Anti Mass Channel Delete/Edit",
+            "description": "Blocks mass deletion and modification of channels."
+          },
+          "anti_mass_role_delete": {
+            "label": "Anti Mass Role Delete/Edit",
+            "description": "Blocks mass deletion and modification of roles."
+          },
+          "anti_vanity_url_edit": {
+            "label": "Anti Vanity URL Edit",
+            "description": "Blocks modification of the vanity URL."
+          },
+          "anti_danger_permission": {
+            "label": "Anti Dangerous Permissions",
+            "description": "Blocks granting dangerous permissions."
+          }
+        }
+      },
+      "captcha": {
+        "label": "Captcha",
+        "description": "Verification system configuration.",
+        "options": {
+          "enabled": {
+            "label": "Enable Captcha",
+            "description": "Enables the captcha verification system."
+          },
+          "channel": {
+            "label": "Captcha Channel",
+            "description": "The channel where verification will take place."
+          },
+          "vrole": {
+            "label": "Verified Role",
+            "description": "The role assigned once the captcha is validated."
+          },
+          "show_to_sus": {
+            "label": "Show to Suspicious Users",
+            "description": "Forces users detected by anti-spam to redo the captcha instead of being kicked."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}

@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "name": "SafetyModule",
+    "label": "Sécurité",
+    "description": "Protégez votre serveur avec nos outils d'anti-raid, anti-spam, anti-nuke et de captcha.",
+    "submodules": {
+      "antiraid": {
+        "label": "Anti-Raid",
+        "description": "Configuration de la protection anti-raid.",
+        "options": {
+          "alt_detector": {
+            "label": "Détecteur de double compte",
+            "description": "Active la détection des doubles comptes."
+          },
+          "anti_bot": {
+            "label": "Anti-Bot",
+            "description": "Active la protection contre l'ajout de bots."
+          },
+          "anti_massjoin_level": {
+            "label": "Niveau d'Anti-Mass Join",
+            "description": "Définit le niveau de protection contre les vagues de connexions.",
+            "options": {
+              "0": { "label": "Désactivé (Ne rien faire)" },
+              "1": { "label": "Faible (Bloquer permissions d'envoi pour @everyone)" },
+              "2": { "label": "Moyen (Activer mode de vérification maximal)" },
+              "3": { "label": "Élevé (Quarantaine puis kick à la fin du raid)" }
+            }
+          }
+        }
+      },
+      "antispam": {
+        "label": "Anti-Spam",
+        "description": "Configuration de la protection anti-spam.",
+        "options": {
+          "anti_spam": {
+            "label": "Niveau d'Anti-Spam",
+            "description": "Définit le niveau de protection contre le spam de messages.",
+            "options": {
+              "0": { "label": "Désactivé (Ne rien faire)" },
+              "1": { "label": "Faible (Bloquer contenu dupliqué en < 5s)" },
+              "2": { "label": "Moyen (Bloquer 2 messages en < 2s)" },
+              "3": { "label": "Élevé (Bloquer contenu dupliqué si 2 messages d'affilée)" }
+            }
+          },
+          "quarentine_role": {
+            "label": "Rôle de quarantaine",
+            "description": "Le rôle attribué aux utilisateurs mis en quarantaine."
+          },
+          "anti_phising": {
+            "label": "Anti-Phishing",
+            "description": "Active la détection de phishing (blacklist + levenshtein)."
+          },
+          "anti_invite": {
+            "label": "Bloquer les liens d'invitation",
+            "description": "Bloque les liens d'invitation vers d'autres serveurs."
+          },
+          "anti_mention": {
+            "label": "Anti-Mention",
+            "description": "Empêche les mentions de masse."
+          },
+          "anti_mass_emoji": {
+            "label": "Anti-Mass Emoji",
+            "description": "Bloque l'utilisation excessive d'emojis."
+          },
+          "anti_zalgo": {
+            "label": "Anti-Zalgo",
+            "description": "Filtre le texte Zalgo (texte corrompu)."
+          },
+          "ignored_channels": {
+            "label": "Salons / Catégories ignorés",
+            "description": "Liste des salons ou catégories exemptés de l'anti-spam (séparés par des virgules)."
+          }
+        }
+      },
+      "antinuke": {
+        "label": "Anti-Nuke",
+        "description": "Configuration de l'anti-nuke.",
+        "options": {
+          "anti_mass_kick": {
+            "label": "Anti Mass Kick/Ban",
+            "description": "Bloque les expulsions et bannissements de masse."
+          },
+          "anti_mass_channel_delete": {
+            "label": "Anti Mass Channel Delete/Edit",
+            "description": "Bloque la suppression et la modification massive de salons."
+          },
+          "anti_mass_role_delete": {
+            "label": "Anti Mass Role Delete/Edit",
+            "description": "Bloque la suppression et la modification massive de rôles."
+          },
+          "anti_vanity_url_edit": {
+            "label": "Anti Vanity URL Edit",
+            "description": "Bloque la modification de l'URL personnalisée."
+          },
+          "anti_danger_permission": {
+            "label": "Permissions Dangereuses",
+            "description": "Bloque l'attribution de permissions dangereuses."
+          }
+        }
+      },
+      "captcha": {
+        "label": "Captcha",
+        "description": "Configuration du système de vérification.",
+        "options": {
+          "enabled": {
+            "label": "Activer le Captcha",
+            "description": "Active le système de vérification par captcha."
+          },
+          "channel": {
+            "label": "Salon Captcha",
+            "description": "Le salon où la vérification sera effectuée."
+          },
+          "vrole": {
+            "label": "Rôle Vérifié",
+            "description": "Le rôle attribué une fois le captcha validé."
+          },
+          "show_to_sus": {
+            "label": "Afficher aux utilisateurs suspects",
+            "description": "Oblige les utilisateurs détectés par l'anti-spam à refaire le captcha au lieu d'être expulsés."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}
