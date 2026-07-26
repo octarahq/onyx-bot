@@ -20,10 +20,18 @@
             "label": "Anti-Mass Join Level",
             "description": "Defines the protection level against mass joins.",
             "options": {
-              "0": { "label": "Disabled (Do nothing)" },
-              "1": { "label": "Soft (Block send permissions for @everyone)" },
-              "2": { "label": "Medium (Activate maximum verification mode)" },
-              "3": { "label": "High (Quarantine then kick at raid end)" }
+              "0": {
+                "label": "Disabled (Do nothing)"
+              },
+              "1": {
+                "label": "Soft (Block send permissions for @everyone)"
+              },
+              "2": {
+                "label": "Medium (Activate maximum verification mode)"
+              },
+              "3": {
+                "label": "High (Quarantine then kick at raid end)"
+              }
             }
           }
         }
@@ -36,19 +44,27 @@
             "label": "Anti-Spam Level",
             "description": "Defines the protection level against message spam.",
             "options": {
-              "0": { "label": "Disabled (Do nothing)" },
-              "1": { "label": "Soft (Block duplicate content in < 5s)" },
-              "2": { "label": "Medium (Block 2 messages in < 2s)" },
-              "3": { "label": "High (Block duplicate content if 2 consecutive messages)" }
+              "0": {
+                "label": "Disabled (Do nothing)"
+              },
+              "1": {
+                "label": "Soft (Block duplicate content in < 5s)"
+              },
+              "2": {
+                "label": "Medium (Block 2 messages in < 2s)"
+              },
+              "3": {
+                "label": "High (Block duplicate content if 2 consecutive messages)"
+              }
             }
           },
           "quarentine_role": {
             "label": "Quarantine Role",
             "description": "The role assigned to quarantined users."
           },
-          "anti_phising": {
+          "anti_phishing": {
             "label": "Anti-Phishing",
-            "description": "Enables phishing detection (blacklist + levenshtein)."
+            "description": "Enables phishing detection."
           },
           "anti_invite": {
             "label": "Block Invite Links",
@@ -122,5 +138,8 @@
       }
     }
   },
-  "trad": {}
+  "trad": {
+    "phishing_censored_title": "Your link was censored for suspected phishing.",
+    "phishing_censored_description": "-# If this is a mistake, please contact support. Code: %s"
+  }
 }

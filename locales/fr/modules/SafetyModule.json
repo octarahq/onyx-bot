@@ -20,10 +20,18 @@
             "label": "Niveau d'Anti-Mass Join",
             "description": "Définit le niveau de protection contre les vagues de connexions.",
             "options": {
-              "0": { "label": "Désactivé (Ne rien faire)" },
-              "1": { "label": "Faible (Bloquer permissions d'envoi pour @everyone)" },
-              "2": { "label": "Moyen (Activer mode de vérification maximal)" },
-              "3": { "label": "Élevé (Quarantaine puis kick à la fin du raid)" }
+              "0": {
+                "label": "Désactivé (Ne rien faire)"
+              },
+              "1": {
+                "label": "Faible (Bloquer permissions d'envoi pour @everyone)"
+              },
+              "2": {
+                "label": "Moyen (Activer mode de vérification maximal)"
+              },
+              "3": {
+                "label": "Élevé (Quarantaine puis kick à la fin du raid)"
+              }
             }
           }
         }
@@ -36,19 +44,27 @@
             "label": "Niveau d'Anti-Spam",
             "description": "Définit le niveau de protection contre le spam de messages.",
             "options": {
-              "0": { "label": "Désactivé (Ne rien faire)" },
-              "1": { "label": "Faible (Bloquer contenu dupliqué en < 5s)" },
-              "2": { "label": "Moyen (Bloquer 2 messages en < 2s)" },
-              "3": { "label": "Élevé (Bloquer contenu dupliqué si 2 messages d'affilée)" }
+              "0": {
+                "label": "Désactivé (Ne rien faire)"
+              },
+              "1": {
+                "label": "Faible (Bloquer contenu dupliqué en < 5s)"
+              },
+              "2": {
+                "label": "Moyen (Bloquer 2 messages en < 2s)"
+              },
+              "3": {
+                "label": "Élevé (Bloquer contenu dupliqué si 2 messages d'affilée)"
+              }
             }
           },
           "quarentine_role": {
             "label": "Rôle de quarantaine",
             "description": "Le rôle attribué aux utilisateurs mis en quarantaine."
           },
-          "anti_phising": {
+          "anti_phishing": {
             "label": "Anti-Phishing",
-            "description": "Active la détection de phishing (blacklist + levenshtein)."
+            "description": "Active la détection de phishing."
           },
           "anti_invite": {
             "label": "Bloquer les liens d'invitation",
@@ -122,5 +138,8 @@
       }
     }
   },
-  "trad": {}
+  "trad": {
+    "phishing_censored_title": "Ton lien a été censuré pour suspicion de phishing.",
+    "phishing_censored_description": "-# S'il s'agit d'une erreur, contactez le support. Code : %s"
+  }
 }
