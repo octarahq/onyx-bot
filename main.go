@@ -12,6 +12,7 @@ import (
 	"onyx/bot/core"
 	"onyx/bot/db"
 	"onyx/bot/handlers"
+	"onyx/bot/logs"
 
 	_ "onyx/bot/commands"
 	_ "onyx/bot/events"
@@ -100,6 +101,9 @@ func main() {
 
 	coreBot.Client = client
 	coreBot.ConnectedSince = connectedSince
+
+	logger := logs.NewLogger(client)
+	coreBot.Logger = logger
 
 	handlers.SetupEvents(coreBot)
 
