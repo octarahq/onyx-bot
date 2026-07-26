@@ -1,12 +1,19 @@
 package modules
 
 import (
-	"fmt"
+	"encoding/csv"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"onyx/bot/core"
 	"onyx/bot/locales"
+	"onyx/bot/utils"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/disgoorg/snowflake/v2"
+	"github.com/texttheater/golang-levenshtein/levenshtein"
 	"gorm.io/gorm"
 )
 
@@ -37,7 +44,7 @@ type SafetyARaidSettings struct {
 type SafetyASpamSettings struct {
 	QuarentineRole  string              `json:"quarentine_role"`
 	AntiSpamLevel   SafetyAntiSpamLevel `json:"anti_spam"`
-	AntiPhishing    bool                `json:"anti_phising"` // blacklist + levenshtein
+	AntiPhishing    bool                `json:"anti_phishing"` // blacklist + levenshtein
 	BlockInviteLink bool                `json:"anti_invite"`
 	AntiMention     bool                `json:"anti_mention"`
 	AntiMassEmoji   bool                `json:"anti_mass_emoji"`
@@ -83,7 +90,7 @@ func init() {
 
 func (m *SafetyModule) Metadata() core.Metadata {
 	return core.Metadata{
-		Name: "Safety",
+		Name: "SafetyModule",
 		Icon: "shield",
 		Label: func(locale discord.Locale) string {
 			return locales.GetMeta(locale, "module_SafetyModule").Label
@@ -113,7 +120,121 @@ func (m *SafetyModule) Permissions() []discord.Permissions {
 
 func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate) bool {
 	if m.Data.Enabled {
-		fmt.Println("SafetyModule message create handled!")
+		if m.Data.AntiSpam.AntiPhishing {
+			content := e.Message.Content
+			urls := utils.ExtractURLs(content)
+
+			isPhishing := false
+
+			for _, u := range urls {
+				hostname := strings.ToLower(u.Hostname())
+				if len(hostname) == 0 {
+					continue
+				}
+
+				firstChar := rune(hostname[0])
+				fileName := string(firstChar) + ".csv"
+				filePath := filepath.Join("data", "security", "domainlist", fileName)
+
+				file, err := os.Open(filePath)
+				if err != nil {
+					continue
+				}
+
+				reader := csv.NewReader(file)
+				records, err := reader.ReadAll()
+				file.Close()
+				if err != nil {
+					continue
+				}
+
+				isExactMatch := false
+				matchedPhishing := false
+
+				for i, record := range records {
+					if i == 0 {
+						continue
+					}
+					if len(record) < 2 {
+						continue
+					}
+					legitDomain := record[1]
+					if hostname == legitDomain {
+						isExactMatch = true
+						matchedPhishing = false
+						break
+					}
+					if !matchedPhishing {
+						dist := levenshtein.DistanceForStrings([]rune(hostname), []rune(legitDomain), levenshtein.DefaultOptions)
+						if dist <= 2 {
+							matchedPhishing = true
+						}
+					}
+				}
+
+				if matchedPhishing && !isExactMatch {
+					isPhishing = true
+					break
+				}
+			}
+
+			mds := utils.ExtractMDURLs(content)
+			for _, md := range mds {
+				name, link := md.Name, md.URL
+
+				nameDomain := utils.ExtractDomain(name)
+
+				if nameDomain == "" {
+					continue
+				}
+
+				linkDomain := strings.ToLower(link.Hostname())
+				linkDomain = strings.TrimPrefix(linkDomain, "www.")
+
+				if nameDomain != linkDomain {
+					isPhishing = true
+				}
+			}
+
+			if isPhishing {
+				e.Client().Rest.DeleteMessage(e.ChannelID, e.MessageID)
+				code := b.Logger.SendSafetyPhishingLogs(urls, e.Message)
+				locale := discord.LocaleEnglishUS
+				if e.GuildID != nil {
+					if guild, ok := e.Client().Caches.Guild(*e.GuildID); ok {
+						locale = discord.Locale(guild.PreferredLocale)
+					}
+				}
+				trad := locales.GetModule_SafetyModule(locale)
+				
+				title := trad.Phishing_censored_title
+				if title == "" {
+					title = "Ton lien a été censuré pour suspicion de phishing."
+				}
+				desc := trad.Phishing_censored_description
+				if desc == "" {
+					desc = "-# Si il s'aggit d'une erreur contactez le support. Code : %s"
+				}
+
+				msg := discord.NewMessageCreateV2(
+					discord.NewContainer(
+						discord.NewSection(
+							discord.NewTextDisplayf("# <@%s>", e.Message.Author.ID.String()),
+							discord.NewTextDisplay(title),
+							discord.NewTextDisplayf(desc, code),
+						).WithAccessory(discord.NewThumbnail(e.Message.Author.EffectiveAvatarURL())),
+						discord.NewActionRow(
+							discord.NewLinkButton("Support", "https://onyx.octara.xyz"),
+						),
+					),
+				).WithAllowedMentions(&discord.AllowedMentions{
+					Users: []snowflake.ID{e.Message.Author.ID},
+				})
+
+				e.Client().Rest.CreateMessage(e.ChannelID, msg)
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -154,7 +275,7 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 
 	asLevelL, asLevelD := getOpt("antispam", "anti_spam")
 	asRoleL, asRoleD := getOpt("antispam", "quarentine_role")
-	asPhishL, asPhishD := getOpt("antispam", "anti_phising")
+	asPhishL, asPhishD := getOpt("antispam", "anti_phishing")
 	asInviteL, asInviteD := getOpt("antispam", "anti_invite")
 	asMentionL, asMentionD := getOpt("antispam", "anti_mention")
 	asEmojiL, asEmojiD := getOpt("antispam", "anti_mass_emoji")
@@ -229,7 +350,7 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 						Type:        core.ComponentTypeRole,
 					},
 					{
-						Name:        "antispam.anti_phising",
+						Name:        "antispam.anti_phishing",
 						Label:       asPhishL,
 						Description: asPhishD,
 						Type:        core.ComponentTypeBoolean,

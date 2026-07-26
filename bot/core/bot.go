@@ -2,6 +2,7 @@ package core
 
 import (
 	"onyx/bot/db"
+	"onyx/bot/logs"
 	"time"
 
 	"github.com/disgoorg/disgo/bot"
@@ -40,6 +41,8 @@ type Bot struct {
 
 	ConnectedSince time.Time
 	Version        string
+
+	Logger logs.Logger
 }
 
 func (b *Bot) SendMessage(cid string, msg discord.MessageCreate) {
