@@ -142,6 +142,8 @@
     "phishing_censored_title": "Your link was censored for suspected phishing.",
     "phishing_censored_description": "-# If this is a mistake, please contact support. Code: %s",
     "blocked_invite_censored_title": "Your message was censored because it contains an invite.",
-    "blocked_invite_censored_description": "-# If this is a mistake, please contact support. Code: %s"
+    "blocked_invite_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "zalgo_censored_title": "Your message was censored because it contains corrupted text (Zalgo).",
+    "zalgo_censored_description": "-# If this is a mistake, please contact support. Code: %s"
   }
 }

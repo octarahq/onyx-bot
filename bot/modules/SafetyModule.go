@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 
 	"onyx/bot/core"
 	"onyx/bot/locales"
@@ -132,6 +133,12 @@ func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate)
 				return true
 			}
 		}
+
+		if m.Data.AntiSpam.AntiZalgo {
+			if handleBlockInvite(b, e.Client(), e.Message) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -145,6 +152,12 @@ func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate)
 		}
 
 		if m.Data.AntiSpam.BlockInviteLink {
+			if handleBlockInvite(b, e.Client(), e.Message) {
+				return true
+			}
+		}
+
+		if m.Data.AntiSpam.AntiZalgo {
 			if handleBlockInvite(b, e.Client(), e.Message) {
 				return true
 			}
@@ -374,6 +387,61 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 	}
 }
 
+func handleZalgo(b *core.Bot, client *bot.Client, message discord.Message) bool {
+	content := message.Content
+	if len(content) == 0 {
+		return false
+	}
+
+	var diacriticCount int
+	var totalRunes int
+
+	for _, r := range content {
+		totalRunes++
+
+		if unicode.Is(unicode.Mn, r) {
+			diacriticCount++
+		}
+	}
+
+	if totalRunes == 0 {
+		return false
+	}
+
+	ratio := float64(diacriticCount) / float64(totalRunes)
+
+	isZalgo := false
+	if ratio > 0.30 || diacriticCount > 15 {
+		isZalgo = true
+	}
+
+	if isZalgo {
+		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		code := b.Logger.SendSafetyZalgoLogs(ratio, message)
+		locale := discord.LocaleEnglishUS
+		if message.GuildID != nil {
+			if guild, ok := client.Caches.Guild(*message.GuildID); ok {
+				locale = discord.Locale(guild.PreferredLocale)
+			}
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		title := trad.Zalgo_censored_title
+		if title == "" {
+			title = "Ton message a été censuré car il contient du texte corrompu (Zalgo)."
+		}
+		desc := trad.Zalgo_censored_description
+		if desc == "" {
+			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
+		}
+
+		sendCensoredMessage(client, message, string(code), title, desc)
+		return true
+	}
+
+	return false
+}
+
 func handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	urls := utils.ExtractURLs(message.Content)
 	var includeInvite bool
@@ -409,11 +477,11 @@ func handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message)
 		}
 		trad := locales.GetModule_SafetyModule(locale)
 
-		title := trad.BlockedInvite_censored_title
+		title := trad.Blocked_invite_censored_title
 		if title == "" {
 			title = "Ton message a été censuré car il contient une invitation."
 		}
-		desc := trad.BlockedInvite_censored_description
+		desc := trad.Blocked_invite_censored_description
 		if desc == "" {
 			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
