@@ -126,6 +126,12 @@ func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate)
 				return true
 			}
 		}
+
+		if m.Data.AntiSpam.BlockInviteLink {
+			if handleBlockInvite(b, e.Client(), e.Message) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -134,6 +140,12 @@ func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate)
 	if m.Data.Enabled {
 		if m.Data.AntiSpam.AntiPhishing {
 			if handlePhishing(b, e.Client(), e.Message) {
+				return true
+			}
+		}
+
+		if m.Data.AntiSpam.BlockInviteLink {
+			if handleBlockInvite(b, e.Client(), e.Message) {
 				return true
 			}
 		}
@@ -362,6 +374,57 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 	}
 }
 
+func handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message) bool {
+	urls := utils.ExtractURLs(message.Content)
+	var includeInvite bool
+
+	for _, url := range urls {
+		host := strings.ToLower(url.Hostname())
+
+		switch {
+		case host == "discord.gg" || strings.HasSuffix(host, ".discord.gg"):
+			includeInvite = true
+
+		case host == "discord.com" || strings.HasSuffix(host, ".discord.com"):
+			if strings.HasPrefix(url.Path, "/invite") || strings.HasPrefix(url.Path, "/application-directory") {
+				includeInvite = true
+			} else if strings.HasPrefix(url.Path, "/oauth2/authorize") {
+				includeInvite = true
+			}
+		}
+
+		if includeInvite {
+			break
+		}
+	}
+
+	if includeInvite {
+		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		code := b.Logger.SendSafetyBlockedInviteLogs(urls, message)
+		locale := discord.LocaleEnglishUS
+		if message.GuildID != nil {
+			if guild, ok := client.Caches.Guild(*message.GuildID); ok {
+				locale = discord.Locale(guild.PreferredLocale)
+			}
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		title := trad.BlockedInvite_censored_title
+		if title == "" {
+			title = "Ton message a été censuré car il contient une invitation."
+		}
+		desc := trad.BlockedInvite_censored_description
+		if desc == "" {
+			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
+		}
+
+		sendCensoredMessage(client, message, string(code), title, desc)
+		return true
+	}
+
+	return false
+}
+
 func handlePhishing(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	content := message.Content
 	urls := utils.ExtractURLs(content)
@@ -455,27 +518,31 @@ func handlePhishing(b *core.Bot, client *bot.Client, message discord.Message) bo
 		}
 		desc := trad.Phishing_censored_description
 		if desc == "" {
-			desc = "-# Si il s'aggit d'une erreur contactez le support. Code : %s"
+			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
 
-		msg := discord.NewMessageCreateV2(
-			discord.NewContainer(
-				discord.NewSection(
-					discord.NewTextDisplayf("# <@%s>", message.Author.ID.String()),
-					discord.NewTextDisplay(title),
-					discord.NewTextDisplayf(desc, code),
-				).WithAccessory(discord.NewThumbnail(message.Author.EffectiveAvatarURL())),
-				discord.NewActionRow(
-					discord.NewLinkButton("Support", "https://onyx.octara.xyz"),
-				),
-			),
-		).WithAllowedMentions(&discord.AllowedMentions{
-			Users: []snowflake.ID{message.Author.ID},
-		})
-
-		client.Rest.CreateMessage(message.ChannelID, msg)
+		sendCensoredMessage(client, message, string(code), title, desc)
 		return true
 	}
 
 	return false
+}
+
+func sendCensoredMessage(client *bot.Client, message discord.Message, code string, title string, desc string) {
+	msg := discord.NewMessageCreateV2(
+		discord.NewContainer(
+			discord.NewSection(
+				discord.NewTextDisplayf("# <@%s>", message.Author.ID.String()),
+				discord.NewTextDisplay(title),
+				discord.NewTextDisplayf(desc, code),
+			).WithAccessory(discord.NewThumbnail(message.Author.EffectiveAvatarURL())),
+			discord.NewActionRow(
+				discord.NewLinkButton("Support", "https://onyx.octara.xyz"),
+			),
+		),
+	).WithAllowedMentions(&discord.AllowedMentions{
+		Users: []snowflake.ID{message.Author.ID},
+	})
+
+	client.Rest.CreateMessage(message.ChannelID, msg)
 }

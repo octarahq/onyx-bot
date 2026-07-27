@@ -140,6 +140,8 @@
   },
   "trad": {
     "phishing_censored_title": "Ton lien a été censuré pour suspicion de phishing.",
-    "phishing_censored_description": "-# S'il s'agit d'une erreur, contactez le support. Code : %s"
+    "phishing_censored_description": "-# S'il s'agit d'une erreur, contactez le support. Code : %s",
+    "blocked_invite_censored_title": "Ton message a été censuré car il contient une invitation.",
+    "blocked_invite_censored_description": "-# S'il s'agit d'une erreur, contactez le support. Code : %s"
   }
 }

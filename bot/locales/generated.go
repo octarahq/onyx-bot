@@ -839,8 +839,10 @@ func GetModule_LoggingModule(locale discord.Locale) ModuleLoggingModuleTrad {
 }
 
 type ModuleSafetyModuleTrad struct {
-	Phishing_censored_title       string `json:"phishing_censored_title"`
-	Phishing_censored_description string `json:"phishing_censored_description"`
+	Phishing_censored_title             string `json:"phishing_censored_title"`
+	Phishing_censored_description       string `json:"phishing_censored_description"`
+	BlockedInvite_censored_title        string `json:"blocked_invite_censored_title"`
+	BlockedInvite_censored_description  string `json:"blocked_invite_censored_description"`
 }
 
 func GetModule_SafetyModule(locale discord.Locale) ModuleSafetyModuleTrad {
