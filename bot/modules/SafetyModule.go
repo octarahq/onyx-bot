@@ -10,6 +10,7 @@ import (
 	"onyx/bot/locales"
 	"onyx/bot/utils"
 
+	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/snowflake/v2"
@@ -121,117 +122,18 @@ func (m *SafetyModule) Permissions() []discord.Permissions {
 func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate) bool {
 	if m.Data.Enabled {
 		if m.Data.AntiSpam.AntiPhishing {
-			content := e.Message.Content
-			urls := utils.ExtractURLs(content)
-
-			isPhishing := false
-
-			for _, u := range urls {
-				hostname := strings.ToLower(u.Hostname())
-				if len(hostname) == 0 {
-					continue
-				}
-
-				firstChar := rune(hostname[0])
-				fileName := string(firstChar) + ".csv"
-				filePath := filepath.Join("data", "security", "domainlist", fileName)
-
-				file, err := os.Open(filePath)
-				if err != nil {
-					continue
-				}
-
-				reader := csv.NewReader(file)
-				records, err := reader.ReadAll()
-				file.Close()
-				if err != nil {
-					continue
-				}
-
-				isExactMatch := false
-				matchedPhishing := false
-
-				for i, record := range records {
-					if i == 0 {
-						continue
-					}
-					if len(record) < 2 {
-						continue
-					}
-					legitDomain := record[1]
-					if hostname == legitDomain {
-						isExactMatch = true
-						matchedPhishing = false
-						break
-					}
-					if !matchedPhishing {
-						dist := levenshtein.DistanceForStrings([]rune(hostname), []rune(legitDomain), levenshtein.DefaultOptions)
-						if dist <= 2 {
-							matchedPhishing = true
-						}
-					}
-				}
-
-				if matchedPhishing && !isExactMatch {
-					isPhishing = true
-					break
-				}
+			if handlePhishing(b, e.Client(), e.Message) {
+				return true
 			}
+		}
+	}
+	return false
+}
 
-			mds := utils.ExtractMDURLs(content)
-			for _, md := range mds {
-				name, link := md.Name, md.URL
-
-				nameDomain := utils.ExtractDomain(name)
-
-				if nameDomain == "" {
-					continue
-				}
-
-				linkDomain := strings.ToLower(link.Hostname())
-				linkDomain = strings.TrimPrefix(linkDomain, "www.")
-
-				if nameDomain != linkDomain {
-					isPhishing = true
-				}
-			}
-
-			if isPhishing {
-				e.Client().Rest.DeleteMessage(e.ChannelID, e.MessageID)
-				code := b.Logger.SendSafetyPhishingLogs(urls, e.Message)
-				locale := discord.LocaleEnglishUS
-				if e.GuildID != nil {
-					if guild, ok := e.Client().Caches.Guild(*e.GuildID); ok {
-						locale = discord.Locale(guild.PreferredLocale)
-					}
-				}
-				trad := locales.GetModule_SafetyModule(locale)
-				
-				title := trad.Phishing_censored_title
-				if title == "" {
-					title = "Ton lien a été censuré pour suspicion de phishing."
-				}
-				desc := trad.Phishing_censored_description
-				if desc == "" {
-					desc = "-# Si il s'aggit d'une erreur contactez le support. Code : %s"
-				}
-
-				msg := discord.NewMessageCreateV2(
-					discord.NewContainer(
-						discord.NewSection(
-							discord.NewTextDisplayf("# <@%s>", e.Message.Author.ID.String()),
-							discord.NewTextDisplay(title),
-							discord.NewTextDisplayf(desc, code),
-						).WithAccessory(discord.NewThumbnail(e.Message.Author.EffectiveAvatarURL())),
-						discord.NewActionRow(
-							discord.NewLinkButton("Support", "https://onyx.octara.xyz"),
-						),
-					),
-				).WithAllowedMentions(&discord.AllowedMentions{
-					Users: []snowflake.ID{e.Message.Author.ID},
-				})
-
-				e.Client().Rest.CreateMessage(e.ChannelID, msg)
+func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate) bool {
+	if m.Data.Enabled {
+		if m.Data.AntiSpam.AntiPhishing {
+			if handlePhishing(b, e.Client(), e.Message) {
 				return true
 			}
 		}
@@ -458,4 +360,122 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 			},
 		},
 	}
+}
+
+func handlePhishing(b *core.Bot, client *bot.Client, message discord.Message) bool {
+	content := message.Content
+	urls := utils.ExtractURLs(content)
+
+	isPhishing := false
+
+	for _, u := range urls {
+		hostname := strings.ToLower(u.Hostname())
+		if len(hostname) == 0 {
+			continue
+		}
+
+		firstChar := rune(hostname[0])
+		fileName := string(firstChar) + ".csv"
+		filePath := filepath.Join("data", "security", "domainlist", fileName)
+
+		file, err := os.Open(filePath)
+		if err != nil {
+			continue
+		}
+
+		reader := csv.NewReader(file)
+		records, err := reader.ReadAll()
+		file.Close()
+		if err != nil {
+			continue
+		}
+
+		isExactMatch := false
+		matchedPhishing := false
+
+		for i, record := range records {
+			if i == 0 {
+				continue
+			}
+			if len(record) < 2 {
+				continue
+			}
+			legitDomain := record[1]
+			if hostname == legitDomain {
+				isExactMatch = true
+				matchedPhishing = false
+				break
+			}
+			if !matchedPhishing {
+				dist := levenshtein.DistanceForStrings([]rune(hostname), []rune(legitDomain), levenshtein.DefaultOptions)
+				if dist <= 2 {
+					matchedPhishing = true
+				}
+			}
+		}
+
+		if matchedPhishing && !isExactMatch {
+			isPhishing = true
+			break
+		}
+	}
+
+	mds := utils.ExtractMDURLs(content)
+	for _, md := range mds {
+		name, link := md.Name, md.URL
+
+		nameDomain := utils.ExtractDomain(name)
+
+		if nameDomain == "" {
+			continue
+		}
+
+		linkDomain := strings.ToLower(link.Hostname())
+		linkDomain = strings.TrimPrefix(linkDomain, "www.")
+
+		if nameDomain != linkDomain {
+			isPhishing = true
+		}
+	}
+
+	if isPhishing {
+		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		code := b.Logger.SendSafetyPhishingLogs(urls, message)
+		locale := discord.LocaleEnglishUS
+		if message.GuildID != nil {
+			if guild, ok := client.Caches.Guild(*message.GuildID); ok {
+				locale = discord.Locale(guild.PreferredLocale)
+			}
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		title := trad.Phishing_censored_title
+		if title == "" {
+			title = "Ton lien a été censuré pour suspicion de phishing."
+		}
+		desc := trad.Phishing_censored_description
+		if desc == "" {
+			desc = "-# Si il s'aggit d'une erreur contactez le support. Code : %s"
+		}
+
+		msg := discord.NewMessageCreateV2(
+			discord.NewContainer(
+				discord.NewSection(
+					discord.NewTextDisplayf("# <@%s>", message.Author.ID.String()),
+					discord.NewTextDisplay(title),
+					discord.NewTextDisplayf(desc, code),
+				).WithAccessory(discord.NewThumbnail(message.Author.EffectiveAvatarURL())),
+				discord.NewActionRow(
+					discord.NewLinkButton("Support", "https://onyx.octara.xyz"),
+				),
+			),
+		).WithAllowedMentions(&discord.AllowedMentions{
+			Users: []snowflake.ID{message.Author.ID},
+		})
+
+		client.Rest.CreateMessage(message.ChannelID, msg)
+		return true
+	}
+
+	return false
 }
