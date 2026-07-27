@@ -163,6 +163,23 @@
         "code": "Code"
       }
     },
+    "messageUpdate": {
+      "title": "Message Modifié",
+      "states": {
+        "author": "Auteur",
+        "channel": "Salon",
+        "oldContent": "Ancien Contenu",
+        "newContent": "Nouveau Contenu"
+      }
+    },
+    "messageDelete": {
+      "title": "Message Supprimé",
+      "states": {
+        "author": "Auteur",
+        "channel": "Salon",
+        "content": "Contenu"
+      }
+    },
     "threadCreate": {
       "title": "Fil de discussion Créé",
       "states": {

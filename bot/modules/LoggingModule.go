@@ -601,3 +601,59 @@ func (m *LoggingModule) HandleThreadDelete(b *core.Bot, e *events.ThreadDelete) 
 	m.sendLog(b, ActionDelete, t.Title, comps)
 	return false
 }
+
+func (m *LoggingModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate) bool {
+	if !m.Data.Enabled || e.GuildID == nil {
+		return false
+	}
+	if e.Message.Author.Bot || e.OldMessage.ID == 0 {
+		return false
+	}
+	if e.OldMessage.Content == e.Message.Content {
+		return false
+	}
+	guild, ok := e.Client().Caches.Guild(*e.GuildID)
+	if !ok {
+		return false
+	}
+	t := locales.GetModule_LoggingModule(discord.Locale(guild.PreferredLocale)).MessageUpdate
+	var comps []discord.ContainerSubComponent
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.Author, e.Message.Author.Tag())))
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.Channel, fmt.Sprintf("<#%s>", e.Message.ChannelID.String()))))
+	oldContent := e.OldMessage.Content
+	if oldContent == "" {
+		oldContent = "*No Content*"
+	}
+	newContent := e.Message.Content
+	if newContent == "" {
+		newContent = "*No Content*"
+	}
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.OldContent, "\n"+oldContent)))
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.NewContent, "\n"+newContent)))
+	m.sendLog(b, ActionUpdate, t.Title, comps)
+	return false
+}
+
+func (m *LoggingModule) HandleMessageDelete(b *core.Bot, e *events.MessageDelete) bool {
+	if !m.Data.Enabled || e.GuildID == nil {
+		return false
+	}
+	if e.Message.Author.ID == 0 || e.Message.Author.Bot {
+		return false
+	}
+	guild, ok := e.Client().Caches.Guild(*e.GuildID)
+	if !ok {
+		return false
+	}
+	t := locales.GetModule_LoggingModule(discord.Locale(guild.PreferredLocale)).MessageDelete
+	var comps []discord.ContainerSubComponent
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.Author, e.Message.Author.Tag())))
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.Channel, fmt.Sprintf("<#%s>", e.ChannelID.String()))))
+	content := e.Message.Content
+	if content == "" {
+		content = "*No content*"
+	}
+	comps = append(comps, discord.NewTextDisplay(formatState(t.States.Content, "\n"+content)))
+	m.sendLog(b, ActionDelete, t.Title, comps)
+	return false
+}

@@ -163,6 +163,23 @@
         "code": "Code"
       }
     },
+    "messageUpdate": {
+      "title": "Message Edited",
+      "states": {
+        "author": "Author",
+        "channel": "Channel",
+        "oldContent": "Old Content",
+        "newContent": "New Content"
+      }
+    },
+    "messageDelete": {
+      "title": "Message Deleted",
+      "states": {
+        "author": "Author",
+        "channel": "Channel",
+        "content": "Content"
+      }
+    },
     "threadCreate": {
       "title": "Thread Created",
       "states": {
