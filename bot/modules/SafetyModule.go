@@ -2,6 +2,7 @@ package modules
 
 import (
 	"encoding/csv"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,6 +15,7 @@ import (
 	"github.com/disgoorg/disgo/bot"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/disgoorg/disgo/rest"
 	"github.com/disgoorg/snowflake/v2"
 	"github.com/texttheater/golang-levenshtein/levenshtein"
 	"gorm.io/gorm"
@@ -118,6 +120,74 @@ func (m *SafetyModule) Priority() int   { return 1 }
 func (m *SafetyModule) IsEnabled() bool { return m.Data.Enabled }
 func (m *SafetyModule) Permissions() []discord.Permissions {
 	return []discord.Permissions{}
+}
+
+func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) bool {
+	if m.Data.Enabled {
+		if m.Data.AntiNuke.AntiVanityUrlEdit {
+			oldCode := ""
+			if e.OldGuild.VanityURLCode != nil {
+				oldCode = *e.OldGuild.VanityURLCode
+			}
+			newCode := ""
+			if e.Guild.VanityURLCode != nil {
+				newCode = *e.Guild.VanityURLCode
+			}
+
+			if oldCode != newCode {
+				var userID snowflake.ID
+
+				auditLogs, err := e.Client().Rest.GetAuditLog(e.GuildID, 0, discord.AuditLogEventGuildUpdate, 0, 0, 1)
+				if err == nil && len(auditLogs.AuditLogEntries) > 0 {
+					entry := auditLogs.AuditLogEntries[0]
+					if entry.UserID != 0 && entry.UserID != e.Guild.OwnerID {
+						userID = entry.UserID
+					}
+				}
+
+				if userID != 0 {
+					type UpdateVanity struct {
+						Code string `json:"code"`
+					}
+					ep := rest.NewEndpoint(http.MethodPatch, "/guilds/{guild.id}/vanity-url")
+					e.Client().Rest.Do(ep.Compile(nil, e.GuildID), UpdateVanity{Code: oldCode}, nil)
+
+					member, err := e.Client().Rest.GetMember(e.GuildID, userID)
+					if err == nil {
+						for _, roleID := range member.RoleIDs {
+							if role, ok := e.Client().Caches.Role(e.GuildID, roleID); ok {
+								if role.Permissions.Has(discord.PermissionAdministrator) || role.Permissions.Has(discord.PermissionManageGuild) {
+									e.Client().Rest.RemoveMemberRole(e.GuildID, userID, roleID)
+								}
+							}
+						}
+					}
+
+					locale := discord.LocaleFrench
+					if e.Guild.PreferredLocale != "" {
+						locale = discord.Locale(e.Guild.PreferredLocale)
+					}
+					trad := locales.GetModule_SafetyModule(locale)
+
+					ownerChannel, err := e.Client().Rest.CreateDMChannel(e.Guild.OwnerID)
+					if err == nil {
+						msg := discord.NewMessageCreateV2(
+							discord.NewContainer(
+								discord.NewSection(
+									discord.NewTextDisplayf(trad.Vanity_nuke_alert, userID, e.Guild.Name),
+								).WithAccessory(discord.NewThumbnail(*e.Guild.IconURL())),
+							).WithAccentColor(utils.ParseStrColor("#e74c3c")),
+						)
+						e.Client().Rest.CreateMessage(ownerChannel.ID(), msg)
+					}
+
+					return true
+				}
+			}
+		}
+	}
+
+	return false
 }
 
 func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate) bool {
