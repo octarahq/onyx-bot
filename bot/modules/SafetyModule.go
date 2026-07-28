@@ -124,6 +124,28 @@ func (m *SafetyModule) Permissions() []discord.Permissions {
 	return []discord.Permissions{}
 }
 
+func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJoin) bool {
+	if m.Data.Enabled {
+		if m.Data.AntiRaid.AntiBot {
+			if e.Member.User.Bot {
+				e.Client().Rest.RemoveMember(e.GuildID, e.Member.User.ID)
+				b.Logger.SendSafetyRaidBotLogs(e.Member)
+				return true
+			}
+		}
+
+		if m.Data.AntiRaid.AltDetector {
+			if time.Since(e.Member.CreatedAt()) < 7*24*time.Hour {
+				e.Client().Rest.RemoveMember(e.GuildID, e.Member.User.ID)
+				b.Logger.SendSafetyRaidAltLogs(e.Member)
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) bool {
 	if m.Data.Enabled {
 		if m.Data.AntiNuke.AntiVanityUrlEdit {

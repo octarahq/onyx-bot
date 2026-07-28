@@ -116,3 +116,45 @@ func (l Logger) SendSafetyMentionSpamLogs(message discord.Message) Code {
 
 	return code
 }
+
+func (l Logger) SendSafetyRaidBotLogs(member discord.Member) Code {
+	code := GenerateCode(time.Now(), "safety", "bot")
+	guild, exist := l.Client.Caches.Guild(member.GuildID)
+	var guildName string = "unknown"
+	if exist {
+		guildName = guild.Name
+	}
+
+	msg := discord.NewMessageCreateV2(
+		discord.NewContainer(
+			discord.NewTextDisplayf("## Anti Bot `%s`", code),
+			discord.NewTextDisplayf("Bot : %s (<@%s>)", member.User.Username, member.User.ID),
+			discord.NewTextDisplayf("Guild  : %s (%s)", guildName, guild.ID),
+		),
+	)
+
+	l.SendLog(SafetyLogsChannel, msg)
+
+	return code
+}
+
+func (l Logger) SendSafetyRaidAltLogs(member discord.Member) Code {
+	code := GenerateCode(time.Now(), "safety", "alt")
+	guild, exist := l.Client.Caches.Guild(member.GuildID)
+	var guildName string = "unknown"
+	if exist {
+		guildName = guild.Name
+	}
+
+	msg := discord.NewMessageCreateV2(
+		discord.NewContainer(
+			discord.NewTextDisplayf("## Anti Bot `%s`", code),
+			discord.NewTextDisplayf("Bot : %s (<@%s>)", member.User.Username, member.User.ID),
+			discord.NewTextDisplayf("Guild  : %s (%s)", guildName, guild.ID),
+		),
+	)
+
+	l.SendLog(SafetyLogsChannel, msg)
+
+	return code
+}
