@@ -789,3 +789,86 @@ func handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message)
 
 	return false
 }
+
+func handleEmojiSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
+	if message.GuildID == nil {
+		return false
+	}
+
+	guildID := *message.GuildID
+	userID := message.Author.ID
+
+	cacheKey := "emoji_spam:" + guildID.String() + ":" + userID.String()
+
+	includeEmojis, _ := utils.IncludeEmojis(message.Content)
+	if !includeEmojis {
+		utils.Cache.Mu.Lock()
+		delete(utils.Cache.Items, cacheKey)
+		utils.Cache.Mu.Unlock()
+
+		return false
+	}
+
+	utils.Cache.Mu.Lock()
+	var userCounts []int
+	if val, ok := utils.Cache.Items[cacheKey]; ok {
+		if val.Expiration == 0 || time.Now().UnixNano() <= val.Expiration {
+			userCounts = val.Value.([]int)
+		}
+	}
+
+	userCounts = append(userCounts, 1)
+	if len(userCounts) > 10 {
+		userCounts = userCounts[len(userCounts)-3:]
+	}
+
+	totalEmojis := 0
+	for _, count := range userCounts {
+		totalEmojis += count
+	}
+
+	shouldTimeout := totalEmojis >= 10
+	if shouldTimeout {
+		delete(utils.Cache.Items, cacheKey)
+	} else {
+		utils.Cache.Items[cacheKey] = utils.CacheItem{
+			Value:      userCounts,
+			Expiration: time.Now().Add(5 * time.Minute).UnixNano(),
+		}
+	}
+	utils.Cache.Mu.Unlock()
+
+	if shouldTimeout {
+		timeoutDuration := 6 * time.Hour
+		until := time.Now().Add(timeoutDuration)
+
+		go func() {
+			client.Rest.UpdateMember(guildID, userID, discord.MemberUpdate{
+				CommunicationDisabledUntil: omit.New(&until),
+			})
+		}()
+
+		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		code := b.Logger.SendSafetyEmojisSpamLogs(message)
+
+		locale := discord.LocaleEnglishUS
+		if guild, ok := client.Caches.Guild(guildID); ok {
+			locale = discord.Locale(guild.PreferredLocale)
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		title := trad.Emojis_spam_censored_title
+		if title == "" {
+			title = "Tu as été timeout pour spam d'émojis."
+		}
+		desc := trad.Emojis_spam_censored_description
+		if desc == "" {
+			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
+		}
+
+		sendCensoredMessage(client, message, string(code), title, desc)
+		return true
+	}
+
+	return false
+}

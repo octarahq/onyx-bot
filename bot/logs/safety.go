@@ -117,6 +117,30 @@ func (l Logger) SendSafetyMentionSpamLogs(message discord.Message) Code {
 	return code
 }
 
+func (l Logger) SendSafetyEmojisSpamLogs(message discord.Message) Code {
+	code := GenerateCode(time.Now(), "safety", "emojis")
+	guild, exist := l.Client.Caches.Guild(*message.GuildID)
+	var guildName string = "unknown"
+	if exist {
+		guildName = guild.Name
+	}
+
+	msg := discord.NewMessageCreateV2(
+		discord.NewContainer(
+			discord.NewTextDisplayf("## Emojis Spam `%s`", code),
+			discord.NewTextDisplayf("Author : %s (<@%s>)", message.Author.Username, message.Author.ID),
+			discord.NewTextDisplayf("Guild  : %s (%s)", guildName, message.GuildID),
+		),
+		discord.NewContainer(
+			discord.NewTextDisplayf("```%s```", message.Content),
+		),
+	)
+
+	l.SendLog(SafetyLogsChannel, msg)
+
+	return code
+}
+
 func (l Logger) SendSafetyRaidBotLogs(member discord.Member) Code {
 	code := GenerateCode(time.Now(), "safety", "bot")
 	guild, exist := l.Client.Caches.Guild(member.GuildID)
