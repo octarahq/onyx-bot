@@ -145,6 +145,8 @@
     "blocked_invite_censored_description": "-# If this is a mistake, please contact support. Code: %s",
     "zalgo_censored_title": "Your message was censored because it contains corrupted text (Zalgo).",
     "zalgo_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "mention_spam_censored_title": "Your message was censored for mention spam. You have been timed out for 6 hours.",
+    "mention_spam_censored_description": "-# If this is a mistake, please contact support. Code: %s",
     "vanity_nuke_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to change the vanity URL of your server **%s**.\nThe action was reverted, the old vanity URL was restored, and their administrator permissions have been revoked."
   }
 }

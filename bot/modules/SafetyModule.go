@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 	"unicode"
 
 	"onyx/bot/core"
@@ -16,6 +17,7 @@ import (
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"github.com/disgoorg/disgo/rest"
+	"github.com/disgoorg/omit"
 	"github.com/disgoorg/snowflake/v2"
 	"github.com/texttheater/golang-levenshtein/levenshtein"
 	"gorm.io/gorm"
@@ -205,7 +207,13 @@ func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate)
 		}
 
 		if m.Data.AntiSpam.AntiZalgo {
-			if handleBlockInvite(b, e.Client(), e.Message) {
+			if handleZalgo(b, e.Client(), e.Message) {
+				return true
+			}
+		}
+
+		if m.Data.AntiSpam.AntiMention {
+			if handleMentionSpam(b, e.Client(), e.Message) {
 				return true
 			}
 		}
@@ -228,7 +236,7 @@ func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate)
 		}
 
 		if m.Data.AntiSpam.AntiZalgo {
-			if handleBlockInvite(b, e.Client(), e.Message) {
+			if handleZalgo(b, e.Client(), e.Message) {
 				return true
 			}
 		}
@@ -683,4 +691,79 @@ func sendCensoredMessage(client *bot.Client, message discord.Message, code strin
 	})
 
 	client.Rest.CreateMessage(message.ChannelID, msg)
+}
+
+func handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
+	if message.GuildID == nil {
+		return false
+	}
+
+	guildID := *message.GuildID
+	userID := message.Author.ID
+	mentionCount := len(message.Mentions)
+
+	cacheKey := "mention_spam:" + guildID.String() + ":" + userID.String()
+
+	utils.Cache.Mu.Lock()
+	var userCounts []int
+	if val, ok := utils.Cache.Items[cacheKey]; ok {
+		if val.Expiration == 0 || time.Now().UnixNano() <= val.Expiration {
+			userCounts = val.Value.([]int)
+		}
+	}
+
+	userCounts = append(userCounts, mentionCount)
+	if len(userCounts) > 3 {
+		userCounts = userCounts[len(userCounts)-3:]
+	}
+
+	totalMentions := 0
+	for _, count := range userCounts {
+		totalMentions += count
+	}
+
+	shouldTimeout := totalMentions >= 3
+	if shouldTimeout {
+		delete(utils.Cache.Items, cacheKey)
+	} else {
+		utils.Cache.Items[cacheKey] = utils.CacheItem{
+			Value:      userCounts,
+			Expiration: time.Now().Add(5 * time.Minute).UnixNano(),
+		}
+	}
+	utils.Cache.Mu.Unlock()
+
+	if shouldTimeout {
+		timeoutDuration := 6 * time.Hour
+		until := time.Now().Add(timeoutDuration)
+
+		go func() {
+			client.Rest.UpdateMember(guildID, userID, discord.MemberUpdate{
+				CommunicationDisabledUntil: omit.New(&until),
+			})
+		}()
+
+		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		code := b.Logger.SendSafetyMentionSpamLogs(message)
+
+		locale := discord.LocaleEnglishUS
+		if guild, ok := client.Caches.Guild(guildID); ok {
+			locale = discord.Locale(guild.PreferredLocale)
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		title := trad.Mention_spam_censored_title
+		if title == "" {
+			title = "Tu as été timeout pour spam de mentions."
+		}
+		desc := trad.Mention_spam_censored_description
+		if desc == "" {
+			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
+		}
+
+		sendCensoredMessage(client, message, string(code), title, desc)
+		return true
+	}
+
+	return false
 }
