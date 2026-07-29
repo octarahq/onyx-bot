@@ -42,27 +42,27 @@ const (
 )
 
 type SafetyARaidSettings struct {
-	AltDetector       bool                    `json:"alt_detector"`
+	AltDetector       bool                    `json:"alt_detector"` //done
 	AntiMassJoinLevel SafetyAntiMassJoinLevel `json:"anti_massjoin_level"`
-	AntiBot           bool                    `json:"anti_bot"`
+	AntiBot           bool                    `json:"anti_bot"` //done
 }
 
-type SafetyASpamSettings struct {
+type SafetyASpamSettings struct { //done
 	QuarentineRole  string              `json:"quarentine_role"`
 	AntiSpamLevel   SafetyAntiSpamLevel `json:"anti_spam"`
-	AntiPhishing    bool                `json:"anti_phishing"` // blacklist + levenshtein
+	AntiPhishing    bool                `json:"anti_phishing"`
 	BlockInviteLink bool                `json:"anti_invite"`
 	AntiMention     bool                `json:"anti_mention"`
 	AntiMassEmoji   bool                `json:"anti_mass_emoji"`
 	AntiZalgo       bool                `json:"anti_zalgo"`
-	IgnoredChannels string              `json:"ignored_channels"` // liste des salons/categories ignores
+	IgnoredChannels string              `json:"ignored_channels"`
 }
 
 type SafetyANukeSettings struct {
 	AntiMassKick             bool `json:"anti_mass_kick"`
 	AntiMassChannelD         bool `json:"anti_mass_channel_delete"` // dedans compte aussi le mass channel edit
 	AntiMassRoleD            bool `json:"anti_mass_role_delete"`    // dedans compte aussi le mass role edit
-	AntiVanityUrlEdit        bool `json:"anti_vanity_url_edit"`
+	AntiVanityUrlEdit        bool `json:"anti_vanity_url_edit"`     //done
 	AntiDangerousPermissions bool `json:"anti_danger_permission"`
 }
 
