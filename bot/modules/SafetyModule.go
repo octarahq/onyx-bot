@@ -232,25 +232,25 @@ func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate)
 		}
 
 		if m.Data.AntiSpam.AntiPhishing {
-			if handlePhishing(b, e.Client(), e.Message) {
+			if m.handlePhishing(b, e.Client(), e.Message) {
 				return true
 			}
 		}
 
 		if m.Data.AntiSpam.BlockInviteLink {
-			if handleBlockInvite(b, e.Client(), e.Message) {
+			if m.handleBlockInvite(b, e.Client(), e.Message) {
 				return true
 			}
 		}
 
 		if m.Data.AntiSpam.AntiZalgo {
-			if handleZalgo(b, e.Client(), e.Message) {
+			if m.handleZalgo(b, e.Client(), e.Message) {
 				return true
 			}
 		}
 
 		if m.Data.AntiSpam.AntiMention {
-			if handleMentionSpam(b, e.Client(), e.Message) {
+			if m.handleMentionSpam(b, e.Client(), e.Message) {
 				return true
 			}
 		}
@@ -275,19 +275,19 @@ func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate)
 			return false
 		}
 		if m.Data.AntiSpam.AntiPhishing {
-			if handlePhishing(b, e.Client(), e.Message) {
+			if m.handlePhishing(b, e.Client(), e.Message) {
 				return true
 			}
 		}
 
 		if m.Data.AntiSpam.BlockInviteLink {
-			if handleBlockInvite(b, e.Client(), e.Message) {
+			if m.handleBlockInvite(b, e.Client(), e.Message) {
 				return true
 			}
 		}
 
 		if m.Data.AntiSpam.AntiZalgo {
-			if handleZalgo(b, e.Client(), e.Message) {
+			if m.handleZalgo(b, e.Client(), e.Message) {
 				return true
 			}
 		}
@@ -516,7 +516,19 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 	}
 }
 
-func handleZalgo(b *core.Bot, client *bot.Client, message discord.Message) bool {
+func (m *SafetyModule) giveQuarentineRole(client *bot.Client, member discord.Member) {
+	if m.Data.AntiSpam.QuarentineRole != "" {
+		gid, _ := snowflake.Parse(m.Data.GuildID)
+		rid, err := snowflake.Parse(m.Data.AntiSpam.QuarentineRole)
+		if err != nil {
+			return
+		}
+
+		client.Rest.AddMemberRole(gid, member.User.ID, rid)
+	}
+}
+
+func (m *SafetyModule) handleZalgo(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	content := message.Content
 	if len(content) == 0 {
 		return false
@@ -546,6 +558,7 @@ func handleZalgo(b *core.Bot, client *bot.Client, message discord.Message) bool 
 
 	if isZalgo {
 		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyZalgoLogs(ratio, message)
 		locale := discord.LocaleEnglishUS
 		if message.GuildID != nil {
@@ -571,7 +584,7 @@ func handleZalgo(b *core.Bot, client *bot.Client, message discord.Message) bool 
 	return false
 }
 
-func handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message) bool {
+func (m *SafetyModule) handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	urls := utils.ExtractURLs(message.Content)
 	var includeInvite bool
 
@@ -597,6 +610,7 @@ func handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message)
 
 	if includeInvite {
 		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyBlockedInviteLogs(urls, message)
 		locale := discord.LocaleEnglishUS
 		if message.GuildID != nil {
@@ -622,7 +636,7 @@ func handleBlockInvite(b *core.Bot, client *bot.Client, message discord.Message)
 	return false
 }
 
-func handlePhishing(b *core.Bot, client *bot.Client, message discord.Message) bool {
+func (m *SafetyModule) handlePhishing(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	content := message.Content
 	urls := utils.ExtractURLs(content)
 
@@ -700,6 +714,7 @@ func handlePhishing(b *core.Bot, client *bot.Client, message discord.Message) bo
 
 	if isPhishing {
 		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyPhishingLogs(urls, message)
 		locale := discord.LocaleEnglishUS
 		if message.GuildID != nil {
@@ -744,7 +759,7 @@ func sendCensoredMessage(client *bot.Client, message discord.Message, code strin
 	client.Rest.CreateMessage(message.ChannelID, msg)
 }
 
-func handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
+func (m *SafetyModule) handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	if message.GuildID == nil {
 		return false
 	}
@@ -795,6 +810,7 @@ func handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message)
 		}()
 
 		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyMentionSpamLogs(message)
 
 		locale := discord.LocaleEnglishUS
@@ -819,7 +835,7 @@ func handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message)
 	return false
 }
 
-func handleEmojiSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
+func (m *SafetyModule) handleEmojiSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
 	if message.GuildID == nil {
 		return false
 	}
@@ -878,6 +894,7 @@ func handleEmojiSpam(b *core.Bot, client *bot.Client, message discord.Message) b
 		}()
 
 		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyEmojisSpamLogs(message)
 
 		locale := discord.LocaleEnglishUS
