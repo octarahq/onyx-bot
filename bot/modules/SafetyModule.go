@@ -216,6 +216,21 @@ func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) boo
 
 func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate) bool {
 	if m.Data.Enabled {
+		ignore := false
+		for _, cid := range strings.Split(m.Data.AntiSpam.IgnoredChannels, ",") {
+			scid, err := snowflake.Parse(cid)
+			if err == nil {
+				if e.ChannelID == scid {
+					ignore = true
+					break
+				}
+			}
+		}
+
+		if ignore {
+			return false
+		}
+
 		if m.Data.AntiSpam.AntiPhishing {
 			if handlePhishing(b, e.Client(), e.Message) {
 				return true
@@ -245,6 +260,20 @@ func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate)
 
 func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate) bool {
 	if m.Data.Enabled {
+		ignore := false
+		for _, cid := range strings.Split(m.Data.AntiSpam.IgnoredChannels, ",") {
+			scid, err := snowflake.Parse(cid)
+			if err == nil {
+				if e.ChannelID == scid {
+					ignore = true
+					break
+				}
+			}
+		}
+
+		if ignore {
+			return false
+		}
 		if m.Data.AntiSpam.AntiPhishing {
 			if handlePhishing(b, e.Client(), e.Message) {
 				return true
