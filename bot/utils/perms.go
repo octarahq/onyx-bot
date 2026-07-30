@@ -44,3 +44,37 @@ func GetMemberPermissions(client *bot.Client, member discord.Member) discord.Per
 
 	return botPerms
 }
+
+func CheckDangerousPermissions(client *bot.Client, member discord.Member) (bool, []discord.Permissions) {
+	perms := GetMemberPermissions(client, member)
+	var dangerousPerms []discord.Permissions
+
+	for _, p := range []discord.Permissions{
+		discord.PermissionAdministrator,
+		discord.PermissionManageGuild,
+		discord.PermissionManageRoles,
+		discord.PermissionManageChannels,
+		discord.PermissionKickMembers,
+		discord.PermissionBanMembers,
+		discord.PermissionManageNicknames,
+		discord.PermissionManageWebhooks,
+	} {
+		if perms&p != 0 {
+			dangerousPerms = append(dangerousPerms, p)
+		}
+	}
+
+	return len(dangerousPerms) > 0, dangerousPerms
+}
+
+func RemoveMemberPerms(client *bot.Client, member discord.Member, perms []discord.Permissions) {
+	for _, roleID := range member.RoleIDs {
+		if role, ok := client.Caches.Role(member.GuildID, roleID); ok {
+			for _, p := range perms {
+				if role.Permissions.Has(p) {
+					client.Rest.RemoveMemberRole(member.GuildID, member.User.ID, roleID)
+				}
+			}
+		}
+	}
+}
