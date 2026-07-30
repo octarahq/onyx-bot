@@ -63,7 +63,7 @@ type SafetyANukeSettings struct {
 	AntiMassChannelD         bool `json:"anti_mass_channel_delete"` // dedans compte aussi le mass channel edit
 	AntiMassRoleD            bool `json:"anti_mass_role_delete"`    // dedans compte aussi le mass role edit
 	AntiVanityUrlEdit        bool `json:"anti_vanity_url_edit"`     //done
-	AntiDangerousPermissions bool `json:"anti_danger_permission"`
+	AntiDangerousPermissions bool `json:"anti_danger_permission"`   //done
 }
 
 type SafetyCaptchaSettings struct {
@@ -164,7 +164,7 @@ func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) boo
 				auditLogs, err := e.Client().Rest.GetAuditLog(e.GuildID, 0, discord.AuditLogEventGuildUpdate, 0, 0, 1)
 				if err == nil && len(auditLogs.AuditLogEntries) > 0 {
 					entry := auditLogs.AuditLogEntries[0]
-					if entry.UserID != 0 && entry.UserID != e.Guild.OwnerID {
+					if entry.UserID != 0 && entry.UserID != e.Guild.OwnerID && entry.UserID != e.Client().ID() {
 						userID = entry.UserID
 					}
 				}
@@ -177,14 +177,9 @@ func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) boo
 					e.Client().Rest.Do(ep.Compile(nil, e.GuildID), UpdateVanity{Code: oldCode}, nil)
 
 					member, err := e.Client().Rest.GetMember(e.GuildID, userID)
-					if err == nil {
-						for _, roleID := range member.RoleIDs {
-							if role, ok := e.Client().Caches.Role(e.GuildID, roleID); ok {
-								if role.Permissions.Has(discord.PermissionAdministrator) || role.Permissions.Has(discord.PermissionManageGuild) {
-									e.Client().Rest.RemoveMemberRole(e.GuildID, userID, roleID)
-								}
-							}
-						}
+					if err == nil && member != nil {
+						_, dperms := utils.CheckDangerousPermissions(e.Client(), *member)
+						utils.RemoveMemberPerms(e.Client(), *member, dperms)
 					}
 
 					locale := discord.LocaleFrench
@@ -208,6 +203,59 @@ func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) boo
 					return true
 				}
 			}
+		}
+	}
+
+	return false
+}
+
+func (m *SafetyModule) HandleGuildMemberUpdate(b *core.Bot, e *events.GuildMemberUpdate) bool {
+	if m.Data.Enabled && m.Data.AntiNuke.AntiDangerousPermissions {
+		oldRoles := make(map[snowflake.ID]bool)
+		for _, roleID := range e.OldMember.RoleIDs {
+			oldRoles[roleID] = true
+		}
+
+		var rolesToRemove []snowflake.ID
+
+		for _, roleID := range e.Member.RoleIDs {
+			if !oldRoles[roleID] {
+				if role, ok := e.Client().Caches.Role(e.GuildID, roleID); ok {
+					if role.Permissions.Has(discord.PermissionAdministrator) || role.Permissions.Has(discord.PermissionManageGuild) {
+						rolesToRemove = append(rolesToRemove, roleID)
+					}
+				}
+			}
+		}
+
+		if len(rolesToRemove) > 0 {
+			var authorID snowflake.ID
+			auditLogs, err := e.Client().Rest.GetAuditLog(e.GuildID, 0, discord.AuditLogEventMemberRoleUpdate, 0, 0, 1)
+			if err == nil && len(auditLogs.AuditLogEntries) > 0 {
+				entry := auditLogs.AuditLogEntries[0]
+				if entry.TargetID != nil && *entry.TargetID == e.Member.User.ID {
+					guild, exist := b.Client.Caches.Guild(e.GuildID)
+					if !exist {
+						return false
+					}
+					if entry.UserID != 0 && entry.UserID != guild.OwnerID && entry.UserID != e.Client().ID() {
+						authorID = entry.UserID
+					}
+				}
+			}
+
+			for _, roleID := range rolesToRemove {
+				e.Client().Rest.RemoveMemberRole(e.GuildID, e.Member.User.ID, roleID)
+			}
+
+			if authorID != 0 {
+				authorMember, err := e.Client().Rest.GetMember(e.GuildID, authorID)
+				if err == nil && authorMember != nil {
+					_, dperms := utils.CheckDangerousPermissions(e.Client(), *authorMember)
+					utils.RemoveMemberPerms(e.Client(), *authorMember, dperms)
+				}
+			}
+			return true
 		}
 	}
 
