@@ -149,6 +149,11 @@
     "mention_spam_censored_description": "-# S'il s'agit d'une erreur, contactez le support. Code : %s",
     "emojis_spam_censored_title": "Ton message a été censuré pour spam d'emojis. Tu as été timeout pour 6 heures.",
     "emojis_spam_censored_description": "-# S'il s'agit d'une erreur, contactez le support. Code : %s",
-    "vanity_nuke_alert": "⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de modifier l'URL personnalisée (vanity URL) de votre serveur **%s**.\nL'action a été annulée, l'ancienne URL a été restaurée et ses permissions d'administrateur ont été retirées."
+    "vanity_nuke_alert": "⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de modifier l'URL personnalisée (vanity URL) de votre serveur **%s**.\nL'action a été annulée, l'ancienne URL a été restaurée et ses permissions d'administrateur ont été retirées.",
+    "nuke_masskick_alert": "⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de kick en masse des membres sur votre serveur **%s**.\n%s",
+    "nuke_massdelete_alert": "⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de supprimer en masse des %s sur votre serveur **%s**.\n%s",
+    "nuke_massedit_alert": "⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de modifier en masse des %s sur votre serveur **%s**.\n%s",
+    "nuke_success": "Ses permissions dangereuses ont été retirées avec succès.",
+    "nuke_fail": "Je n'ai pas pu lui retirer ses permissions (vérifiez mon rôle)."
   }
 }

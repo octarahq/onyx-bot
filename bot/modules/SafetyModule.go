@@ -2,6 +2,7 @@ package modules
 
 import (
 	"encoding/csv"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -58,12 +59,12 @@ type SafetyASpamSettings struct { //done
 	IgnoredChannels string              `json:"ignored_channels"`
 }
 
-type SafetyANukeSettings struct {
+type SafetyANukeSettings struct { //done
 	AntiMassKick             bool `json:"anti_mass_kick"`
-	AntiMassChannelD         bool `json:"anti_mass_channel_delete"` // dedans compte aussi le mass channel edit
-	AntiMassRoleD            bool `json:"anti_mass_role_delete"`    // dedans compte aussi le mass role edit
-	AntiVanityUrlEdit        bool `json:"anti_vanity_url_edit"`     //done
-	AntiDangerousPermissions bool `json:"anti_danger_permission"`   //done
+	AntiMassChannelD         bool `json:"anti_mass_channel_delete"`
+	AntiMassRoleD            bool `json:"anti_mass_role_delete"`
+	AntiVanityUrlEdit        bool `json:"anti_vanity_url_edit"`
+	AntiDangerousPermissions bool `json:"anti_danger_permission"`
 }
 
 type SafetyCaptchaSettings struct {
@@ -962,6 +963,191 @@ func (m *SafetyModule) handleEmojiSpam(b *core.Bot, client *bot.Client, message 
 
 		sendCensoredMessage(client, message, string(code), title, desc)
 		return true
+	}
+
+	return false
+}
+
+func (m *SafetyModule) handleMassAction(client *bot.Client, guildID snowflake.ID, userID snowflake.ID, count int, threshold int, cacheKey string, messageType string, arg1 string, arg2 string) {
+	utils.Cache.Mu.Lock()
+	var userCounts []time.Time
+	if val, ok := utils.Cache.Items[cacheKey]; ok {
+		if val.Expiration == 0 || time.Now().UnixNano() <= val.Expiration {
+			if v, ok2 := val.Value.([]time.Time); ok2 {
+				userCounts = v
+			}
+		}
+	}
+
+	now := time.Now()
+	var newCounts []time.Time
+	for _, t := range userCounts {
+		if now.Sub(t) <= time.Minute {
+			newCounts = append(newCounts, t)
+		}
+	}
+
+	for i := 0; i < count; i++ {
+		newCounts = append(newCounts, now)
+	}
+
+	shouldPunish := len(newCounts) >= threshold
+	if shouldPunish {
+		delete(utils.Cache.Items, cacheKey)
+	} else {
+		utils.Cache.Items[cacheKey] = utils.CacheItem{
+			Value:      newCounts,
+			Expiration: time.Now().Add(time.Minute).UnixNano(),
+		}
+	}
+	utils.Cache.Mu.Unlock()
+
+	if shouldPunish {
+		member, err := client.Rest.GetMember(guildID, userID)
+		successStr := ""
+		guild, gOk := client.Caches.Guild(guildID)
+		if !gOk {
+			return
+		}
+
+		locale := discord.LocaleFrench
+		if guild.PreferredLocale != "" {
+			locale = discord.Locale(guild.PreferredLocale)
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		if err == nil && member != nil {
+			_, dperms := utils.CheckDangerousPermissions(client, *member)
+			utils.RemoveMemberPerms(client, *member, dperms)
+
+			updatedMember, uErr := client.Rest.GetMember(guildID, userID)
+			if uErr == nil {
+				_, newDperms := utils.CheckDangerousPermissions(client, *updatedMember)
+				if len(newDperms) > 0 {
+					successStr = trad.Nuke_fail
+					if successStr == "" {
+						successStr = "Je n'ai pas pu lui retirer ses permissions (vérifiez mon rôle)."
+					}
+				} else {
+					successStr = trad.Nuke_success
+					if successStr == "" {
+						successStr = "Ses permissions dangereuses ont été retirées avec succès."
+					}
+				}
+			}
+		} else {
+			successStr = trad.Nuke_fail
+			if successStr == "" {
+				successStr = "Je n'ai pas pu lui retirer ses permissions (vérifiez mon rôle)."
+			}
+		}
+
+		ownerChannel, err := client.Rest.CreateDMChannel(guild.OwnerID)
+		if err == nil {
+			var text string
+			switch messageType {
+			case "kick":
+				text = trad.Nuke_masskick_alert
+				if text != "" {
+					text = fmt.Sprintf(text, userID.String(), guild.Name, successStr)
+				} else {
+					text = fmt.Sprintf("⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de kick en masse des membres sur votre serveur **%s**.\n%s", userID.String(), guild.Name, successStr)
+				}
+			case "delete":
+				text = trad.Nuke_massdelete_alert
+				if text != "" {
+					text = fmt.Sprintf(text, userID.String(), arg1, guild.Name, successStr)
+				} else {
+					text = fmt.Sprintf("⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de supprimer en masse des %s sur votre serveur **%s**.\n%s", userID.String(), arg1, guild.Name, successStr)
+				}
+			case "edit":
+				text = trad.Nuke_massedit_alert
+				if text != "" {
+					text = fmt.Sprintf(text, userID.String(), arg1, guild.Name, successStr)
+				} else {
+					text = fmt.Sprintf("⚠️ **Alerte Sécurité - Anti-Nuke**\nL'utilisateur <@%s> a tenté de modifier en masse des %s sur votre serveur **%s**.\n%s", userID.String(), arg1, guild.Name, successStr)
+				}
+			}
+
+			msg := discord.NewMessageCreateV2(
+				discord.NewContainer(
+					discord.NewSection(
+						discord.NewTextDisplay(text),
+					).WithAccessory(discord.NewThumbnail(*guild.IconURL())),
+				).WithAccentColor(utils.ParseStrColor("#e74c3c")),
+			)
+			client.Rest.CreateMessage(ownerChannel.ID(), msg)
+		}
+	}
+}
+
+func (m *SafetyModule) HandleGuildAuditLogEntryCreate(b *core.Bot, e *events.GuildAuditLogEntryCreate) bool {
+	if !m.Data.Enabled {
+		return false
+	}
+
+	guildID := e.GuildID
+	if e.AuditLogEntry.UserID == 0 {
+		return false
+	}
+	userID := e.AuditLogEntry.UserID
+
+	if userID == 0 || userID == b.Client.ID() {
+		return false
+	}
+	guild, ok := b.Client.Caches.Guild(guildID)
+	if ok && userID == guild.OwnerID {
+		return false
+	}
+
+	switch e.AuditLogEntry.ActionType {
+	case discord.AuditLogEventMemberKick:
+		if m.Data.AntiNuke.AntiMassKick {
+			cacheKey := "masskick:" + guildID.String() + ":" + userID.String()
+			m.handleMassAction(b.Client, guildID, userID, 1, 4, cacheKey, "kick", "", "")
+		}
+
+	case discord.AuditLogEventChannelDelete:
+		if m.Data.AntiNuke.AntiMassChannelD {
+			cacheKey := "masschanneldelete:" + guildID.String() + ":" + userID.String()
+			m.handleMassAction(b.Client, guildID, userID, 1, 2, cacheKey, "delete", "salons", "")
+		}
+
+	case discord.AuditLogEventRoleDelete:
+		if m.Data.AntiNuke.AntiMassRoleD {
+			cacheKey := "massroledelete:" + guildID.String() + ":" + userID.String()
+			m.handleMassAction(b.Client, guildID, userID, 1, 2, cacheKey, "delete", "rôles", "")
+		}
+
+	case discord.AuditLogEventChannelUpdate:
+		if m.Data.AntiNuke.AntiMassChannelD {
+			ignore := true
+			for _, change := range e.AuditLogEntry.Changes {
+				if change.Key != discord.AuditLogChangeKeyPosition {
+					ignore = false
+					break
+				}
+			}
+			if !ignore {
+				cacheKey := "masschanneledit:" + guildID.String() + ":" + userID.String()
+				m.handleMassAction(b.Client, guildID, userID, 1, 5, cacheKey, "edit", "salons", "")
+			}
+		}
+
+	case discord.AuditLogEventRoleUpdate:
+		if m.Data.AntiNuke.AntiMassRoleD {
+			ignore := true
+			for _, change := range e.AuditLogEntry.Changes {
+				if change.Key != discord.AuditLogChangeKeyPosition {
+					ignore = false
+					break
+				}
+			}
+			if !ignore {
+				cacheKey := "massroleedit:" + guildID.String() + ":" + userID.String()
+				m.handleMassAction(b.Client, guildID, userID, 1, 5, cacheKey, "edit", "rôles", "")
+			}
+		}
 	}
 
 	return false

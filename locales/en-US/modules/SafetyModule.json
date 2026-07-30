@@ -149,6 +149,11 @@
     "mention_spam_censored_description": "-# If this is a mistake, please contact support. Code: %s",
     "emojis_spam_censored_title": "Your message was censored for emojis spam. You have been timed out for 6 hours.",
     "emojis_spam_censored_description": "-# If this is a mistake, please contact support. Code: %s",
-    "vanity_nuke_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to change the vanity URL of your server **%s**.\nThe action was reverted, the old vanity URL was restored, and their administrator permissions have been revoked."
+    "vanity_nuke_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to change the vanity URL of your server **%s**.\nThe action was reverted, the old vanity URL was restored, and their administrator permissions have been revoked.",
+    "nuke_masskick_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to mass kick members on your server **%s**.\n%s",
+    "nuke_massdelete_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to mass delete %s on your server **%s**.\n%s",
+    "nuke_massedit_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to mass edit %s on your server **%s**.\n%s",
+    "nuke_success": "Their dangerous permissions have been successfully revoked.",
+    "nuke_fail": "I couldn't revoke their permissions (check my role)."
   }
 }
