@@ -124,7 +124,7 @@
           },
           "channel": {
             "label": "Salon Captcha",
-            "description": "Le salon où la vérification sera effectuée."
+            "description": "Le salon où la vérification sera effectuée si le membre n'accepte pas les messages privées."
           },
           "vrole": {
             "label": "Rôle Vérifié",

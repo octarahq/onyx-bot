@@ -124,7 +124,7 @@
           },
           "channel": {
             "label": "Captcha Channel",
-            "description": "The channel where verification will take place."
+            "description": "The channel where verification will take place if the user dont accept private messages."
           },
           "vrole": {
             "label": "Verified Role",

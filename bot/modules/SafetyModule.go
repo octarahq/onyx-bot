@@ -50,7 +50,7 @@ type SafetyARaidSettings struct {
 
 type SafetyASpamSettings struct { //done
 	QuarentineRole  string              `json:"quarentine_role"`
-	AntiSpamLevel   SafetyAntiSpamLevel `json:"anti_spam"`
+	AntiSpamLevel   SafetyAntiSpamLevel `json:"anti_spam"` //not done
 	AntiPhishing    bool                `json:"anti_phishing"`
 	BlockInviteLink bool                `json:"anti_invite"`
 	AntiMention     bool                `json:"anti_mention"`
@@ -141,6 +141,43 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				b.Logger.SendSafetyRaidAltLogs(e.Member)
 				return true
 			}
+		}
+
+		if m.Data.Captcha.Enabled {
+			channel, err := e.Client().Rest.CreateDMChannel(e.Member.User.ID)
+			if err != nil {
+				cid, parseErr := snowflake.Parse(m.Data.Captcha.Channel)
+				if parseErr != nil {
+					return false
+				}
+				_ = cid
+			} else {
+				cid := channel.ID()
+
+				guild, exist := e.Client().Caches.Guild(e.GuildID)
+				if !exist {
+					return false
+				}
+
+				msg, _, _ := utils.CaptchaBuildMessage("", e.Member, guild)
+
+				e.Client().Rest.CreateMessage(cid, msg)
+				return false
+			}
+
+			cid, err := snowflake.Parse(m.Data.Captcha.Channel)
+			if err != nil {
+				return false
+			}
+
+			guild, exist := e.Client().Caches.Guild(e.GuildID)
+			if !exist {
+				return false
+			}
+
+			msg, _, _ := utils.CaptchaBuildMessage("", e.Member, guild)
+
+			_, err = e.Client().Rest.CreateMessage(cid, msg)
 		}
 	}
 
@@ -545,7 +582,7 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 						Name:        "channel",
 						Label:       cChanL,
 						Description: cChanD,
-						Type:        core.ComponentTypeChannel,
+						Type:        core.ComponentTypeChannel, //modifier la desc pour dire que cest le backup si jamais le bot peut pas le mp
 					},
 					{
 						Name:        "vrole",

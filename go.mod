@@ -12,7 +12,9 @@ require (
 
 require (
 	github.com/disgoorg/json v1.2.0 // indirect
+	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/texttheater/golang-levenshtein/levenshtein v0.0.0-20200805054039-cae8b0eaed6c // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 )
 
 require (
