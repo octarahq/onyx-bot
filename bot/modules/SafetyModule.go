@@ -3,9 +3,11 @@ package modules
 import (
 	"encoding/csv"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 	"unicode"
@@ -175,9 +177,60 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				return false
 			}
 
-			msg, _, _ := utils.CaptchaBuildMessage("", e.Member, guild)
+			msg, _, _ := utils.CaptchaBuildMessage("ouit", e.Member, guild)
 
 			_, err = e.Client().Rest.CreateMessage(cid, msg)
+		}
+	}
+
+	return false
+}
+
+func (m *SafetyModule) HandleComponentInteractionCreate(b *core.Bot, e *events.ComponentInteractionCreate) bool {
+	if strings.HasPrefix(e.Data.CustomID(), "module-safety-") && strings.Contains(e.Data.CustomID(), "-captcha-resolve-") {
+		parts := strings.Split(e.Data.CustomID(), "-")
+		if len(parts) < 6 {
+			return false
+		}
+		guildIdStr := parts[2]
+		sessionid := parts[5]
+		isSelect := rand.Intn(2) == 1
+		modal := discord.NewModalCreate(fmt.Sprintf("module-safety-%s-captcha-solution-%s", guildIdStr, sessionid), "What is your response ?")
+
+		letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		b := make([]rune, 5)
+		for i := range b {
+			b[i] = letters[rand.Intn(len(letters))]
+		}
+		resFieldCId := fmt.Sprintf("field-%s", string(b))
+
+		possiblePlaceholder := []string{
+			"Enter your captcha answer here",
+			"Type the captcha solution",
+			"Input your captcha response",
+			"Put your answer in this field",
+			"Submit your captcha code",
+		}
+
+		if isSelect {
+			var opts []discord.StringSelectMenuOption
+			for i := range 5 {
+				opts = append(opts, discord.NewStringSelectMenuOption(fmt.Sprintf("Number %d", i), strconv.Itoa(i)))
+			}
+			modal = modal.AddLabel(
+				"Captcha answer",
+				discord.NewStringSelectMenu(resFieldCId, possiblePlaceholder[rand.Intn(len(possiblePlaceholder))], opts...),
+			)
+		} else {
+			modal = modal.AddLabel(
+				"Captcha answer",
+				discord.NewShortTextInput(resFieldCId).WithPlaceholder(possiblePlaceholder[rand.Intn(len(possiblePlaceholder))]),
+			)
+		}
+
+		err := e.Modal(modal)
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
 

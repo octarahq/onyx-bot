@@ -125,6 +125,10 @@ func CaptchaBuildMessage(sessionId string, member discord.Member, guild discord.
 					},
 				},
 			),
+			discord.NewLargeSeparator(),
+			discord.NewActionRow(
+				discord.NewPrimaryButton("Resolve captcha", fmt.Sprintf("module-safety-%s-captcha-resolve-%s", guild.ID.String(), sessionId)),
+			),
 		),
 	).WithFiles(discord.NewFile("captcha.png", "The captcha image", buf))
 
