@@ -45,6 +45,9 @@ func init() {
 			}
 
 			commandName := parts[0]
+			if commandName == "module" {
+				return
+			}
 			userID := parts[1]
 
 			if userID != "all" && userID != event.User().ID.String() {
