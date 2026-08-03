@@ -76,17 +76,29 @@ type SafetyCaptchaSettings struct {
 	ShowToSusUser bool   `json:"show_to_sus"` // dans un cas ou un anti spam ou autre est active si cette personne sest deja faite verifie precedement elle devra faire le captcha pour ne pas etre kick
 }
 
-type SafetySaveGuildState struct { // servira a garder lancien etat du serveur (nest pas affiche sur le dash)
-	AntiMassJoinOldVerifLevel discord.VerificationLevel
+type CaptchaSession struct {
+	UserID        string    `json:"user_id"`
+	CorrectAnswer string    `json:"correct_answer"`
+	StartedAt     time.Time `json:"started_at"`
+	ExpiresAt     time.Time `json:"expires_at"`
+	Attempts      int       `json:"attempts"`
+	MaxAttempts   int       `json:"max_attempts"`
+	Status        string    `json:"status"`
+}
+
+type SafetySaveGuildState struct {
+	AntiMassJoinOldVerifLevel discord.VerificationLevel `json:"anti_mass_join_old_verif_level"`
+	CaptchaSessions           map[string]CaptchaSession `json:"captcha_sessions"`
 }
 
 type SafetySettings struct {
-	GuildID  string                `gorm:"primaryKey" json:"guild_id"`
-	Enabled  bool                  `gorm:"default:false" json:"enabled"`
-	AntiRaid SafetyARaidSettings   `gorm:"embedded;embeddedPrefix:antiraid_" json:"antiraid"`
-	AntiSpam SafetyASpamSettings   `gorm:"embedded;embeddedPrefix:antispam_" json:"antispam"`
-	AntiNuke SafetyANukeSettings   `gorm:"embedded;embeddedPrefix:antinuke_" json:"antinuke"`
-	Captcha  SafetyCaptchaSettings `gorm:"embedded;embeddedPrefix:captcha_" json:"captcha"`
+	GuildID   string                `gorm:"primaryKey" json:"guild_id"`
+	Enabled   bool                  `gorm:"default:false" json:"enabled"`
+	AntiRaid  SafetyARaidSettings   `gorm:"embedded;embeddedPrefix:antiraid_" json:"antiraid"`
+	AntiSpam  SafetyASpamSettings   `gorm:"embedded;embeddedPrefix:antispam_" json:"antispam"`
+	AntiNuke  SafetyANukeSettings   `gorm:"embedded;embeddedPrefix:antinuke_" json:"antinuke"`
+	Captcha   SafetyCaptchaSettings `gorm:"embedded;embeddedPrefix:captcha_" json:"captcha"`
+	SaveState SafetySaveGuildState  `gorm:"serializer:json" json:"-"`
 }
 
 type SafetyModule struct {
@@ -161,7 +173,8 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 					return false
 				}
 
-				msg, _, _ := utils.CaptchaBuildMessage("", e.Member, guild)
+				msg, good, _ := utils.CaptchaBuildMessage("", e.Member, guild)
+				m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(good)+1), e.GuildID)
 
 				e.Client().Rest.CreateMessage(cid, msg)
 				return false
@@ -177,12 +190,109 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				return false
 			}
 
-			msg, _, _ := utils.CaptchaBuildMessage("ouit", e.Member, guild)
+			msg, goodIdx, _ := utils.CaptchaBuildMessage(e.Member.User.ID.String(), e.Member, guild)
+			m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), e.GuildID)
 
 			_, err = e.Client().Rest.CreateMessage(cid, msg)
 		}
 	}
 
+	return false
+}
+
+func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events.ModalSubmitInteractionCreate) bool {
+	if strings.HasPrefix(e.Data.CustomID, "module-safety-") && strings.Contains(e.Data.CustomID, "-captcha-solution-") {
+		var responseStr string
+		parts := strings.Split(e.Data.CustomID, "-")
+		if len(parts) < 6 {
+			return false
+		}
+		guildID, err := snowflake.Parse(parts[2])
+		if err != nil {
+			return false
+		}
+
+		guild, exist := e.Client().Caches.Guild(guildID)
+		if !exist {
+			return false
+		}
+
+		for component := range e.Data.AllComponents() {
+			switch c := component.(type) {
+			case discord.TextInputComponent:
+				responseStr = c.Value
+			case discord.StringSelectMenuComponent:
+				if len(c.Values) > 0 {
+					responseStr = c.Values[0]
+				}
+			}
+		}
+
+		session, err := m.getCaptchaSession(e.User().ID.String())
+		if err != nil {
+			e.CreateMessage(discord.NewMessageCreateV2(
+				discord.NewContainer(
+					discord.NewTextDisplay(":x: This captcha has expired."),
+				),
+			))
+			return false
+		}
+
+		member, exist := e.Client().Caches.Member(guildID, e.User().ID)
+		if !exist {
+			restMember, err := e.Client().Rest.GetMember(guildID, e.User().ID)
+			if err != nil {
+				e.CreateMessage(discord.NewMessageCreateV2(
+					discord.NewTextDisplay(":x: You are not in the server."),
+				))
+				return false
+			}
+			member = *restMember
+		}
+
+		goodAnswer, err := m.verifyCaptchaSession(b, member.User.ID.String(), responseStr)
+
+		if !goodAnswer {
+			if session.MaxAttempts-session.Attempts == 1 {
+				delete(m.Data.SaveState.CaptchaSessions, member.User.ID.String())
+				b.DB.GormDB.Save(&m.Data)
+
+				e.CreateMessage(discord.NewMessageCreateV2(
+					discord.NewContainer(
+						discord.NewTextDisplayf(":x: You failed the captcha too many times and have been kicked from **%s**.", guild.Name),
+					),
+				))
+				e.Client().Rest.RemoveMember(guildID, member.User.ID)
+				return false
+			}
+
+			msg, good, _ := utils.CaptchaBuildMessage("", member, guild)
+			currentSession := m.Data.SaveState.CaptchaSessions[member.User.ID.String()]
+			currentSession.CorrectAnswer = fmt.Sprintf("%d", int(good)+1)
+			currentSession.ExpiresAt = time.Now().Add(15 * time.Minute)
+			m.Data.SaveState.CaptchaSessions[member.User.ID.String()] = currentSession
+			b.DB.GormDB.Save(&m.Data)
+
+			e.CreateMessage(msg)
+		} else {
+			rid, err := snowflake.Parse(m.Data.Captcha.VerifiedRole)
+			if err != nil {
+				return false
+			}
+			e.Client().Rest.AddMemberRole(guildID, member.User.ID, rid) // ajouter la gesion derreur avec le module des logs au cas ou il y a un probleme affin de le signaler
+
+			e.CreateMessage(discord.NewMessageCreateV2(
+				discord.NewContainer(
+					discord.NewSection(
+						discord.NewTextDisplayf("## Correct answer!"),
+						discord.NewTextDisplayf("> You have correctly answered the captcha, I gave you the <@&%s> role which allows you to access the server. Welcome!", m.Data.Captcha.VerifiedRole),
+					).WithAccessory(discord.NewThumbnail(member.EffectiveAvatarURL())),
+				),
+			))
+			delete(m.Data.SaveState.CaptchaSessions, member.User.ID.String())
+			b.DB.GormDB.Save(&m.Data)
+		}
+	}
 	return false
 }
 
@@ -215,7 +325,7 @@ func (m *SafetyModule) HandleComponentInteractionCreate(b *core.Bot, e *events.C
 		if isSelect {
 			var opts []discord.StringSelectMenuOption
 			for i := range 5 {
-				opts = append(opts, discord.NewStringSelectMenuOption(fmt.Sprintf("Number %d", i), strconv.Itoa(i)))
+				opts = append(opts, discord.NewStringSelectMenuOption(fmt.Sprintf("Number %d", i+1), strconv.Itoa(i+1)))
 			}
 			modal = modal.AddLabel(
 				"Captcha answer",
@@ -1241,4 +1351,76 @@ func (m *SafetyModule) HandleGuildAuditLogEntryCreate(b *core.Bot, e *events.Gui
 	}
 
 	return false
+}
+
+func (m *SafetyModule) addCaptchaSession(b *core.Bot, userID string, newAnswer string, guildID snowflake.ID) error {
+	if m.Data.SaveState.CaptchaSessions == nil {
+		m.Data.SaveState.CaptchaSessions = make(map[string]CaptchaSession)
+	}
+
+	m.Data.SaveState.CaptchaSessions[userID] = CaptchaSession{
+		UserID:        userID,
+		CorrectAnswer: newAnswer,
+		StartedAt:     time.Now(),
+		ExpiresAt:     time.Now().Add(15 * time.Minute),
+		Attempts:      0,
+		MaxAttempts:   3,
+		Status:        "pending",
+	}
+
+	time.AfterFunc(15*time.Minute, func() {
+		if _, exists := m.Data.SaveState.CaptchaSessions[userID]; exists {
+			delete(m.Data.SaveState.CaptchaSessions, userID)
+			b.DB.GormDB.Save(&m.Data)
+
+			uID, _ := snowflake.Parse(userID)
+			channel, err := b.Client.Rest.CreateDMChannel(uID)
+			if err == nil {
+				b.Client.Rest.CreateMessage(channel.ID(), discord.NewMessageCreateV2(
+					discord.NewTextDisplay(":x: You failed to resolve the captcha in time and have been banned from the server."),
+				))
+			}
+			b.Client.Rest.AddBan(guildID, uID, 0)
+		}
+	})
+
+	return b.DB.GormDB.Save(&m.Data).Error
+}
+
+func (m *SafetyModule) getCaptchaSession(userID string) (CaptchaSession, error) {
+	if m.Data.SaveState.CaptchaSessions == nil {
+		return CaptchaSession{}, fmt.Errorf("captcha sessions not initialized")
+	}
+
+	session, exists := m.Data.SaveState.CaptchaSessions[userID]
+	if !exists {
+		return CaptchaSession{}, fmt.Errorf("captcha session not found for user %s", userID)
+	}
+
+	return session, nil
+}
+
+func (m *SafetyModule) verifyCaptchaSession(b *core.Bot, userID string, userAnswer string) (bool, error) {
+	session, exists := m.Data.SaveState.CaptchaSessions[userID]
+	if !exists {
+		return false, nil
+	}
+
+	if time.Now().After(session.ExpiresAt) {
+		delete(m.Data.SaveState.CaptchaSessions, userID)
+		b.DB.GormDB.Save(&m.Data)
+		return false, nil
+	}
+
+	if userAnswer == session.CorrectAnswer {
+		session.Status = "solved"
+		m.Data.SaveState.CaptchaSessions[userID] = session
+		b.DB.GormDB.Save(&m.Data)
+		return true, nil
+	} else {
+		session.Attempts++
+		m.Data.SaveState.CaptchaSessions[userID] = session
+		b.DB.GormDB.Save(&m.Data)
+		return false, nil
+	}
 }
