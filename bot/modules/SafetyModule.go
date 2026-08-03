@@ -69,21 +69,23 @@ type SafetyANukeSettings struct { //done
 	AntiDangerousPermissions bool `json:"anti_danger_permission"`
 }
 
-type SafetyCaptchaSettings struct {
+type SafetyCaptchaSettings struct { //done
 	Enabled       bool   `json:"enabled"`
 	Channel       string `json:"channel"`
 	VerifiedRole  string `json:"vrole"`
-	ShowToSusUser bool   `json:"show_to_sus"` // dans un cas ou un anti spam ou autre est active si cette personne sest deja faite verifie precedement elle devra faire le captcha pour ne pas etre kick
+	ShowToSusUser bool   `json:"show_to_sus"`
 }
 
 type CaptchaSession struct {
-	UserID        string    `json:"user_id"`
-	CorrectAnswer string    `json:"correct_answer"`
-	StartedAt     time.Time `json:"started_at"`
-	ExpiresAt     time.Time `json:"expires_at"`
-	Attempts      int       `json:"attempts"`
-	MaxAttempts   int       `json:"max_attempts"`
-	Status        string    `json:"status"`
+	UserID        string         `json:"user_id"`
+	CorrectAnswer string         `json:"correct_answer"`
+	StartedAt     time.Time      `json:"started_at"`
+	ExpiresAt     time.Time      `json:"expires_at"`
+	Attempts      int            `json:"attempts"`
+	MaxAttempts   int            `json:"max_attempts"`
+	Status        string         `json:"status"`
+	IsSuspect     bool           `json:"is_suspect"`
+	BackupRoles   []snowflake.ID `json:"backup_roles"`
 }
 
 type SafetySaveGuildState struct {
@@ -174,7 +176,7 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				}
 
 				msg, good, _ := utils.CaptchaBuildMessage("", e.Member, guild)
-				m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(good)+1), e.GuildID)
+				m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(good)+1), e.GuildID, false, nil)
 
 				e.Client().Rest.CreateMessage(cid, msg)
 				return false
@@ -191,13 +193,40 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 			}
 
 			msg, goodIdx, _ := utils.CaptchaBuildMessage(e.Member.User.ID.String(), e.Member, guild)
-			m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), e.GuildID)
+			m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), e.GuildID, false, nil)
 
 			_, err = e.Client().Rest.CreateMessage(cid, msg)
 		}
 	}
 
 	return false
+}
+
+func (m *SafetyModule) triggerSuspectCaptcha(b *core.Bot, client *bot.Client, guildID snowflake.ID, member discord.Member) bool {
+	if !m.Data.Captcha.ShowToSusUser || !m.Data.Captcha.Enabled {
+		return false
+	}
+
+	guild, exist := b.Client.Caches.Guild(guildID)
+	if !exist {
+		return false
+	}
+
+	backupRoles := member.RoleIDs
+	_, err := b.Client.Rest.UpdateMember(guildID, member.User.ID, discord.MemberUpdate{Roles: &[]snowflake.ID{}})
+	if err != nil {
+		return false
+	}
+
+	msg, goodIdx, _ := utils.CaptchaBuildMessage(member.User.ID.String(), member, guild)
+	m.addCaptchaSession(b, member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), guildID, true, backupRoles)
+
+	channel, err := b.Client.Rest.CreateDMChannel(member.User.ID)
+	if err == nil {
+		b.Client.Rest.CreateMessage(channel.ID(), msg)
+	}
+
+	return true
 }
 
 func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events.ModalSubmitInteractionCreate) bool {
@@ -269,7 +298,11 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 			msg, good, _ := utils.CaptchaBuildMessage("", member, guild)
 			currentSession := m.Data.SaveState.CaptchaSessions[member.User.ID.String()]
 			currentSession.CorrectAnswer = fmt.Sprintf("%d", int(good)+1)
-			currentSession.ExpiresAt = time.Now().Add(15 * time.Minute)
+			if currentSession.IsSuspect {
+				currentSession.ExpiresAt = time.Now().Add(5 * time.Minute)
+			} else {
+				currentSession.ExpiresAt = time.Now().Add(15 * time.Minute)
+			}
 			m.Data.SaveState.CaptchaSessions[member.User.ID.String()] = currentSession
 			b.DB.GormDB.Save(&m.Data)
 
@@ -279,16 +312,31 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 			if err != nil {
 				return false
 			}
-			e.Client().Rest.AddMemberRole(guildID, member.User.ID, rid) // ajouter la gesion derreur avec le module des logs au cas ou il y a un probleme affin de le signaler
 
-			e.CreateMessage(discord.NewMessageCreateV2(
-				discord.NewContainer(
-					discord.NewSection(
-						discord.NewTextDisplayf("## Correct answer!"),
-						discord.NewTextDisplayf("> You have correctly answered the captcha, I gave you the <@&%s> role which allows you to access the server. Welcome!", m.Data.Captcha.VerifiedRole),
-					).WithAccessory(discord.NewThumbnail(member.EffectiveAvatarURL())),
-				),
-			))
+			if session.IsSuspect {
+				e.Client().Rest.UpdateMember(guildID, member.User.ID, discord.MemberUpdate{
+					Roles: &session.BackupRoles,
+				})
+				e.CreateMessage(discord.NewMessageCreateV2(
+					discord.NewContainer(
+						discord.NewSection(
+							discord.NewTextDisplayf("## Correct answer!"),
+							discord.NewTextDisplayf("> You have correctly answered the captcha, your roles and permissions have been restored."),
+						).WithAccessory(discord.NewThumbnail(member.EffectiveAvatarURL())),
+					),
+				))
+			} else {
+				e.Client().Rest.AddMemberRole(guildID, member.User.ID, rid) // ajouter la gesion derreur avec le module des logs au cas ou il y a un probleme affin de le signaler
+
+				e.CreateMessage(discord.NewMessageCreateV2(
+					discord.NewContainer(
+						discord.NewSection(
+							discord.NewTextDisplayf("## Correct answer!"),
+							discord.NewTextDisplayf("> You have correctly answered the captcha, I gave you the <@&%s> role which allows you to access the server. Welcome!", m.Data.Captcha.VerifiedRole),
+						).WithAccessory(discord.NewThumbnail(member.EffectiveAvatarURL())),
+					),
+				))
+			}
 			delete(m.Data.SaveState.CaptchaSessions, member.User.ID.String())
 			b.DB.GormDB.Save(&m.Data)
 		}
@@ -806,12 +854,15 @@ func (m *SafetyModule) handleZalgo(b *core.Bot, client *bot.Client, message disc
 	}
 
 	if isZalgo {
-		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
+			return true
+		}
 		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyZalgoLogs(ratio, message)
 		locale := discord.LocaleEnglishUS
 		if message.GuildID != nil {
-			if guild, ok := client.Caches.Guild(*message.GuildID); ok {
+			if guild, ok := b.Client.Caches.Guild(*message.GuildID); ok {
 				locale = discord.Locale(guild.PreferredLocale)
 			}
 		}
@@ -826,7 +877,7 @@ func (m *SafetyModule) handleZalgo(b *core.Bot, client *bot.Client, message disc
 			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
 
-		sendCensoredMessage(client, message, string(code), title, desc)
+		sendCensoredMessage(b, client, message, string(code), title, desc)
 		return true
 	}
 
@@ -858,12 +909,15 @@ func (m *SafetyModule) handleBlockInvite(b *core.Bot, client *bot.Client, messag
 	}
 
 	if includeInvite {
-		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
+			return true
+		}
 		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyBlockedInviteLogs(urls, message)
 		locale := discord.LocaleEnglishUS
 		if message.GuildID != nil {
-			if guild, ok := client.Caches.Guild(*message.GuildID); ok {
+			if guild, ok := b.Client.Caches.Guild(*message.GuildID); ok {
 				locale = discord.Locale(guild.PreferredLocale)
 			}
 		}
@@ -878,7 +932,7 @@ func (m *SafetyModule) handleBlockInvite(b *core.Bot, client *bot.Client, messag
 			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
 
-		sendCensoredMessage(client, message, string(code), title, desc)
+		sendCensoredMessage(b, client, message, string(code), title, desc)
 		return true
 	}
 
@@ -962,12 +1016,15 @@ func (m *SafetyModule) handlePhishing(b *core.Bot, client *bot.Client, message d
 	}
 
 	if isPhishing {
-		client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
+			return true
+		}
 		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyPhishingLogs(urls, message)
 		locale := discord.LocaleEnglishUS
 		if message.GuildID != nil {
-			if guild, ok := client.Caches.Guild(*message.GuildID); ok {
+			if guild, ok := b.Client.Caches.Guild(*message.GuildID); ok {
 				locale = discord.Locale(guild.PreferredLocale)
 			}
 		}
@@ -982,14 +1039,14 @@ func (m *SafetyModule) handlePhishing(b *core.Bot, client *bot.Client, message d
 			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
 
-		sendCensoredMessage(client, message, string(code), title, desc)
+		sendCensoredMessage(b, client, message, string(code), title, desc)
 		return true
 	}
 
 	return false
 }
 
-func sendCensoredMessage(client *bot.Client, message discord.Message, code string, title string, desc string) {
+func sendCensoredMessage(b *core.Bot, client *bot.Client, message discord.Message, code string, title string, desc string) {
 	msg := discord.NewMessageCreateV2(
 		discord.NewContainer(
 			discord.NewSection(
@@ -1005,7 +1062,7 @@ func sendCensoredMessage(client *bot.Client, message discord.Message, code strin
 		Users: []snowflake.ID{message.Author.ID},
 	})
 
-	client.Rest.CreateMessage(message.ChannelID, msg)
+	b.Client.Rest.CreateMessage(message.ChannelID, msg)
 }
 
 func (m *SafetyModule) handleMentionSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
@@ -1049,21 +1106,24 @@ func (m *SafetyModule) handleMentionSpam(b *core.Bot, client *bot.Client, messag
 	utils.Cache.Mu.Unlock()
 
 	if shouldTimeout {
+		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
+			return true
+		}
+
 		timeoutDuration := 6 * time.Hour
 		until := time.Now().Add(timeoutDuration)
 
 		go func() {
-			client.Rest.UpdateMember(guildID, userID, discord.MemberUpdate{
+			b.Client.Rest.UpdateMember(guildID, userID, discord.MemberUpdate{
 				CommunicationDisabledUntil: omit.New(&until),
 			})
 		}()
-
-		client.Rest.DeleteMessage(message.ChannelID, message.ID)
 		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyMentionSpamLogs(message)
 
 		locale := discord.LocaleEnglishUS
-		if guild, ok := client.Caches.Guild(guildID); ok {
+		if guild, ok := b.Client.Caches.Guild(guildID); ok {
 			locale = discord.Locale(guild.PreferredLocale)
 		}
 		trad := locales.GetModule_SafetyModule(locale)
@@ -1077,7 +1137,7 @@ func (m *SafetyModule) handleMentionSpam(b *core.Bot, client *bot.Client, messag
 			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
 
-		sendCensoredMessage(client, message, string(code), title, desc)
+		sendCensoredMessage(b, client, message, string(code), title, desc)
 		return true
 	}
 
@@ -1133,21 +1193,24 @@ func (m *SafetyModule) handleEmojiSpam(b *core.Bot, client *bot.Client, message 
 	utils.Cache.Mu.Unlock()
 
 	if shouldTimeout {
+		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
+			return true
+		}
+
 		timeoutDuration := 6 * time.Hour
 		until := time.Now().Add(timeoutDuration)
 
 		go func() {
-			client.Rest.UpdateMember(guildID, userID, discord.MemberUpdate{
+			b.Client.Rest.UpdateMember(guildID, userID, discord.MemberUpdate{
 				CommunicationDisabledUntil: omit.New(&until),
 			})
 		}()
-
-		client.Rest.DeleteMessage(message.ChannelID, message.ID)
 		m.giveQuarentineRole(client, *message.Member)
 		code := b.Logger.SendSafetyEmojisSpamLogs(message)
 
 		locale := discord.LocaleEnglishUS
-		if guild, ok := client.Caches.Guild(guildID); ok {
+		if guild, ok := b.Client.Caches.Guild(guildID); ok {
 			locale = discord.Locale(guild.PreferredLocale)
 		}
 		trad := locales.GetModule_SafetyModule(locale)
@@ -1161,14 +1224,14 @@ func (m *SafetyModule) handleEmojiSpam(b *core.Bot, client *bot.Client, message 
 			desc = "-# S'il s'agit d'une erreur contactez le support. Code : %s"
 		}
 
-		sendCensoredMessage(client, message, string(code), title, desc)
+		sendCensoredMessage(b, client, message, string(code), title, desc)
 		return true
 	}
 
 	return false
 }
 
-func (m *SafetyModule) handleMassAction(client *bot.Client, guildID snowflake.ID, userID snowflake.ID, count int, threshold int, cacheKey string, messageType string, arg1 string, arg2 string) {
+func (m *SafetyModule) handleMassAction(b *core.Bot, guildID snowflake.ID, userID snowflake.ID, count int, threshold int, cacheKey string, messageType string, arg1 string, arg2 string) {
 	utils.Cache.Mu.Lock()
 	var userCounts []time.Time
 	if val, ok := utils.Cache.Items[cacheKey]; ok {
@@ -1203,9 +1266,9 @@ func (m *SafetyModule) handleMassAction(client *bot.Client, guildID snowflake.ID
 	utils.Cache.Mu.Unlock()
 
 	if shouldPunish {
-		member, err := client.Rest.GetMember(guildID, userID)
+		member, err := b.Client.Rest.GetMember(guildID, userID)
 		successStr := ""
-		guild, gOk := client.Caches.Guild(guildID)
+		guild, gOk := b.Client.Caches.Guild(guildID)
 		if !gOk {
 			return
 		}
@@ -1217,12 +1280,16 @@ func (m *SafetyModule) handleMassAction(client *bot.Client, guildID snowflake.ID
 		trad := locales.GetModule_SafetyModule(locale)
 
 		if err == nil && member != nil {
-			_, dperms := utils.CheckDangerousPermissions(client, *member)
-			utils.RemoveMemberPerms(client, *member, dperms)
+			if m.triggerSuspectCaptcha(b, b.Client, guildID, *member) {
+				return
+			}
 
-			updatedMember, uErr := client.Rest.GetMember(guildID, userID)
+			_, dperms := utils.CheckDangerousPermissions(b.Client, *member)
+			utils.RemoveMemberPerms(b.Client, *member, dperms)
+
+			updatedMember, uErr := b.Client.Rest.GetMember(guildID, userID)
 			if uErr == nil {
-				_, newDperms := utils.CheckDangerousPermissions(client, *updatedMember)
+				_, newDperms := utils.CheckDangerousPermissions(b.Client, *updatedMember)
 				if len(newDperms) > 0 {
 					successStr = trad.Nuke_fail
 					if successStr == "" {
@@ -1242,7 +1309,7 @@ func (m *SafetyModule) handleMassAction(client *bot.Client, guildID snowflake.ID
 			}
 		}
 
-		ownerChannel, err := client.Rest.CreateDMChannel(guild.OwnerID)
+		ownerChannel, err := b.Client.Rest.CreateDMChannel(guild.OwnerID)
 		if err == nil {
 			var text string
 			switch messageType {
@@ -1276,7 +1343,7 @@ func (m *SafetyModule) handleMassAction(client *bot.Client, guildID snowflake.ID
 					).WithAccessory(discord.NewThumbnail(*guild.IconURL())),
 				).WithAccentColor(utils.ParseStrColor("#e74c3c")),
 			)
-			client.Rest.CreateMessage(ownerChannel.ID(), msg)
+			b.Client.Rest.CreateMessage(ownerChannel.ID(), msg)
 		}
 	}
 }
@@ -1304,19 +1371,19 @@ func (m *SafetyModule) HandleGuildAuditLogEntryCreate(b *core.Bot, e *events.Gui
 	case discord.AuditLogEventMemberKick:
 		if m.Data.AntiNuke.AntiMassKick {
 			cacheKey := "masskick:" + guildID.String() + ":" + userID.String()
-			m.handleMassAction(b.Client, guildID, userID, 1, 4, cacheKey, "kick", "", "")
+			m.handleMassAction(b, guildID, userID, 1, 4, cacheKey, "kick", "", "")
 		}
 
 	case discord.AuditLogEventChannelDelete:
 		if m.Data.AntiNuke.AntiMassChannelD {
 			cacheKey := "masschanneldelete:" + guildID.String() + ":" + userID.String()
-			m.handleMassAction(b.Client, guildID, userID, 1, 2, cacheKey, "delete", "salons", "")
+			m.handleMassAction(b, guildID, userID, 1, 2, cacheKey, "delete", "salons", "")
 		}
 
 	case discord.AuditLogEventRoleDelete:
 		if m.Data.AntiNuke.AntiMassRoleD {
 			cacheKey := "massroledelete:" + guildID.String() + ":" + userID.String()
-			m.handleMassAction(b.Client, guildID, userID, 1, 2, cacheKey, "delete", "rôles", "")
+			m.handleMassAction(b, guildID, userID, 1, 2, cacheKey, "delete", "rôles", "")
 		}
 
 	case discord.AuditLogEventChannelUpdate:
@@ -1330,7 +1397,7 @@ func (m *SafetyModule) HandleGuildAuditLogEntryCreate(b *core.Bot, e *events.Gui
 			}
 			if !ignore {
 				cacheKey := "masschanneledit:" + guildID.String() + ":" + userID.String()
-				m.handleMassAction(b.Client, guildID, userID, 1, 5, cacheKey, "edit", "salons", "")
+				m.handleMassAction(b, guildID, userID, 1, 5, cacheKey, "edit", "salons", "")
 			}
 		}
 
@@ -1345,7 +1412,7 @@ func (m *SafetyModule) HandleGuildAuditLogEntryCreate(b *core.Bot, e *events.Gui
 			}
 			if !ignore {
 				cacheKey := "massroleedit:" + guildID.String() + ":" + userID.String()
-				m.handleMassAction(b.Client, guildID, userID, 1, 5, cacheKey, "edit", "rôles", "")
+				m.handleMassAction(b, guildID, userID, 1, 5, cacheKey, "edit", "rôles", "")
 			}
 		}
 	}
@@ -1353,22 +1420,31 @@ func (m *SafetyModule) HandleGuildAuditLogEntryCreate(b *core.Bot, e *events.Gui
 	return false
 }
 
-func (m *SafetyModule) addCaptchaSession(b *core.Bot, userID string, newAnswer string, guildID snowflake.ID) error {
+func (m *SafetyModule) addCaptchaSession(b *core.Bot, userID string, newAnswer string, guildID snowflake.ID, isSuspect bool, backupRoles []snowflake.ID) error {
 	if m.Data.SaveState.CaptchaSessions == nil {
 		m.Data.SaveState.CaptchaSessions = make(map[string]CaptchaSession)
+	}
+
+	duration := 15 * time.Minute
+	maxAttempts := 3
+	if isSuspect {
+		duration = 5 * time.Minute
+		maxAttempts = 2
 	}
 
 	m.Data.SaveState.CaptchaSessions[userID] = CaptchaSession{
 		UserID:        userID,
 		CorrectAnswer: newAnswer,
 		StartedAt:     time.Now(),
-		ExpiresAt:     time.Now().Add(15 * time.Minute),
+		ExpiresAt:     time.Now().Add(duration),
 		Attempts:      0,
-		MaxAttempts:   3,
+		MaxAttempts:   maxAttempts,
 		Status:        "pending",
+		IsSuspect:     isSuspect,
+		BackupRoles:   backupRoles,
 	}
 
-	time.AfterFunc(15*time.Minute, func() {
+	time.AfterFunc(duration, func() {
 		if _, exists := m.Data.SaveState.CaptchaSessions[userID]; exists {
 			delete(m.Data.SaveState.CaptchaSessions, userID)
 			b.DB.GormDB.Save(&m.Data)
