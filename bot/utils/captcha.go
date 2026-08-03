@@ -217,12 +217,17 @@ func GenerateCaptchaImages(objects []CaptchaObject, goodIdx int) image.Image {
 		}
 	}
 
+	for _, p := range placements {
+		if p.rotated == nil {
+			continue
+		}
+		img = imaging.Overlay(img, p.rotated, image.Pt(p.x, p.y), 1.0)
+	}
+
 	for i, p := range placements {
 		if p.rotated == nil {
 			continue
 		}
-
-		img = imaging.Overlay(img, p.rotated, image.Pt(p.x, p.y), 1.0)
 
 		indexText := fmt.Sprintf("%d", i+1)
 
