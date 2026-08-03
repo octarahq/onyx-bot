@@ -1,5 +1,7 @@
 package modules
 
+// il faut ajouter le support des logs de module et mettre les differentes actions realisées
+
 import (
 	"encoding/csv"
 	"fmt"
@@ -29,30 +31,30 @@ import (
 type SafetyAntiMassJoinLevel int
 
 const (
-	SafetyAntiMassJoinLevelNone   SafetyAntiMassJoinLevel = 0 // ne rien faire
-	SafetyAntiMassJoinLevelSoft   SafetyAntiMassJoinLevel = 1 // blockerles permissions denvoie de message pour @everyone
-	SafetyAntiMassJoinLevelMedium SafetyAntiMassJoinLevel = 2 // activation du mode de verification maximal
-	SafetyAntiMassJoinLevelHight  SafetyAntiMassJoinLevel = 3 // mets en quarentaine (bloque toutes les permissions) puis kick a la fin du raid
+	SafetyAntiMassJoinLevelNone   SafetyAntiMassJoinLevel = 0
+	SafetyAntiMassJoinLevelSoft   SafetyAntiMassJoinLevel = 1
+	SafetyAntiMassJoinLevelMedium SafetyAntiMassJoinLevel = 2
+	SafetyAntiMassJoinLevelHight  SafetyAntiMassJoinLevel = 3
 )
 
 type SafetyAntiSpamLevel int
 
 const (
-	SafetyAntiSpamLevelNone   SafetyAntiSpamLevel = 0 // ne rien faire
-	SafetyAntiSpamLevelSoft   SafetyAntiSpamLevel = 1 // bloquer si un contenu dupplique a été envoye en moins de 5 sec (seulement liens + petits message)
-	SafetyAntiSpamLevelMedium SafetyAntiSpamLevel = 2 // bloque le spam de message 2 en moins de 2 secondes
-	SafetyAntiSpamLevelHight  SafetyAntiSpamLevel = 3 // bloque les contenu duplique si 2 message daffile se suivent
+	SafetyAntiSpamLevelNone   SafetyAntiSpamLevel = 0
+	SafetyAntiSpamLevelSoft   SafetyAntiSpamLevel = 1
+	SafetyAntiSpamLevelMedium SafetyAntiSpamLevel = 2
+	SafetyAntiSpamLevelHight  SafetyAntiSpamLevel = 3
 )
 
 type SafetyARaidSettings struct {
-	AltDetector       bool                    `json:"alt_detector"` //done
+	AltDetector       bool                    `json:"alt_detector"`
 	AntiMassJoinLevel SafetyAntiMassJoinLevel `json:"anti_massjoin_level"`
-	AntiBot           bool                    `json:"anti_bot"` //done
+	AntiBot           bool                    `json:"anti_bot"`
 }
 
-type SafetyASpamSettings struct { //done
+type SafetyASpamSettings struct {
 	QuarentineRole  string              `json:"quarentine_role"`
-	AntiSpamLevel   SafetyAntiSpamLevel `json:"anti_spam"` //not done
+	AntiSpamLevel   SafetyAntiSpamLevel `json:"anti_spam"`
 	AntiPhishing    bool                `json:"anti_phishing"`
 	BlockInviteLink bool                `json:"anti_invite"`
 	AntiMention     bool                `json:"anti_mention"`
@@ -61,7 +63,7 @@ type SafetyASpamSettings struct { //done
 	IgnoredChannels string              `json:"ignored_channels"`
 }
 
-type SafetyANukeSettings struct { //done
+type SafetyANukeSettings struct {
 	AntiMassKick             bool `json:"anti_mass_kick"`
 	AntiMassChannelD         bool `json:"anti_mass_channel_delete"`
 	AntiMassRoleD            bool `json:"anti_mass_role_delete"`
@@ -69,7 +71,7 @@ type SafetyANukeSettings struct { //done
 	AntiDangerousPermissions bool `json:"anti_danger_permission"`
 }
 
-type SafetyCaptchaSettings struct { //done
+type SafetyCaptchaSettings struct {
 	Enabled       bool   `json:"enabled"`
 	Channel       string `json:"channel"`
 	VerifiedRole  string `json:"vrole"`
@@ -89,8 +91,9 @@ type CaptchaSession struct {
 }
 
 type SafetySaveGuildState struct {
-	AntiMassJoinOldVerifLevel discord.VerificationLevel `json:"anti_mass_join_old_verif_level"`
-	CaptchaSessions           map[string]CaptchaSession `json:"captcha_sessions"`
+	AntiMassJoinOldVerifLevel   discord.VerificationLevel `json:"anti_mass_join_old_verif_level"`
+	AntiMassJoinOldEveryonePerm discord.Permissions       `json:"anti_mass_join_old_everyone_perm"`
+	CaptchaSessions             map[string]CaptchaSession `json:"captcha_sessions"`
 }
 
 type SafetySettings struct {
@@ -516,6 +519,118 @@ func (m *SafetyModule) HandleGuildMemberUpdate(b *core.Bot, e *events.GuildMembe
 	return false
 }
 
+func (m *SafetyModule) HandleGuildMemberAdd(b *core.Bot, e *events.GuildMemberJoin) bool {
+	if !m.Data.Enabled {
+		return false
+	}
+
+	level := m.Data.AntiRaid.AntiMassJoinLevel
+	if level == SafetyAntiMassJoinLevelNone {
+		return false
+	}
+
+	guild, exist := b.Client.Caches.Guild(e.GuildID)
+	if !exist {
+		return false
+	}
+
+	threshold := guild.MemberCount / 10
+	if threshold < 10 {
+		threshold = 10
+	}
+
+	cacheKey := fmt.Sprintf("massjoin:%s", e.GuildID.String())
+
+	utils.Cache.Mu.Lock()
+	var joinTimes []time.Time
+	if val, ok := utils.Cache.Items[cacheKey]; ok {
+		if val.Expiration == 0 || time.Now().UnixNano() <= val.Expiration {
+			if v, ok2 := val.Value.([]time.Time); ok2 {
+				joinTimes = v
+			}
+		}
+	}
+
+	now := time.Now()
+	var newTimes []time.Time
+	for _, t := range joinTimes {
+		if now.Sub(t) <= 10*time.Second {
+			newTimes = append(newTimes, t)
+		}
+	}
+
+	newTimes = append(newTimes, now)
+	isRaid := len(newTimes) >= threshold
+
+	utils.Cache.Items[cacheKey] = utils.CacheItem{
+		Value:      newTimes,
+		Expiration: now.Add(1 * time.Minute).UnixNano(),
+	}
+	utils.Cache.Mu.Unlock()
+
+	if !isRaid {
+		return false
+	}
+
+	switch level {
+	case SafetyAntiMassJoinLevelSoft:
+		everyoneRoleID := e.GuildID
+		everyoneRole, ok := b.Client.Caches.Role(e.GuildID, everyoneRoleID)
+		if ok {
+			if m.Data.SaveState.AntiMassJoinOldEveryonePerm == 0 {
+				m.Data.SaveState.AntiMassJoinOldEveryonePerm = everyoneRole.Permissions
+				b.DB.GormDB.Save(&m.Data)
+			}
+			newPerms := everyoneRole.Permissions.Remove(discord.PermissionSendMessages)
+			b.Client.Rest.UpdateRole(e.GuildID, everyoneRoleID, discord.RoleUpdate{
+				Permissions: &newPerms,
+			})
+			time.AfterFunc(15*time.Minute, func() {
+				if m.Data.SaveState.AntiMassJoinOldEveryonePerm != 0 {
+					oldPerms := m.Data.SaveState.AntiMassJoinOldEveryonePerm
+					b.Client.Rest.UpdateRole(e.GuildID, everyoneRoleID, discord.RoleUpdate{
+						Permissions: &oldPerms,
+					})
+					m.Data.SaveState.AntiMassJoinOldEveryonePerm = 0
+					b.DB.GormDB.Save(&m.Data)
+				}
+			})
+		}
+
+	case SafetyAntiMassJoinLevelMedium:
+		if m.Data.SaveState.AntiMassJoinOldVerifLevel == 0 {
+			m.Data.SaveState.AntiMassJoinOldVerifLevel = guild.VerificationLevel
+			b.DB.GormDB.Save(&m.Data)
+		}
+		vLevel := discord.VerificationLevelVeryHigh
+		b.Client.Rest.UpdateGuild(e.GuildID, discord.GuildUpdate{
+			VerificationLevel: omit.New(&vLevel),
+		})
+		time.AfterFunc(15*time.Minute, func() {
+			if m.Data.SaveState.AntiMassJoinOldVerifLevel != 0 {
+				oldVerif := m.Data.SaveState.AntiMassJoinOldVerifLevel
+				b.Client.Rest.UpdateGuild(e.GuildID, discord.GuildUpdate{
+					VerificationLevel: omit.New(&oldVerif),
+				})
+				m.Data.SaveState.AntiMassJoinOldVerifLevel = 0
+				b.DB.GormDB.Save(&m.Data)
+			}
+		})
+
+	case SafetyAntiMassJoinLevelHight:
+		if !m.triggerSuspectCaptcha(b, b.Client, e.GuildID, e.Member) {
+			b.Client.Rest.UpdateMember(e.GuildID, e.Member.User.ID, discord.MemberUpdate{
+				Roles: &[]snowflake.ID{},
+			})
+			time.AfterFunc(15*time.Minute, func() {
+				b.Client.Rest.RemoveMember(e.GuildID, e.Member.User.ID)
+			})
+		}
+	}
+
+	return true
+}
+
 func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate) bool {
 	if m.Data.Enabled {
 		ignore := false
@@ -888,7 +1003,7 @@ func (m *SafetyModule) UISchema(locale discord.Locale) core.UISchema {
 						Name:        "channel",
 						Label:       cChanL,
 						Description: cChanD,
-						Type:        core.ComponentTypeChannel, //modifier la desc pour dire que cest le backup si jamais le bot peut pas le mp
+						Type:        core.ComponentTypeChannel,
 					},
 					{
 						Name:        "vrole",
