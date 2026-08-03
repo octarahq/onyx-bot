@@ -107,6 +107,11 @@ type SafetyModule struct {
 	Data SafetySettings
 }
 
+type AntiSpamCacheItem struct {
+	LastMessageContent string
+	LastMessageTime    time.Time
+}
+
 func init() {
 	Register(&SafetyModule{})
 }
@@ -551,8 +556,98 @@ func (m *SafetyModule) HandleMessageCreate(b *core.Bot, e *events.MessageCreate)
 				return true
 			}
 		}
+
+		if m.Data.AntiSpam.AntiSpamLevel > 0 {
+			if m.handleMessageSpam(b, e.Client(), e.Message) {
+				return true
+			}
+		}
 	}
 	return false
+}
+
+func (m *SafetyModule) handleMessageSpam(b *core.Bot, client *bot.Client, message discord.Message) bool {
+	if message.Author.Bot {
+		return false
+	}
+	if message.GuildID == nil {
+		return false
+	}
+
+	level := m.Data.AntiSpam.AntiSpamLevel
+	cacheKey := fmt.Sprintf("antispam_msg:%s:%s", message.GuildID.String(), message.Author.ID.String())
+
+	var lastItem AntiSpamCacheItem
+	hasLast := false
+
+	utils.Cache.Mu.Lock()
+	if val, ok := utils.Cache.Items[cacheKey]; ok {
+		if val.Expiration == 0 || time.Now().UnixNano() <= val.Expiration {
+			if v, ok2 := val.Value.(AntiSpamCacheItem); ok2 {
+				lastItem = v
+				hasLast = true
+			}
+		}
+	}
+
+	now := time.Now()
+
+	utils.Cache.Items[cacheKey] = utils.CacheItem{
+		Value: AntiSpamCacheItem{
+			LastMessageContent: message.Content,
+			LastMessageTime:    now,
+		},
+		Expiration: now.Add(5 * time.Minute).UnixNano(),
+	}
+	utils.Cache.Mu.Unlock()
+
+	if !hasLast {
+		return false
+	}
+
+	isSpam := false
+	timeDiff := now.Sub(lastItem.LastMessageTime)
+
+	switch level {
+	case SafetyAntiSpamLevelSoft:
+		if message.Content == lastItem.LastMessageContent && timeDiff <= 5*time.Second {
+			isSpam = true
+		}
+	case SafetyAntiSpamLevelMedium:
+		if timeDiff <= 2*time.Second {
+			isSpam = true
+		}
+	case SafetyAntiSpamLevelHight:
+		if message.Content == lastItem.LastMessageContent {
+			isSpam = true
+		}
+	}
+
+	if isSpam {
+		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
+			return true
+		}
+
+		timeoutDuration := 6 * time.Hour
+		until := time.Now().Add(timeoutDuration)
+
+		go func() {
+			b.Client.Rest.UpdateMember(*message.GuildID, message.Author.ID, discord.MemberUpdate{
+				CommunicationDisabledUntil: omit.New(&until),
+			})
+		}()
+		m.giveQuarentineRole(client, *message.Member)
+
+		channel, err := client.Rest.CreateDMChannel(message.Author.ID)
+		if err == nil {
+			client.Rest.CreateMessage(channel.ID(), discord.NewMessageCreateV2(
+				discord.NewTextDisplay(":warning: You have been timed out for 6 hours due to message spam."),
+			))
+		}
+	}
+
+	return isSpam
 }
 
 func (m *SafetyModule) HandleMessageUpdate(b *core.Bot, e *events.MessageUpdate) bool {
