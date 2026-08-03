@@ -100,7 +100,7 @@ func CaptchaBuildMessage(sessionId string, member discord.Member, guild discord.
 			content = append(content, obj)
 			answers = append(answers, strconv.Itoa(i+1))
 		}
-		question = "Witch image is the **fruit** ?"
+		question = "Which image is the **fruit** ?"
 	}
 
 	img := GenerateCaptchaImages(content, goodIdx)
