@@ -151,20 +151,18 @@ func (m *LoggingModule) LoadData(db *gorm.DB, guildID string) error {
 
 func (m *LoggingModule) UISchema(locale discord.Locale) core.UISchema {
 	meta := locales.GetMeta(locale, "module_LoggingModule")
-	_ = meta // Keep it around if needed later, or remove. Let's just keep _ = meta
-
 
 	schema := core.UISchema{
 		SubModules: []core.UISubModule{
 			{
 				Name:        "main",
-				Label:       "Paramètres principaux",
-				Description: "Configuration générale du module (logs des évènements du serveur).",
+				Label:       meta.Submodules["main"].Label,
+				Description: meta.Submodules["main"].Description,
 				Components: []core.UIComponent{
 					{
 						Name:         "channel",
-						Label:        "Salon des évènements",
-						Description:  "Le salon où les logs du serveur seront envoyés.",
+						Label:        meta.Submodules["main"].Options["channel"].Label,
+						Description:  meta.Submodules["main"].Options["channel"].Description,
 						Type:         core.ComponentTypeChannel,
 						Required:     true,
 						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildText},
@@ -173,21 +171,21 @@ func (m *LoggingModule) UISchema(locale discord.Locale) core.UISchema {
 			},
 			{
 				Name:        "module_defaults",
-				Label:       "Paramètres par défaut",
-				Description: "Sélectionnez les salons par défaut pour les logs des modules.",
+				Label:       meta.Submodules["module_defaults"].Label,
+				Description: meta.Submodules["module_defaults"].Description,
 				Components: []core.UIComponent{
 					{
 						Name:         "basic_channel",
-						Label:        "Salon des Logs Basiques",
-						Description:  "Le salon où les logs d'information seront envoyés.",
+						Label:        meta.Submodules["module_defaults"].Options["basic_channel"].Label,
+						Description:  meta.Submodules["module_defaults"].Options["basic_channel"].Description,
 						Type:         core.ComponentTypeChannel,
 						Required:     true,
 						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildText},
 					},
 					{
 						Name:         "important_channel",
-						Label:        "Salon des Logs Importants",
-						Description:  "Le salon où les logs importants ou d'erreurs seront envoyés.",
+						Label:        meta.Submodules["module_defaults"].Options["important_channel"].Label,
+						Description:  meta.Submodules["module_defaults"].Options["important_channel"].Description,
 						Type:         core.ComponentTypeChannel,
 						Required:     true,
 						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildText},
@@ -210,8 +208,8 @@ func (m *LoggingModule) UISchema(locale discord.Locale) core.UISchema {
 
 	schema.SubModules = append(schema.SubModules, core.UISubModule{
 		Name:        "",
-		Label:       "Configuration des modules",
-		Description: "Activez ou désactivez les logs pour chaque module.",
+		Label:       meta.Submodules["module_configs"].Label,
+		Description: meta.Submodules["module_configs"].Description,
 		FullWidth:   true,
 		Components: []core.UIComponent{
 			{

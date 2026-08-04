@@ -16,6 +16,24 @@
             "description": "The channel where logs will be sent."
           }
         }
+      },
+      "module_defaults": {
+        "label": "Default Settings",
+        "description": "Select the default channels for module logs.",
+        "options": {
+          "basic_channel": {
+            "label": "Basic Logs Channel",
+            "description": "The channel where information logs will be sent."
+          },
+          "important_channel": {
+            "label": "Important Logs Channel",
+            "description": "The channel where important or error logs will be sent."
+          }
+        }
+      },
+      "module_configs": {
+        "label": "Modules Configuration",
+        "description": "Enable or disable logs for each module."
       }
     }
   },
