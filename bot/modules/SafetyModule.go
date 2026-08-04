@@ -146,7 +146,14 @@ func (m *SafetyModule) Metadata() core.Metadata {
 func (m *SafetyModule) Priority() int   { return 1 }
 func (m *SafetyModule) IsEnabled() bool { return m.Data.Enabled }
 func (m *SafetyModule) Permissions() []discord.Permissions {
-	return []discord.Permissions{}
+	return []discord.Permissions{
+		discord.PermissionManageChannels,
+		discord.PermissionManageGuild,
+		discord.PermissionManageMessages,
+		discord.PermissionBanMembers,
+		discord.PermissionKickMembers,
+		discord.PermissionModerateMembers,
+	}
 }
 
 func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJoin) bool {
