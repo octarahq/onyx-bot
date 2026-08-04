@@ -105,6 +105,13 @@ func main() {
 	logger := logs.NewLogger(client)
 	coreBot.Logger = logger
 
+	for _, m := range coreBot.Modules {
+		if ml, ok := m.(core.ModuleLogger); ok {
+			coreBot.ModuleLogger = ml
+			break
+		}
+	}
+
 	handlers.SetupEvents(coreBot)
 
 	go api.Start(coreBot)

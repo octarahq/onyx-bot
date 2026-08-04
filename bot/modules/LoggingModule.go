@@ -58,10 +58,24 @@ type LoggingMainSettings struct {
 	Channel string `json:"channel"`
 }
 
+type ModuleLogDefaults struct {
+	BasicChannel     string `json:"basic_channel"`
+	ImportantChannel string `json:"important_channel"`
+}
+
+type ModuleLogSetting struct {
+	GuildID    string `gorm:"primaryKey" json:"-"`
+	ModuleName string `gorm:"primaryKey" json:"module_name"`
+	LogInfo    bool   `gorm:"default:true" json:"log_info"`
+	LogErrors  bool   `gorm:"default:true" json:"log_errors"`
+}
+
 type LoggingSettings struct {
-	GuildID string              `gorm:"primaryKey" json:"guild_id"`
-	Enabled bool                `gorm:"default:false" json:"enabled"`
-	Main    LoggingMainSettings `gorm:"embedded;embeddedPrefix:main_" json:"main"`
+	GuildID        string              `gorm:"primaryKey" json:"guild_id"`
+	Enabled        bool                `gorm:"default:false" json:"enabled"`
+	Main           LoggingMainSettings `gorm:"embedded;embeddedPrefix:main_" json:"main"`
+	ModuleDefaults ModuleLogDefaults   `gorm:"embedded;embeddedPrefix:moddef_" json:"module_defaults"`
+	ModuleConfigs  []ModuleLogSetting  `gorm:"foreignKey:GuildID;references:GuildID" json:"module_configs"`
 }
 
 type LoggingModule struct {
@@ -137,41 +151,43 @@ func (m *LoggingModule) LoadData(db *gorm.DB, guildID string) error {
 
 func (m *LoggingModule) UISchema(locale discord.Locale) core.UISchema {
 	meta := locales.GetMeta(locale, "module_LoggingModule")
+	_ = meta // Keep it around if needed later, or remove. Let's just keep _ = meta
 
-	mainLabel := "Main Settings"
-	mainDesc := ""
-	mainChannelLabel := "Channel"
-	mainChannelDesc := "The channel where logs will be sent."
 
-	if sub, ok := meta.Submodules["main"]; ok {
-		if sub.Label != "" {
-			mainLabel = sub.Label
-		}
-		if sub.Description != "" {
-			mainDesc = sub.Description
-		}
-
-		if opt, ok := sub.Options["channel"]; ok {
-			if opt.Label != "" {
-				mainChannelLabel = opt.Label
-			}
-			if opt.Description != "" {
-				mainChannelDesc = opt.Description
-			}
-		}
-	}
-
-	return core.UISchema{
+	schema := core.UISchema{
 		SubModules: []core.UISubModule{
 			{
 				Name:        "main",
-				Label:       mainLabel,
-				Description: mainDesc,
+				Label:       "Paramètres principaux",
+				Description: "Configuration générale du module (logs des évènements du serveur).",
 				Components: []core.UIComponent{
 					{
 						Name:         "channel",
-						Label:        mainChannelLabel,
-						Description:  mainChannelDesc,
+						Label:        "Salon des évènements",
+						Description:  "Le salon où les logs du serveur seront envoyés.",
+						Type:         core.ComponentTypeChannel,
+						Required:     true,
+						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildText},
+					},
+				},
+			},
+			{
+				Name:        "module_defaults",
+				Label:       "Paramètres par défaut",
+				Description: "Sélectionnez les salons par défaut pour les logs des modules.",
+				Components: []core.UIComponent{
+					{
+						Name:         "basic_channel",
+						Label:        "Salon des Logs Basiques",
+						Description:  "Le salon où les logs d'information seront envoyés.",
+						Type:         core.ComponentTypeChannel,
+						Required:     true,
+						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildText},
+					},
+					{
+						Name:         "important_channel",
+						Label:        "Salon des Logs Importants",
+						Description:  "Le salon où les logs importants ou d'erreurs seront envoyés.",
 						Type:         core.ComponentTypeChannel,
 						Required:     true,
 						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildText},
@@ -180,13 +196,103 @@ func (m *LoggingModule) UISchema(locale discord.Locale) core.UISchema {
 			},
 		},
 	}
+
+	var moduleGridOptions []core.UISelectOption
+	for _, m := range RegisteredModules {
+		modMeta := m.Metadata()
+		if modMeta.Loggable {
+			moduleGridOptions = append(moduleGridOptions, core.UISelectOption{
+				Label: modMeta.Label(locale),
+				Value: modMeta.Name,
+			})
+		}
+	}
+
+	schema.SubModules = append(schema.SubModules, core.UISubModule{
+		Name:        "",
+		Label:       "Configuration des modules",
+		Description: "Activez ou désactivez les logs pour chaque module.",
+		FullWidth:   true,
+		Components: []core.UIComponent{
+			{
+				Name:    "module_configs",
+				Type:    core.ComponentTypeModuleGrid,
+				Options: moduleGridOptions,
+			},
+		},
+	})
+
+	return schema
 }
 
 func (m *LoggingModule) sendLog(b *core.Bot, color, title string, components []discord.ContainerSubComponent) {
 	if !m.Data.Enabled || len(components) == 0 {
 		return
 	}
+	if m.Data.Main.Channel == "" {
+		return
+	}
 	b.SendMessage(m.Data.Main.Channel, createMessage(color, title, components))
+}
+
+func (m *LoggingModule) LogInfo(b *core.Bot, gid string, moduleName string, title string, logs []string) {
+	var settings LoggingSettings
+	if err := b.DB.GormDB.Preload("ModuleConfigs").First(&settings, "guild_id = ?", gid).Error; err != nil {
+		return
+	}
+	if !settings.Enabled || settings.ModuleDefaults.BasicChannel == "" {
+		return
+	}
+
+	canLog := false
+	for _, config := range settings.ModuleConfigs {
+		if config.ModuleName == moduleName {
+			if config.LogInfo {
+				canLog = true
+			}
+			break
+		}
+	}
+	if !canLog {
+		return
+	}
+
+	var comps []discord.ContainerSubComponent
+	for _, c := range logs {
+		comps = append(comps, discord.NewTextDisplayf("> %s", c))
+	}
+	msg := createMessage("#e4ab17", title, comps)
+	b.SendMessage(settings.ModuleDefaults.BasicChannel, msg)
+}
+
+func (m *LoggingModule) LogImportant(b *core.Bot, gid string, moduleName string, title string, logs []string) {
+	var settings LoggingSettings
+	if err := b.DB.GormDB.Preload("ModuleConfigs").First(&settings, "guild_id = ?", gid).Error; err != nil {
+		return
+	}
+	if !settings.Enabled || settings.ModuleDefaults.ImportantChannel == "" {
+		return
+	}
+
+	canLog := false
+	for _, config := range settings.ModuleConfigs {
+		if config.ModuleName == moduleName {
+			if config.LogErrors {
+				canLog = true
+			}
+			break
+		}
+	}
+	if !canLog {
+		return
+	}
+
+	var comps []discord.ContainerSubComponent
+	for _, c := range logs {
+		comps = append(comps, discord.NewTextDisplayf("> %s", c))
+	}
+	msg := createMessage("#e74c3c", title, comps)
+	b.SendMessage(settings.ModuleDefaults.ImportantChannel, msg)
 }
 
 func (m *LoggingModule) HandleGuildChannelCreate(b *core.Bot, e *events.GuildChannelCreate) bool {
