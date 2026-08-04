@@ -1,7 +1,5 @@
 package modules
 
-// il faut ajouter le support des logs de module et mettre les differentes actions realisées
-
 import (
 	"encoding/csv"
 	"fmt"
@@ -140,6 +138,7 @@ func (m *SafetyModule) Metadata() core.Metadata {
 			}
 			return subs
 		},
+		Loggable: true,
 	}
 }
 
@@ -161,7 +160,14 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 		if m.Data.AntiRaid.AntiBot {
 			if e.Member.User.Bot {
 				e.Client().Rest.RemoveMember(e.GuildID, e.Member.User.ID)
-				b.Logger.SendSafetyRaidBotLogs(e.Member)
+				locale := discord.LocaleEnglishUS
+				if guild, ok := e.Client().Caches.Guild(e.GuildID); ok {
+					locale = discord.Locale(guild.PreferredLocale)
+				}
+				trad := locales.GetModule_SafetyModule(locale)
+				b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_bot, []string{
+					fmt.Sprintf(trad.Log_fields.Bot_kicked, e.Member.User.ID),
+				})
 				return true
 			}
 		}
@@ -169,7 +175,16 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 		if m.Data.AntiRaid.AltDetector {
 			if time.Since(e.Member.CreatedAt()) < 7*24*time.Hour {
 				e.Client().Rest.RemoveMember(e.GuildID, e.Member.User.ID)
-				b.Logger.SendSafetyRaidAltLogs(e.Member)
+
+				locale := discord.LocaleEnglishUS
+				if guild, ok := e.Client().Caches.Guild(e.GuildID); ok {
+					locale = discord.Locale(guild.PreferredLocale)
+				}
+				trad := locales.GetModule_SafetyModule(locale)
+				b.LogModuleInfo(e.GuildID.String(), "SafetyModule", trad.Log_title_alt, []string{
+					fmt.Sprintf(trad.Log_fields.User, e.Member.User.ID),
+					fmt.Sprintf(trad.Log_fields.Created_ago, time.Since(e.Member.CreatedAt()).Truncate(time.Second)),
+				})
 				return true
 			}
 		}
@@ -194,6 +209,11 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(good)+1), e.GuildID, false, nil)
 
 				e.Client().Rest.CreateMessage(cid, msg)
+
+				trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+				b.LogModuleInfo(e.GuildID.String(), "SafetyModule", trad.Log_title_captcha_sent, []string{
+					fmt.Sprintf(trad.Log_fields.User, e.Member.User.ID),
+				})
 				return false
 			}
 
@@ -211,6 +231,11 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 			m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), e.GuildID, false, nil)
 
 			_, err = e.Client().Rest.CreateMessage(cid, msg)
+
+			trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+			b.LogModuleInfo(e.GuildID.String(), "SafetyModule", trad.Log_title_captcha_sent, []string{
+				fmt.Sprintf(trad.Log_fields.User, e.Member.User.ID),
+			})
 		}
 	}
 
@@ -240,6 +265,11 @@ func (m *SafetyModule) triggerSuspectCaptcha(b *core.Bot, client *bot.Client, gu
 	if err == nil {
 		b.Client.Rest.CreateMessage(channel.ID(), msg)
 	}
+
+	trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+	b.LogModuleInfo(guildID.String(), "SafetyModule", trad.Log_title_captcha_sent, []string{
+		fmt.Sprintf(trad.Log_fields.User, member.User.ID),
+	})
 
 	return true
 }
@@ -279,6 +309,12 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 					discord.NewTextDisplay(":x: This captcha has expired."),
 				),
 			))
+
+			trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+			b.LogModuleInfo(guildID.String(), "SafetyModule", trad.Log_title_captcha_failed, []string{
+				fmt.Sprintf(trad.Log_fields.User, e.User().ID),
+				trad.Log_fields.Captcha_expired,
+			})
 			return false
 		}
 
@@ -307,6 +343,12 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 					),
 				))
 				e.Client().Rest.RemoveMember(guildID, member.User.ID)
+
+				trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+				b.LogModuleInfo(guildID.String(), "SafetyModule", trad.Log_title_captcha_failed, []string{
+					fmt.Sprintf(trad.Log_fields.User, member.User.ID),
+					trad.Log_fields.Captcha_failed,
+				})
 				return false
 			}
 
@@ -341,7 +383,7 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 					),
 				))
 			} else {
-				e.Client().Rest.AddMemberRole(guildID, member.User.ID, rid) // ajouter la gesion derreur avec le module des logs au cas ou il y a un probleme affin de le signaler
+				e.Client().Rest.AddMemberRole(guildID, member.User.ID, rid)
 
 				e.CreateMessage(discord.NewMessageCreateV2(
 					discord.NewContainer(
@@ -354,6 +396,11 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 			}
 			delete(m.Data.SaveState.CaptchaSessions, member.User.ID.String())
 			b.DB.GormDB.Save(&m.Data)
+
+			trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+			b.LogModuleInfo(guildID.String(), "SafetyModule", trad.Log_title_captcha_passed, []string{
+				fmt.Sprintf(trad.Log_fields.User, member.User.ID),
+			})
 		}
 	}
 	return false
@@ -452,6 +499,12 @@ func (m *SafetyModule) HandleGuildUpdate(b *core.Bot, e *events.GuildUpdate) boo
 					}
 					trad := locales.GetModule_SafetyModule(locale)
 
+					b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_vanity, []string{
+						fmt.Sprintf(trad.Log_fields.User, userID.String()),
+						fmt.Sprintf(trad.Log_fields.Action_vanity, oldCode, newCode),
+						trad.Log_fields.Status_vanity,
+					})
+
 					ownerChannel, err := e.Client().Rest.CreateDMChannel(e.Guild.OwnerID)
 					if err == nil {
 						msg := discord.NewMessageCreateV2(
@@ -518,6 +571,18 @@ func (m *SafetyModule) HandleGuildMemberUpdate(b *core.Bot, e *events.GuildMembe
 					_, dperms := utils.CheckDangerousPermissions(e.Client(), *authorMember)
 					utils.RemoveMemberPerms(e.Client(), *authorMember, dperms)
 				}
+
+				locale := discord.LocaleFrench
+				if guild, ok := b.Client.Caches.Guild(e.GuildID); ok && guild.PreferredLocale != "" {
+					locale = discord.Locale(guild.PreferredLocale)
+				}
+				trad := locales.GetModule_SafetyModule(locale)
+
+				b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_danger_perm, []string{
+					fmt.Sprintf(trad.Log_fields.Author, authorID.String()),
+					fmt.Sprintf(trad.Log_fields.Target, e.Member.User.ID.String()),
+					trad.Log_fields.Action_danger_perm,
+				})
 			}
 			return true
 		}
@@ -578,6 +643,11 @@ func (m *SafetyModule) HandleGuildMemberAdd(b *core.Bot, e *events.GuildMemberJo
 	if !isRaid {
 		return false
 	}
+
+	trad := locales.GetModule_SafetyModule(discord.Locale(guild.PreferredLocale))
+	b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_raid, []string{
+		fmt.Sprintf(trad.Log_fields.Level_activated, level),
+	})
 
 	switch level {
 	case SafetyAntiMassJoinLevelSoft:
@@ -767,6 +837,18 @@ func (m *SafetyModule) handleMessageSpam(b *core.Bot, client *bot.Client, messag
 				discord.NewTextDisplay(":warning: You have been timed out for 6 hours due to message spam."),
 			))
 		}
+
+		locale := discord.LocaleEnglishUS
+		if guild, ok := b.Client.Caches.Guild(*message.GuildID); ok {
+			locale = discord.Locale(guild.PreferredLocale)
+		}
+		trad := locales.GetModule_SafetyModule(locale)
+
+		b.LogModuleImportant(message.GuildID.String(), "SafetyModule", trad.Log_title_spam, []string{
+			fmt.Sprintf(trad.Log_fields.User, message.Author.ID),
+			trad.Log_fields.Action_deleted_timeout,
+			fmt.Sprintf(trad.Log_fields.Level_triggered, level),
+		})
 	}
 
 	return isSpam
@@ -1085,6 +1167,12 @@ func (m *SafetyModule) handleZalgo(b *core.Bot, client *bot.Client, message disc
 		}
 		trad := locales.GetModule_SafetyModule(locale)
 
+		b.LogModuleInfo(message.GuildID.String(), "SafetyModule", trad.Log_title_zalgo, []string{
+			fmt.Sprintf(trad.Log_fields.User, message.Author.ID),
+			fmt.Sprintf(trad.Log_fields.Zalgo_ratio, ratio*100),
+			fmt.Sprintf(trad.Log_fields.Infraction_code, code),
+		})
+
 		title := trad.Zalgo_censored_title
 		if title == "" {
 			title = "Ton message a été censuré car il contient du texte corrompu (Zalgo)."
@@ -1139,6 +1227,12 @@ func (m *SafetyModule) handleBlockInvite(b *core.Bot, client *bot.Client, messag
 			}
 		}
 		trad := locales.GetModule_SafetyModule(locale)
+
+		b.LogModuleImportant(message.GuildID.String(), "SafetyModule", trad.Log_title_invite, []string{
+			fmt.Sprintf(trad.Log_fields.User, message.Author.ID),
+			trad.Log_fields.Action_deleted_quarantine,
+			fmt.Sprintf(trad.Log_fields.Infraction_code, code),
+		})
 
 		title := trad.Blocked_invite_censored_title
 		if title == "" {
@@ -1247,6 +1341,12 @@ func (m *SafetyModule) handlePhishing(b *core.Bot, client *bot.Client, message d
 		}
 		trad := locales.GetModule_SafetyModule(locale)
 
+		b.LogModuleImportant(message.GuildID.String(), "SafetyModule", trad.Log_title_phishing, []string{
+			fmt.Sprintf(trad.Log_fields.User, message.Author.ID),
+			trad.Log_fields.Action_deleted_quarantine,
+			fmt.Sprintf(trad.Log_fields.Infraction_code, code),
+		})
+
 		title := trad.Phishing_censored_title
 		if title == "" {
 			title = "Ton lien a été censuré pour suspicion de phishing."
@@ -1345,6 +1445,12 @@ func (m *SafetyModule) handleMentionSpam(b *core.Bot, client *bot.Client, messag
 		}
 		trad := locales.GetModule_SafetyModule(locale)
 
+		b.LogModuleInfo(guildID.String(), "SafetyModule", trad.Log_title_mention, []string{
+			fmt.Sprintf(trad.Log_fields.User, message.Author.ID),
+			trad.Log_fields.Action_deleted_timeout,
+			fmt.Sprintf(trad.Log_fields.Infraction_code, code),
+		})
+
 		title := trad.Mention_spam_censored_title
 		if title == "" {
 			title = "Tu as été timeout pour spam de mentions."
@@ -1431,6 +1537,12 @@ func (m *SafetyModule) handleEmojiSpam(b *core.Bot, client *bot.Client, message 
 			locale = discord.Locale(guild.PreferredLocale)
 		}
 		trad := locales.GetModule_SafetyModule(locale)
+
+		b.LogModuleInfo(guildID.String(), "SafetyModule", trad.Log_title_emoji, []string{
+			fmt.Sprintf(trad.Log_fields.User, message.Author.ID),
+			trad.Log_fields.Action_deleted_timeout,
+			fmt.Sprintf(trad.Log_fields.Infraction_code, code),
+		})
 
 		title := trad.Emojis_spam_censored_title
 		if title == "" {
@@ -1525,6 +1637,12 @@ func (m *SafetyModule) handleMassAction(b *core.Bot, guildID snowflake.ID, userI
 				successStr = "Je n'ai pas pu lui retirer ses permissions (vérifiez mon rôle)."
 			}
 		}
+
+		b.LogModuleImportant(guildID.String(), "SafetyModule", trad.Log_title_nuke, []string{
+			fmt.Sprintf(trad.Log_fields.User, userID.String()),
+			fmt.Sprintf(trad.Log_fields.Nuke_action, messageType, arg1),
+			fmt.Sprintf(trad.Log_fields.Nuke_result, successStr),
+		})
 
 		ownerChannel, err := b.Client.Rest.CreateDMChannel(guild.OwnerID)
 		if err == nil {
