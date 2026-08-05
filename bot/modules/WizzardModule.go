@@ -190,17 +190,41 @@ func (m *WizzardModule) LoadData(db *gorm.DB, guildID string) error {
 }
 
 func (m *WizzardModule) UISchema(locale discord.Locale) core.UISchema {
+	meta := locales.GetMeta(locale, "module_WizzardModule")
+
+	mainLabel := "Paramètres Principaux"
+	mainDesc := "Configuration générale des sorts."
+	if sub, ok := meta.Submodules["main"]; ok {
+		if sub.Label != "" {
+			mainLabel = sub.Label
+		}
+		if sub.Description != "" {
+			mainDesc = sub.Description
+		}
+	}
+
+	transLabel := "Traductions"
+	transDesc := "Personnaliser les messages de réponse."
+	if sub, ok := meta.Submodules["translations"]; ok {
+		if sub.Label != "" {
+			transLabel = sub.Label
+		}
+		if sub.Description != "" {
+			transDesc = sub.Description
+		}
+	}
+
 	return core.UISchema{
 		SubModules: []core.UISubModule{
 			{
 				Name:        "main",
-				Label:       "Paramètres Principaux",
-				Description: "Configuration générale des sorts.",
+				Label:       mainLabel,
+				Description: mainDesc,
 				Components: []core.UIComponent{
 					{
 						Name:        "prefix",
-						Label:       "Préfixe des sorts",
-						Description: "Le préfixe à utiliser avant le nom du sort (ex: !avadakedavra)",
+						Label:       meta.Submodules["main"].Options["prefix"].Label,
+						Description: meta.Submodules["main"].Options["prefix"].Description,
 						Placeholder: "!",
 						Type:        core.ComponentTypeString,
 						Required:    true,
@@ -211,37 +235,37 @@ func (m *WizzardModule) UISchema(locale discord.Locale) core.UISchema {
 			},
 			{
 				Name:        "translations",
-				Label:       "Traductions",
-				Description: "Personnaliser les messages de réponse.",
+				Label:       transLabel,
+				Description: transDesc,
 				Components: []core.UIComponent{
 					{
 						Name:        "no_permission",
-						Label:       "Message - Pas de permission",
-						Description: "Envoyé quand l'utilisateur ou le bot n'a pas la permission.",
+						Label:       meta.Submodules["translations"].Options["no_permission"].Label,
+						Description: meta.Submodules["translations"].Options["no_permission"].Description,
 						Placeholder: "Vous n'avez pas la permission de lancer ce sort.",
 						Type:        core.ComponentTypeString,
 						Required:    false,
 					},
 					{
 						Name:        "missing_args",
-						Label:       "Message - Arguments manquants",
-						Description: "Envoyé quand il manque des arguments (ex: mention).",
+						Label:       meta.Submodules["translations"].Options["missing_args"].Label,
+						Description: meta.Submodules["translations"].Options["missing_args"].Description,
 						Placeholder: "Il manque des arguments pour ce sort.",
 						Type:        core.ComponentTypeString,
 						Required:    false,
 					},
 					{
 						Name:        "spell_success",
-						Label:       "Message - Sort réussi",
-						Description: "Envoyé quand un sort est réussi.",
+						Label:       meta.Submodules["translations"].Options["spell_success"].Label,
+						Description: meta.Submodules["translations"].Options["spell_success"].Description,
 						Placeholder: "Le sort a été lancé avec succès !",
 						Type:        core.ComponentTypeString,
 						Required:    false,
 					},
 					{
 						Name:        "spell_failed",
-						Label:       "Message - Sort échoué",
-						Description: "Envoyé quand un sort échoue.",
+						Label:       meta.Submodules["translations"].Options["spell_failed"].Label,
+						Description: meta.Submodules["translations"].Options["spell_failed"].Description,
 						Placeholder: "Le sort a échoué...",
 						Type:        core.ComponentTypeString,
 						Required:    false,

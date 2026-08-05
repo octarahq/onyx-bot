@@ -25,6 +25,14 @@
           "missing_args": {
             "label": "Message - Missing Arguments",
             "description": "Sent when arguments are missing (e.g., mention)."
+          },
+          "spell_success": {
+            "label": "Message - Spell Success",
+            "description": "Sent when a spell is successful."
+          },
+          "spell_failed": {
+            "label": "Message - Spell Failed",
+            "description": "Sent when a spell fails."
           }
         }
       }

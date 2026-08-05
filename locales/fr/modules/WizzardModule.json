@@ -25,6 +25,14 @@
           "missing_args": {
             "label": "Message - Arguments manquants",
             "description": "Envoyé quand il manque des arguments (ex: mention)."
+          },
+          "spell_success": {
+            "label": "Message - Sort réussi",
+            "description": "Envoyé quand un sort est réussi."
+          },
+          "spell_failed": {
+            "label": "Message - Sort échoué",
+            "description": "Envoyé quand un sort échoue."
           }
         }
       }
