@@ -66,7 +66,12 @@ func main() {
 
 	for _, mod := range coreBot.Modules {
 		if dbAware, ok := mod.(core.DatabaseAware); ok {
-			db.GormDB.AutoMigrate(dbAware.Schema())
+			schema := dbAware.Schema()
+			if slice, isSlice := schema.([]interface{}); isSlice {
+				db.GormDB.AutoMigrate(slice...)
+			} else {
+				db.GormDB.AutoMigrate(schema)
+			}
 		}
 	}
 

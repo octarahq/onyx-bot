@@ -66,8 +66,8 @@ type ModuleLogDefaults struct {
 type ModuleLogSetting struct {
 	GuildID    string `gorm:"primaryKey" json:"-"`
 	ModuleName string `gorm:"primaryKey" json:"module_name"`
-	LogInfo    bool   `gorm:"default:true" json:"log_info"`
-	LogErrors  bool   `gorm:"default:true" json:"log_errors"`
+	LogInfo    *bool  `gorm:"default:true" json:"log_info"`
+	LogErrors  *bool  `gorm:"default:true" json:"log_errors"`
 }
 
 type LoggingSettings struct {
@@ -142,11 +142,11 @@ func (m *LoggingModule) Permissions() []discord.Permissions {
 	}
 }
 
-func (m *LoggingModule) Schema() interface{}  { return &LoggingSettings{} }
+func (m *LoggingModule) Schema() interface{}  { return []interface{}{&LoggingSettings{}, &ModuleLogSetting{}} }
 func (m *LoggingModule) DataPtr() interface{} { return &m.Data }
 func (m *LoggingModule) LoadData(db *gorm.DB, guildID string) error {
 	m.Data = LoggingSettings{GuildID: guildID}
-	return db.FirstOrCreate(&m.Data, LoggingSettings{GuildID: guildID}).Error
+	return db.Preload("ModuleConfigs").FirstOrCreate(&m.Data, LoggingSettings{GuildID: guildID}).Error
 }
 
 func (m *LoggingModule) UISchema(locale discord.Locale) core.UISchema {
@@ -242,11 +242,11 @@ func (m *LoggingModule) LogInfo(b *core.Bot, gid string, moduleName string, titl
 		return
 	}
 
-	canLog := false
+	canLog := true
 	for _, config := range settings.ModuleConfigs {
 		if config.ModuleName == moduleName {
-			if config.LogInfo {
-				canLog = true
+			if config.LogInfo != nil {
+				canLog = *config.LogInfo
 			}
 			break
 		}
@@ -272,11 +272,11 @@ func (m *LoggingModule) LogImportant(b *core.Bot, gid string, moduleName string,
 		return
 	}
 
-	canLog := false
+	canLog := true
 	for _, config := range settings.ModuleConfigs {
 		if config.ModuleName == moduleName {
-			if config.LogErrors {
-				canLog = true
+			if config.LogErrors != nil {
+				canLog = *config.LogErrors
 			}
 			break
 		}
