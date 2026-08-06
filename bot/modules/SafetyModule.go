@@ -2,6 +2,7 @@ package modules
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -43,6 +44,46 @@ const (
 	SafetyAntiSpamLevelMedium SafetyAntiSpamLevel = 2
 	SafetyAntiSpamLevelHight  SafetyAntiSpamLevel = 3
 )
+
+func (l *SafetyAntiMassJoinLevel) UnmarshalJSON(b []byte) error {
+	var i int
+	if err := json.Unmarshal(b, &i); err == nil {
+		*l = SafetyAntiMassJoinLevel(i)
+		return nil
+	}
+	var s string
+	if err := json.Unmarshal(b, &s); err == nil {
+		if parsed, err := strconv.Atoi(s); err == nil {
+			*l = SafetyAntiMassJoinLevel(parsed)
+			return nil
+		}
+	}
+	return fmt.Errorf("invalid type for SafetyAntiMassJoinLevel")
+}
+
+func (l SafetyAntiMassJoinLevel) MarshalJSON() ([]byte, error) {
+	return json.Marshal(strconv.Itoa(int(l)))
+}
+
+func (l *SafetyAntiSpamLevel) UnmarshalJSON(b []byte) error {
+	var i int
+	if err := json.Unmarshal(b, &i); err == nil {
+		*l = SafetyAntiSpamLevel(i)
+		return nil
+	}
+	var s string
+	if err := json.Unmarshal(b, &s); err == nil {
+		if parsed, err := strconv.Atoi(s); err == nil {
+			*l = SafetyAntiSpamLevel(parsed)
+			return nil
+		}
+	}
+	return fmt.Errorf("invalid type for SafetyAntiSpamLevel")
+}
+
+func (l SafetyAntiSpamLevel) MarshalJSON() ([]byte, error) {
+	return json.Marshal(strconv.Itoa(int(l)))
+}
 
 type SafetyARaidSettings struct {
 	AltDetector       bool                    `json:"alt_detector"`
