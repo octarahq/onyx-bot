@@ -65,10 +65,15 @@ func (m *WelcomeModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMember
 			return false
 		}
 
+		userName := e.Member.User.Username
+		if e.Member.User.GlobalName != nil {
+			userName = *e.Member.User.GlobalName
+		}
+
 		vars := map[string]string{
 			"user.id":             e.Member.User.ID.String(),
 			"user.mention":        fmt.Sprintf("<@%s>", e.Member.User.ID),
-			"user.name":           *e.Member.User.GlobalName,
+			"user.name":           userName,
 			"server.name":         guild.Name,
 			"server.member_count": strconv.Itoa(guild.MemberCount),
 		}
@@ -153,9 +158,14 @@ func (m *WelcomeModule) HandleGuildMemberLeave(b *core.Bot, e *events.GuildMembe
 			return false
 		}
 
+		userName := e.User.Username
+		if e.User.GlobalName != nil {
+			userName = *e.User.GlobalName
+		}
+
 		vars := map[string]string{
 			"user.id":             e.User.ID.String(),
-			"user.name":           *e.User.GlobalName,
+			"user.name":           userName,
 			"server.name":         guild.Name,
 			"server.member_count": strconv.Itoa(guild.MemberCount),
 		}

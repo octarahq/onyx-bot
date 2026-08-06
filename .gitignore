@@ -5,3 +5,5 @@ bot/modules/TestModule.txt
 todo.md
 # Orion CLI
 .orion/
+cmd/
+.vscode/

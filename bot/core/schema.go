@@ -12,7 +12,8 @@ const (
 	ComponentTypeChannel  ComponentType = "channel"
 	ComponentTypeRole     ComponentType = "role"
 	ComponentTypeTextarea ComponentType = "textarea"
-	ComponentTypeList     ComponentType = "list"
+	ComponentTypeList        ComponentType = "list"
+	ComponentTypeModuleGrid  ComponentType = "moduleGrid"
 )
 
 type UISelectOption struct {
@@ -51,6 +52,7 @@ type UISubModule struct {
 	Name        string        `json:"name"`
 	Label       string        `json:"label,omitempty"`
 	Description string        `json:"description,omitempty"`
+	FullWidth   bool          `json:"fullWidth,omitempty"`
 	Components  []UIComponent `json:"components"`
 }
 

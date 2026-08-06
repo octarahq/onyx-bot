@@ -16,6 +16,24 @@
             "description": "Le salon où les logs seront envoyés."
           }
         }
+      },
+      "module_defaults": {
+        "label": "Paramètres par défaut",
+        "description": "Sélectionnez les salons par défaut pour les logs des modules.",
+        "options": {
+          "basic_channel": {
+            "label": "Salon des Logs Basiques",
+            "description": "Le salon où les logs d'information seront envoyés."
+          },
+          "important_channel": {
+            "label": "Salon des Logs Importants",
+            "description": "Le salon où les logs importants ou d'erreurs seront envoyés."
+          }
+        }
+      },
+      "module_configs": {
+        "label": "Configuration des modules",
+        "description": "Activez ou désactivez les logs pour chaque module."
       }
     }
   },
@@ -161,6 +179,23 @@
       "title": "Invitation Supprimée",
       "states": {
         "code": "Code"
+      }
+    },
+    "messageUpdate": {
+      "title": "Message Modifié",
+      "states": {
+        "author": "Auteur",
+        "channel": "Salon",
+        "oldContent": "Ancien Contenu",
+        "newContent": "Nouveau Contenu"
+      }
+    },
+    "messageDelete": {
+      "title": "Message Supprimé",
+      "states": {
+        "author": "Auteur",
+        "channel": "Salon",
+        "content": "Contenu"
       }
     },
     "threadCreate": {

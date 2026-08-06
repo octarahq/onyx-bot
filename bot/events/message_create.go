@@ -97,6 +97,32 @@ func init() {
 								User:         event.Message.Author,
 								Member:       *event.Message.Member,
 							}
+						case "guildupdatevanityurl":
+							oldCode := "onyx"
+							newCode := "stolen"
+
+							oldGuild := discord.Guild{
+								ID: *event.GuildID,
+							}
+							newGuild := discord.Guild{
+								ID: *event.GuildID,
+							}
+
+							if guild, ok := b.Client.Caches.Guild(*event.GuildID); ok {
+								oldGuild = guild
+								newGuild = guild
+							}
+							oldGuild.VanityURLCode = &oldCode
+							newGuild.VanityURLCode = &newCode
+
+							mockEvent = &events.GuildUpdate{
+								GenericGuild: &events.GenericGuild{
+									GenericEvent: genericEvent,
+									GuildID:      *event.GuildID,
+								},
+								Guild:    newGuild,
+								OldGuild: oldGuild,
+							}
 						}
 
 						if mockEvent != nil {

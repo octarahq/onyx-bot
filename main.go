@@ -12,6 +12,7 @@ import (
 	"onyx/bot/core"
 	"onyx/bot/db"
 	"onyx/bot/handlers"
+	"onyx/bot/logs"
 
 	_ "onyx/bot/commands"
 	_ "onyx/bot/events"
@@ -32,7 +33,7 @@ import (
 )
 
 func main() {
-	var version = "1.0.0"
+	var version = "1.2.0"
 	_ = godotenv.Load()
 	if err := locales.Load("locales"); err != nil {
 		fmt.Printf("Warning: failed to load locales: %v\n", err)
@@ -65,7 +66,12 @@ func main() {
 
 	for _, mod := range coreBot.Modules {
 		if dbAware, ok := mod.(core.DatabaseAware); ok {
-			db.GormDB.AutoMigrate(dbAware.Schema())
+			schema := dbAware.Schema()
+			if slice, isSlice := schema.([]interface{}); isSlice {
+				db.GormDB.AutoMigrate(slice...)
+			} else {
+				db.GormDB.AutoMigrate(schema)
+			}
 		}
 	}
 
@@ -100,6 +106,16 @@ func main() {
 
 	coreBot.Client = client
 	coreBot.ConnectedSince = connectedSince
+
+	logger := logs.NewLogger(client)
+	coreBot.Logger = logger
+
+	for _, m := range coreBot.Modules {
+		if ml, ok := m.(core.ModuleLogger); ok {
+			coreBot.ModuleLogger = ml
+			break
+		}
+	}
 
 	handlers.SetupEvents(coreBot)
 

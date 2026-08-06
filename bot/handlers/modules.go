@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"strings"
+
 	"onyx/bot/core"
 	"onyx/bot/utils"
 
@@ -39,6 +41,14 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 		guildID = e.GuildID()
 	case *events.ComponentInteractionCreate:
 		guildID = e.GuildID()
+		if guildID == nil && strings.HasPrefix(e.Data.CustomID(), "module-") {
+			parts := strings.Split(e.Data.CustomID(), "-")
+			if len(parts) > 2 {
+				if id, err := snowflake.Parse(parts[2]); err == nil {
+					guildID = &id
+				}
+			}
+		}
 	case *events.EmojiCreate:
 		guildID = &e.GuildID
 	case *events.EmojiDelete:
@@ -157,6 +167,14 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 		guildID = e.GuildID
 	case *events.ModalSubmitInteractionCreate:
 		guildID = e.GuildID()
+		if guildID == nil && strings.HasPrefix(e.Data.CustomID, "module-") {
+			parts := strings.Split(e.Data.CustomID, "-")
+			if len(parts) > 2 {
+				if id, err := snowflake.Parse(parts[2]); err == nil {
+					guildID = &id
+				}
+			}
+		}
 	case *events.PresenceUpdate:
 		guildID = &e.GuildID
 	case *events.RoleCreate:

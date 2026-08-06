@@ -17,6 +17,7 @@ type Metadata struct {
 	Label       func(locale discord.Locale) string
 	Description func(locale discord.Locale) string
 	Submodules  func(locale discord.Locale) map[string]SubmoduleMeta
+	Loggable    bool
 }
 
 type Module interface {
@@ -30,6 +31,11 @@ type DatabaseAware interface {
 	Schema() interface{}
 	LoadData(db *gorm.DB, guildID string) error
 	DataPtr() interface{}
+}
+
+type ModuleLogger interface {
+	LogInfo(b *Bot, gid string, moduleName string, title string, logs []string)
+	LogImportant(b *Bot, gid string, moduleName string, title string, logs []string)
 }
 
 type OnApplicationCommandInteractionCreate interface {

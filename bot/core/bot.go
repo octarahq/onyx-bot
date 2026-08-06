@@ -2,6 +2,7 @@ package core
 
 import (
 	"onyx/bot/db"
+	"onyx/bot/logs"
 	"time"
 
 	"github.com/disgoorg/disgo/bot"
@@ -40,6 +41,21 @@ type Bot struct {
 
 	ConnectedSince time.Time
 	Version        string
+
+	Logger logs.Logger
+	ModuleLogger ModuleLogger
+}
+
+func (b *Bot) LogModuleInfo(gid string, moduleName string, title string, logs []string) {
+	if b.ModuleLogger != nil {
+		b.ModuleLogger.LogInfo(b, gid, moduleName, title, logs)
+	}
+}
+
+func (b *Bot) LogModuleImportant(gid string, moduleName string, title string, logs []string) {
+	if b.ModuleLogger != nil {
+		b.ModuleLogger.LogImportant(b, gid, moduleName, title, logs)
+	}
 }
 
 func (b *Bot) SendMessage(cid string, msg discord.MessageCreate) {

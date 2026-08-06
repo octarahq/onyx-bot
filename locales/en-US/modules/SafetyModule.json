@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "name": "SafetyModule",
+    "label": "Safety",
+    "description": "Protect your server with our anti-raid, anti-spam, anti-nuke and captcha tools.",
+    "submodules": {
+      "antiraid": {
+        "label": "Anti-Raid",
+        "description": "Anti-raid protection configuration.",
+        "options": {
+          "alt_detector": {
+            "label": "Alt Detector",
+            "description": "Enables alt account detection."
+          },
+          "anti_bot": {
+            "label": "Anti-Bot",
+            "description": "Enables protection against bot addition."
+          },
+          "anti_massjoin_level": {
+            "label": "Anti-Mass Join Level",
+            "description": "Defines the protection level against mass joins.",
+            "options": {
+              "0": {
+                "label": "Disabled (Do nothing)"
+              },
+              "1": {
+                "label": "Soft (Block send permissions for @everyone)"
+              },
+              "2": {
+                "label": "Medium (Activate maximum verification mode)"
+              },
+              "3": {
+                "label": "High (Quarantine then kick at raid end)"
+              }
+            }
+          }
+        }
+      },
+      "antispam": {
+        "label": "Anti-Spam",
+        "description": "Anti-spam protection configuration.",
+        "options": {
+          "anti_spam": {
+            "label": "Anti-Spam Level",
+            "description": "Defines the protection level against message spam.",
+            "options": {
+              "0": {
+                "label": "Disabled (Do nothing)"
+              },
+              "1": {
+                "label": "Soft (Block duplicate content in < 5s)"
+              },
+              "2": {
+                "label": "Medium (Block 2 messages in < 2s)"
+              },
+              "3": {
+                "label": "High (Block duplicate content if 2 consecutive messages)"
+              }
+            }
+          },
+          "quarentine_role": {
+            "label": "Quarantine Role",
+            "description": "The role assigned to quarantined users."
+          },
+          "anti_phishing": {
+            "label": "Anti-Phishing",
+            "description": "Enables phishing detection."
+          },
+          "anti_invite": {
+            "label": "Block Invite Links",
+            "description": "Blocks invite links to other servers."
+          },
+          "anti_mention": {
+            "label": "Anti-Mention",
+            "description": "Prevents mass mentions."
+          },
+          "anti_mass_emoji": {
+            "label": "Anti-Mass Emoji",
+            "description": "Blocks excessive use of emojis."
+          },
+          "anti_zalgo": {
+            "label": "Anti-Zalgo",
+            "description": "Filters Zalgo text (corrupted text)."
+          },
+          "ignored_channels": {
+            "label": "Ignored Channels / Categories",
+            "description": "List of channels or categories exempted from anti-spam (comma separated)."
+          }
+        }
+      },
+      "antinuke": {
+        "label": "Anti-Nuke",
+        "description": "Anti-nuke configuration.",
+        "options": {
+          "anti_mass_kick": {
+            "label": "Anti Mass Kick/Ban",
+            "description": "Blocks mass kicks and bans."
+          },
+          "anti_mass_channel_delete": {
+            "label": "Anti Mass Channel Delete/Edit",
+            "description": "Blocks mass deletion and modification of channels."
+          },
+          "anti_mass_role_delete": {
+            "label": "Anti Mass Role Delete/Edit",
+            "description": "Blocks mass deletion and modification of roles."
+          },
+          "anti_vanity_url_edit": {
+            "label": "Anti Vanity URL Edit",
+            "description": "Blocks modification of the vanity URL."
+          },
+          "anti_danger_permission": {
+            "label": "Anti Dangerous Permissions",
+            "description": "Blocks granting dangerous permissions."
+          }
+        }
+      },
+      "captcha": {
+        "label": "Captcha",
+        "description": "Verification system configuration.",
+        "options": {
+          "enabled": {
+            "label": "Enable Captcha",
+            "description": "Enables the captcha verification system."
+          },
+          "channel": {
+            "label": "Captcha Channel",
+            "description": "The channel where verification will take place if the user dont accept private messages."
+          },
+          "vrole": {
+            "label": "Verified Role",
+            "description": "The role assigned once the captcha is validated."
+          },
+          "show_to_sus": {
+            "label": "Show to Suspicious Users",
+            "description": "Forces users detected by anti-spam to redo the captcha instead of being kicked."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "phishing_censored_title": "Your link was censored for suspected phishing.",
+    "phishing_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "blocked_invite_censored_title": "Your message was censored because it contains an invite.",
+    "blocked_invite_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "zalgo_censored_title": "Your message was censored because it contains corrupted text (Zalgo).",
+    "zalgo_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "mention_spam_censored_title": "Your message was censored for mention spam. You have been timed out for 6 hours.",
+    "mention_spam_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "emojis_spam_censored_title": "Your message was censored for emojis spam. You have been timed out for 6 hours.",
+    "emojis_spam_censored_description": "-# If this is a mistake, please contact support. Code: %s",
+    "vanity_nuke_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to change the vanity URL of your server **%s**.\nThe action was reverted, the old vanity URL was restored, and their administrator permissions have been revoked.",
+    "nuke_masskick_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to mass kick members on your server **%s**.\n%s",
+    "nuke_massdelete_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to mass delete %s on your server **%s**.\n%s",
+    "nuke_massedit_alert": "⚠️ **Security Alert - Anti-Nuke**\nUser <@%s> attempted to mass edit %s on your server **%s**.\n%s",
+    "nuke_success": "Their dangerous permissions were successfully removed.",
+    "nuke_fail": "I couldn't remove their permissions (check my role).",
+    "log_title_captcha_sent": "🛡️ Captcha Sent",
+    "log_title_captcha_passed": "✅ Captcha Passed",
+    "log_title_captcha_failed": "❌ Captcha Failed",
+    "log_title_zalgo": "🧹 Anti-Zalgo",
+    "log_title_emoji": "🧹 Anti-Mass Emoji",
+    "log_title_mention": "🧹 Anti-Mention",
+    "log_title_alt": "⚠️ Alt Account Detector",
+    "log_title_nuke": "🚨 Anti-Nuke Alert",
+    "log_title_raid": "🚨 Raid Detected",
+    "log_title_spam": "🚨 Spam Alert",
+    "log_title_phishing": "🚨 Phishing Link",
+    "log_title_invite": "🚨 Invite Link",
+    "log_title_danger_perm": "🚨 Dangerous Permissions",
+    "log_title_vanity": "🚨 Vanity URL",
+    "log_fields": {
+      "user": "User: <@%s>",
+      "author": "Author: <@%s>",
+      "target": "Target: <@%s>",
+      "bot_kicked": "Bot <@%s> was kicked.",
+      "created_ago": "Created ago: %v",
+      "captcha_expired": "Reason: Captcha expired.",
+      "captcha_failed": "Reason: Too many failed attempts.",
+      "action_deleted_timeout": "Action: Message deleted and 6h timeout applied.",
+      "action_deleted_quarantine": "Action: Message deleted and user quarantined.",
+      "action_vanity": "Action: Vanity URL changed from %s to %s",
+      "action_danger_perm": "Action: Assignment of dangerous permissions was reverted.",
+      "nuke_action": "Action detected: %s %s",
+      "nuke_result": "Permissions result: %s",
+      "level_triggered": "Level triggered: %d",
+      "level_activated": "Level activated: %d",
+      "zalgo_ratio": "Zalgo Ratio: %.2f%%",
+      "infraction_code": "Infraction Code: `%s`",
+      "status_vanity": "Status: Old URL restored and user permissions removed."
+    },
+    "log_title_bot": "🤖 Anti-Bot"
+  }
+}
