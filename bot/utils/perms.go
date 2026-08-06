@@ -70,8 +70,23 @@ func CheckDangerousPermissions(client *bot.Client, member discord.Member) (bool,
 func RemoveMemberPerms(client *bot.Client, member discord.Member, perms []discord.Permissions) {
 	for _, roleID := range member.RoleIDs {
 		if role, ok := client.Caches.Role(member.GuildID, roleID); ok {
+			hasPerm := false
 			for _, p := range perms {
 				if role.Permissions.Has(p) {
+					hasPerm = true
+					break
+				}
+			}
+			if hasPerm {
+				if role.Managed {
+					newPerms := role.Permissions
+					for _, p := range perms {
+						newPerms = newPerms.Remove(p)
+					}
+					client.Rest.UpdateRole(member.GuildID, roleID, discord.RoleUpdate{
+						Permissions: &newPerms,
+					})
+				} else {
 					client.Rest.RemoveMemberRole(member.GuildID, member.User.ID, roleID)
 				}
 			}

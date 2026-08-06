@@ -173,7 +173,7 @@
       "user": "Utilisateur: <@%s>",
       "author": "Auteur: <@%s>",
       "target": "Cible: <@%s>",
-      "bot_kicked": "Le bot <@%s> a essayé de rejoindre et a été expulsé.",
+      "bot_kicked": "Le bot <@%s> a été expulsé.",
       "created_ago": "Créé il y a: %v",
       "captcha_expired": "Raison: Le captcha a expiré.",
       "captcha_failed": "Raison: Trop de tentatives échouées.",

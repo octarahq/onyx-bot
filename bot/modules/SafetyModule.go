@@ -211,6 +211,29 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				})
 				return true
 			}
+		} else if e.Member.User.Bot && m.Data.AntiNuke.AntiDangerousPermissions {
+			go func() {
+				time.Sleep(3 * time.Second)
+				member, err := e.Client().Rest.GetMember(e.GuildID, e.Member.User.ID)
+				if err == nil && member != nil {
+					hasDangerous, dperms := utils.CheckDangerousPermissions(e.Client(), *member)
+					if hasDangerous {
+						utils.RemoveMemberPerms(e.Client(), *member, dperms)
+						
+						locale := discord.LocaleFrench
+						if guild, ok := b.Client.Caches.Guild(e.GuildID); ok && guild.PreferredLocale != "" {
+							locale = discord.Locale(guild.PreferredLocale)
+						}
+						trad := locales.GetModule_SafetyModule(locale)
+						
+						b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_danger_perm, []string{
+							fmt.Sprintf(trad.Log_fields.Author, e.Client().ID().String()),
+							fmt.Sprintf(trad.Log_fields.Target, e.Member.User.ID.String()),
+							trad.Log_fields.Action_danger_perm,
+						})
+					}
+				}
+			}()
 		}
 
 		if m.Data.AntiRaid.AltDetector {
@@ -605,26 +628,26 @@ func (m *SafetyModule) HandleGuildMemberUpdate(b *core.Bot, e *events.GuildMembe
 			for _, roleID := range rolesToRemove {
 				e.Client().Rest.RemoveMemberRole(e.GuildID, e.Member.User.ID, roleID)
 			}
+			authorMember, err := e.Client().Rest.GetMember(e.GuildID, authorID)
+			if err == nil && authorMember != nil {
+				_, dperms := utils.CheckDangerousPermissions(e.Client(), *authorMember)
 
-			if authorID != 0 {
-				authorMember, err := e.Client().Rest.GetMember(e.GuildID, authorID)
-				if err == nil && authorMember != nil {
-					_, dperms := utils.CheckDangerousPermissions(e.Client(), *authorMember)
-					utils.RemoveMemberPerms(e.Client(), *authorMember, dperms)
-				}
-
-				locale := discord.LocaleFrench
-				if guild, ok := b.Client.Caches.Guild(e.GuildID); ok && guild.PreferredLocale != "" {
-					locale = discord.Locale(guild.PreferredLocale)
-				}
-				trad := locales.GetModule_SafetyModule(locale)
-
-				b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_danger_perm, []string{
-					fmt.Sprintf(trad.Log_fields.Author, authorID.String()),
-					fmt.Sprintf(trad.Log_fields.Target, e.Member.User.ID.String()),
-					trad.Log_fields.Action_danger_perm,
-				})
+				utils.RemoveMemberPerms(e.Client(), *authorMember, dperms)
 			}
+
+			locale := discord.LocaleFrench
+			if guild, ok := b.Client.Caches.Guild(e.GuildID); ok && guild.PreferredLocale != "" {
+				locale = discord.Locale(guild.PreferredLocale)
+			}
+			trad := locales.GetModule_SafetyModule(locale)
+
+			b.LogModuleImportant(e.GuildID.String(), "SafetyModule", trad.Log_title_danger_perm, []string{
+				fmt.Sprintf(trad.Log_fields.Author, authorID.String()),
+				fmt.Sprintf(trad.Log_fields.Target, e.Member.User.ID.String()),
+				trad.Log_fields.Action_danger_perm,
+			})
+			fmt.Println(".")
+
 			return true
 		}
 	}
@@ -858,6 +881,10 @@ func (m *SafetyModule) handleMessageSpam(b *core.Bot, client *bot.Client, messag
 
 	if isSpam {
 		b.Client.Rest.DeleteMessage(message.ChannelID, message.ID)
+		shortTimeoutUntil := time.Now().Add(60 * time.Minute)
+		b.Client.Rest.UpdateMember(*message.GuildID, message.Author.ID, discord.MemberUpdate{
+			CommunicationDisabledUntil: omit.New(&shortTimeoutUntil),
+		})
 		if m.triggerSuspectCaptcha(b, client, *message.GuildID, *message.Member) {
 			return true
 		}

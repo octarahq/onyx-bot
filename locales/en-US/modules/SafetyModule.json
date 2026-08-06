@@ -173,7 +173,7 @@
       "user": "User: <@%s>",
       "author": "Author: <@%s>",
       "target": "Target: <@%s>",
-      "bot_kicked": "Bot <@%s> tried to join and was kicked.",
+      "bot_kicked": "Bot <@%s> was kicked.",
       "created_ago": "Created ago: %v",
       "captcha_expired": "Reason: Captcha expired.",
       "captcha_failed": "Reason: Too many failed attempts.",
