@@ -15,6 +15,7 @@ import (
 	"onyx/bot/logs"
 
 	_ "onyx/bot/commands"
+	"onyx/bot/commands/reminders"
 	_ "onyx/bot/events"
 	"onyx/bot/locales"
 	"onyx/bot/modules"
@@ -130,6 +131,7 @@ func main() {
 	handlers.SetupEvents(coreBot)
 
 	go api.Start(coreBot)
+	go reminders.StartWorker(coreBot)
 
 	defer func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

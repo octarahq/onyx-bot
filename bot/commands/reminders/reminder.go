@@ -13,6 +13,7 @@ import (
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
+	"github.com/disgoorg/snowflake/v2"
 )
 
 type Reminder struct {
@@ -21,6 +22,7 @@ type Reminder struct {
 	GuildID   string    `gorm:"index" json:"guild_id"`
 	ChannelID string    `gorm:"not null" json:"channel_id"`
 	Content   string    `gorm:"not null" json:"content"`
+	Locale    string    `gorm:"not null;default:'en-US'" json:"locale"`
 	RemindAt  time.Time `gorm:"index;not null" json:"remind_at"`
 	CreatedAt time.Time `json:"created_at"`
 	Completed bool      `gorm:"default:false;index" json:"completed"`
@@ -168,6 +170,7 @@ func init() {
 					GuildID:   guildID,
 					ChannelID: event.Channel().ID().String(),
 					Content:   content,
+					Locale:    string(event.Locale()),
 					RemindAt:  t,
 					CreatedAt: now,
 				}
@@ -248,6 +251,7 @@ func init() {
 
 			updates := map[string]interface{}{
 				"content": content,
+				"locale":  string(event.Locale()),
 			}
 
 			var targetTime time.Time
@@ -298,23 +302,166 @@ func init() {
 		ExecuteButton: func(b *core.Bot, event *events.ComponentInteractionCreate) {
 			customID := event.Data.CustomID()
 			parts := strings.Split(customID, "-")
-			if len(parts) < 4 || parts[2] != "page" {
+			if len(parts) < 3 {
 				return
 			}
 
-			page, err := strconv.Atoi(parts[3])
-			if err != nil {
+			trad := locales.GetReminder(event.Locale())
+
+			if parts[2] == "snooze" && len(parts) >= 4 {
+				reminderID, _ := strconv.Atoi(parts[3])
+
+				content := ""
+				guildID := ""
+				channelID := event.Channel().ID().String()
+
+				var oldReminder Reminder
+				if err := b.DB.GormDB.Where("id = ?", reminderID).First(&oldReminder).Error; err == nil {
+					content = oldReminder.Content
+					guildID = oldReminder.GuildID
+					if oldReminder.ChannelID != "" && oldReminder.ChannelID != "0" {
+						channelID = oldReminder.ChannelID
+					}
+				}
+
+				if content == "" && len(event.Message.Components) > 0 {
+					for _, comp := range event.Message.Components {
+						if container, ok := comp.(discord.ContainerComponent); ok {
+							for _, sub := range container.Components {
+								if td, ok := sub.(discord.TextDisplayComponent); ok {
+									text := td.Content
+									if strings.HasPrefix(text, "> ") {
+										content = strings.TrimPrefix(text, "> ")
+										break
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if content == "" {
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_not_found))
+					return
+				}
+
+				now := time.Now()
+				remindAt := now.Add(10 * time.Minute)
+
+				snoozedReminder := Reminder{
+					UserID:    event.User().ID.String(),
+					GuildID:   guildID,
+					ChannelID: channelID,
+					Content:   content,
+					Locale:    string(event.Locale()),
+					RemindAt:  remindAt,
+					CreatedAt: now,
+				}
+
+				if err := b.DB.GormDB.Create(&snoozedReminder).Error; err != nil {
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_db))
+					return
+				}
+
+				relTime := utils.GenerateTimestamp(int(remindAt.Unix()), utils.TimestampRelativeTime)
+				_ = event.CreateMessage(discord.NewMessageCreateV2().
+					WithComponents(
+						discord.NewContainer(
+							discord.NewSection(
+								discord.NewTextDisplay(trad.Snooze_success_title),
+								discord.NewTextDisplayf(trad.Snooze_success_desc, content, relTime),
+							).WithAccessory(discord.NewThumbnail(event.User().EffectiveAvatarURL())),
+						),
+					),
+				)
 				return
 			}
 
-			container, err := buildReminderListContainer(b, event.Locale(), event.User().ID.String(), page)
-			if err != nil {
-				return
-			}
+			if parts[2] == "page" && len(parts) >= 4 {
+				page, err := strconv.Atoi(parts[3])
+				if err != nil {
+					return
+				}
 
-			_ = event.UpdateMessage(discord.NewMessageUpdateV2(container))
+				container, err := buildReminderListContainer(b, event.Locale(), event.User().ID.String(), page)
+				if err != nil {
+					return
+				}
+
+				_ = event.UpdateMessage(discord.NewMessageUpdateV2().WithComponents(container))
+			}
 		},
 	})
+}
+
+func StartWorker(b *core.Bot) {
+	// Cleanup completed reminders from database at bot startup
+	if b.DB != nil && b.DB.GormDB != nil {
+		b.DB.GormDB.Where("completed = ?", true).Delete(&Reminder{})
+	}
+
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+
+	for range ticker.C {
+		if b.Client == nil || b.DB == nil || b.DB.GormDB == nil {
+			continue
+		}
+
+		now := time.Now()
+		var dueReminders []Reminder
+		if err := b.DB.GormDB.Where("completed = ? AND remind_at <= ?", false, now).Find(&dueReminders).Error; err != nil || len(dueReminders) == 0 {
+			continue
+		}
+
+		for _, r := range dueReminders {
+			b.DB.GormDB.Model(&Reminder{}).Where("id = ?", r.ID).Update("completed", true)
+			go triggerReminder(b, r)
+		}
+	}
+}
+
+func triggerReminder(b *core.Bot, r Reminder) {
+	locale := discord.Locale(r.Locale)
+	if locale == "" {
+		locale = discord.LocaleEnglishUS
+	}
+	trad := locales.GetReminder(locale)
+
+	userID, err := snowflake.Parse(r.UserID)
+	if err != nil {
+		return
+	}
+
+	msg := discord.NewMessageCreateV2(
+		discord.NewContainer(
+			discord.NewTextDisplayf("<@%s>", r.UserID),
+			discord.NewTextDisplay(trad.Trigger_title),
+			discord.NewTextDisplayf("> %s", r.Content),
+			discord.NewActionRow(
+				discord.NewSecondaryButton(trad.Snooze_button, fmt.Sprintf("reminder-%s-snooze-%d", r.UserID, r.ID)),
+			),
+		),
+	).WithAllowedMentions(&discord.AllowedMentions{
+		Users: []snowflake.ID{
+			userID,
+		},
+	})
+
+	dmChannel, err := b.Client.Rest.CreateDMChannel(userID)
+	if err == nil && dmChannel != nil {
+		_, err = b.Client.Rest.CreateMessage(dmChannel.ID(), msg)
+		if err == nil {
+			return
+		}
+	}
+
+	if r.ChannelID != "" && r.ChannelID != "0" {
+		channelID, err := snowflake.Parse(r.ChannelID)
+		if err == nil {
+			_, _ = b.Client.Rest.CreateMessage(channelID, msg)
+		}
+	}
 }
 
 func buildReminderListContainer(b *core.Bot, locale discord.Locale, userID string, page int) (discord.ContainerComponent, error) {
@@ -333,8 +480,7 @@ func buildReminderListContainer(b *core.Bot, locale discord.Locale, userID strin
 
 	if page < 1 {
 		page = 1
-	}
-	if page > totalPages {
+	} else if page > totalPages {
 		page = totalPages
 	}
 
@@ -348,33 +494,24 @@ func buildReminderListContainer(b *core.Bot, locale discord.Locale, userID strin
 		return discord.ContainerComponent{}, err
 	}
 
-	var components []discord.ContainerSubComponent
-	components = append(components, discord.NewTextDisplay(trad.List_title))
+	subComponents := []discord.ContainerSubComponent{
+		discord.NewTextDisplay(trad.List_title),
+	}
 
 	if len(userReminders) == 0 {
-		components = append(components, discord.NewTextDisplay(trad.List_empty))
+		subComponents = append(subComponents, discord.NewTextDisplay(trad.List_empty))
 	} else {
 		for _, r := range userReminders {
 			relTime := utils.GenerateTimestamp(int(r.RemindAt.Unix()), utils.TimestampRelativeTime)
-			displayText := fmt.Sprintf("%d - %s\n> %s", r.ID, relTime, r.Content)
-			components = append(components, discord.NewTextDisplay(displayText))
+			subComponents = append(subComponents, discord.NewTextDisplayf("%d - %s\n> %s", r.ID, relTime, r.Content))
 		}
 	}
 
-	prevBtn := discord.NewSecondaryButton("<", fmt.Sprintf("reminder-%s-page-%d", userID, page-1))
-	if page <= 1 {
-		prevBtn.Disabled = true
-	}
+	subComponents = append(subComponents, discord.NewActionRow(
+		discord.NewSecondaryButton("<", fmt.Sprintf("reminder-%s-page-%d", userID, page-1)).WithDisabled(page <= 1),
+		discord.NewSecondaryButton(fmt.Sprintf("%d/%d", page, totalPages), fmt.Sprintf("reminder-%s-noop", userID)).AsDisabled(),
+		discord.NewSecondaryButton(">", fmt.Sprintf("reminder-%s-page-%d", userID, page+1)).WithDisabled(page >= totalPages),
+	))
 
-	pageBtn := discord.NewSecondaryButton(fmt.Sprintf("%d/%d", page, totalPages), fmt.Sprintf("reminder-%s-noop", userID))
-	pageBtn.Disabled = true
-
-	nextBtn := discord.NewSecondaryButton(">", fmt.Sprintf("reminder-%s-page-%d", userID, page+1))
-	if page >= totalPages {
-		nextBtn.Disabled = true
-	}
-
-	components = append(components, discord.NewActionRow(prevBtn, pageBtn, nextBtn))
-
-	return discord.NewContainer(components...), nil
+	return discord.NewContainer(subComponents...), nil
 }
