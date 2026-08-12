@@ -8,6 +8,7 @@ import (
 
 	"onyx/bot/core"
 	"onyx/bot/handlers"
+	"onyx/bot/locales"
 	"onyx/bot/utils"
 
 	"github.com/disgoorg/disgo/discord"
@@ -125,16 +126,18 @@ func init() {
 				return
 			}
 
+			trad := locales.GetReminder(event.Locale())
+
 			switch *slash.SubCommandName {
 			case "create":
 				var count int64
 				if err := b.DB.GormDB.Model(&Reminder{}).Where("user_id = ? AND completed = ?", event.User().ID.String(), false).Count(&count).Error; err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent("Oups, une erreur s'est produite."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_db))
 					return
 				}
 
 				if count >= 25 {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":x: Vous ne pouvez pas avoir plus de 25 rappels."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_limit_reached))
 					return
 				}
 
@@ -142,7 +145,7 @@ func init() {
 				duration := slash.String("time")
 				t, err := utils.ParseDurationToTime(duration)
 				if err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(":x: Un problème est survenu : %s", err))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(trad.Error_generic, err))
 					return
 				}
 
@@ -151,7 +154,7 @@ func init() {
 				oneMonthLater := now.AddDate(0, 1, 0)
 
 				if t.Before(oneMinLater) || t.After(oneMonthLater) {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":x: Le temps doit être compris entre 1min et 1 mois."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_invalid_time))
 					return
 				}
 
@@ -170,7 +173,7 @@ func init() {
 				}
 
 				if err := b.DB.GormDB.Create(&reminder).Error; err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent("Oups, une erreur s'est produite."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_db))
 					return
 				}
 
@@ -178,8 +181,8 @@ func init() {
 					WithComponents(
 						discord.NewContainer(
 							discord.NewSection(
-								discord.NewTextDisplay("## C'est noté !"),
-								discord.NewTextDisplayf("Je vous rappellerai : `%s`\n> %s", content, utils.GenerateTimestamp(int(t.Unix()), utils.TimestampRelativeTime)),
+								discord.NewTextDisplay(trad.Create_success_title),
+								discord.NewTextDisplayf(trad.Create_success_desc, content, utils.GenerateTimestamp(int(t.Unix()), utils.TimestampRelativeTime)),
 							).WithAccessory(discord.NewThumbnail(event.User().EffectiveAvatarURL())),
 						),
 					),
@@ -190,11 +193,11 @@ func init() {
 
 				err := b.DB.GormDB.Where("id = ? AND user_id = ?", id, event.User().ID.String()).Delete(&Reminder{}).Error
 				if err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(":x: Un problème est survenu : %s", err))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(trad.Error_generic, err))
 					return
 				}
 
-				_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":white_check_mark: Ce rappel a été supprimé"))
+				_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Delete_success))
 				return
 
 			case "edit":
@@ -202,23 +205,23 @@ func init() {
 
 				var reminder Reminder
 				if err := b.DB.GormDB.Where("id = ? AND user_id = ? AND completed = ?", id, event.User().ID.String(), false).First(&reminder).Error; err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":x: Rappel introuvable."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_not_found))
 					return
 				}
 
 				modal := discord.NewModalCreate(
 					fmt.Sprintf("reminder-%s-edit-%d", event.User().ID.String(), reminder.ID),
-					"Modifier le rappel",
+					trad.Edit_modal_title,
 				).
-					AddLabel("Contenu", discord.NewShortTextInput("content").WithValue(reminder.Content).WithRequired(true)).
-					AddLabel("Nouveau délai (optionnel, ex: 10m, 1h)", discord.NewShortTextInput("time").WithRequired(false))
+					AddLabel(trad.Edit_modal_content_label, discord.NewShortTextInput("content").WithValue(reminder.Content).WithRequired(true)).
+					AddLabel(trad.Edit_modal_time_label, discord.NewShortTextInput("time").WithRequired(false))
 
 				_ = event.Respond(discord.InteractionResponseTypeModal, modal)
 				return
 			case "list":
-				container, err := buildReminderListContainer(b, event.User().ID.String(), 1)
+				container, err := buildReminderListContainer(b, event.Locale(), event.User().ID.String(), 1)
 				if err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(":x: Un problème est survenu : %s", err))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(trad.Error_generic, err))
 					return
 				}
 
@@ -232,6 +235,8 @@ func init() {
 			if len(parts) < 4 || parts[2] != "edit" {
 				return
 			}
+
+			trad := locales.GetReminder(event.Locale())
 
 			reminderID, err := strconv.Atoi(parts[3])
 			if err != nil {
@@ -250,7 +255,7 @@ func init() {
 			if duration != "" {
 				t, err := utils.ParseDurationToTime(duration)
 				if err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(":x: Un problème est survenu : %s", err))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(trad.Error_generic, err))
 					return
 				}
 
@@ -259,7 +264,7 @@ func init() {
 				oneMonthLater := now.AddDate(0, 1, 0)
 
 				if t.Before(oneMinLater) || t.After(oneMonthLater) {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":x: Le temps doit être compris entre 1min et 1 mois."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_invalid_time))
 					return
 				}
 
@@ -268,14 +273,14 @@ func init() {
 			} else {
 				var existing Reminder
 				if err := b.DB.GormDB.Where("id = ? AND user_id = ?", reminderID, event.User().ID.String()).First(&existing).Error; err != nil {
-					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":x: Rappel introuvable."))
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_not_found))
 					return
 				}
 				targetTime = existing.RemindAt
 			}
 
 			if err := b.DB.GormDB.Model(&Reminder{}).Where("id = ? AND user_id = ?", reminderID, event.User().ID.String()).Updates(updates).Error; err != nil {
-				_ = event.CreateMessage(discord.NewMessageCreate().WithContent("Oups, une erreur s'est produite."))
+				_ = event.CreateMessage(discord.NewMessageCreate().WithContent(trad.Error_db))
 				return
 			}
 
@@ -283,8 +288,8 @@ func init() {
 				WithComponents(
 					discord.NewContainer(
 						discord.NewSection(
-							discord.NewTextDisplay("## Rappel modifié !"),
-							discord.NewTextDisplayf("Je vous rappellerai : `%s` %s", content, utils.GenerateTimestamp(int(targetTime.Unix()), utils.TimestampRelativeTime)),
+							discord.NewTextDisplay(trad.Edit_success_title),
+							discord.NewTextDisplayf(trad.Edit_success_desc, content, utils.GenerateTimestamp(int(targetTime.Unix()), utils.TimestampRelativeTime)),
 						).WithAccessory(discord.NewThumbnail(event.User().EffectiveAvatarURL())),
 					),
 				),
@@ -302,7 +307,7 @@ func init() {
 				return
 			}
 
-			container, err := buildReminderListContainer(b, event.User().ID.String(), page)
+			container, err := buildReminderListContainer(b, event.Locale(), event.User().ID.String(), page)
 			if err != nil {
 				return
 			}
@@ -312,7 +317,9 @@ func init() {
 	})
 }
 
-func buildReminderListContainer(b *core.Bot, userID string, page int) (discord.ContainerComponent, error) {
+func buildReminderListContainer(b *core.Bot, locale discord.Locale, userID string, page int) (discord.ContainerComponent, error) {
+	trad := locales.GetReminder(locale)
+
 	var totalCount int64
 	if err := b.DB.GormDB.Model(&Reminder{}).Where("user_id = ? AND completed = ?", userID, false).Count(&totalCount).Error; err != nil {
 		return discord.ContainerComponent{}, err
@@ -342,10 +349,10 @@ func buildReminderListContainer(b *core.Bot, userID string, page int) (discord.C
 	}
 
 	var components []discord.ContainerSubComponent
-	components = append(components, discord.NewTextDisplay("## Vos Rappels"))
+	components = append(components, discord.NewTextDisplay(trad.List_title))
 
 	if len(userReminders) == 0 {
-		components = append(components, discord.NewTextDisplay("Vous n'avez aucun rappel actif."))
+		components = append(components, discord.NewTextDisplay(trad.List_empty))
 	} else {
 		for _, r := range userReminders {
 			relTime := utils.GenerateTimestamp(int(r.RemindAt.Unix()), utils.TimestampRelativeTime)
