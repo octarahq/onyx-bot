@@ -75,6 +75,16 @@ func main() {
 		}
 	}
 
+	for _, cmd := range coreBot.Commands {
+		if cmd.Schema != nil {
+			if slice, isSlice := cmd.Schema.([]interface{}); isSlice {
+				db.GormDB.AutoMigrate(slice...)
+			} else {
+				db.GormDB.AutoMigrate(cmd.Schema)
+			}
+		}
+	}
+
 	var connectedSince = time.Now()
 
 	client, err := disgo.New(token,
