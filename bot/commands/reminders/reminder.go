@@ -1,6 +1,7 @@
 package reminders
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -196,7 +197,95 @@ func init() {
 				_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":white_check_mark: Ce rappel a été supprimé"))
 				return
 
+			case "list":
+				container, err := buildReminderListContainer(b, event.User().ID.String(), 1)
+				if err != nil {
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(":x: Un problème est survenu : %s", err))
+					return
+				}
+
+				_ = event.CreateMessage(discord.NewMessageCreateV2(container))
+				return
 			}
 		},
+		ExecuteButton: func(b *core.Bot, event *events.ComponentInteractionCreate) {
+			customID := event.Data.CustomID()
+			parts := strings.Split(customID, "-")
+			if len(parts) < 4 || parts[2] != "page" {
+				return
+			}
+
+			page, err := strconv.Atoi(parts[3])
+			if err != nil {
+				return
+			}
+
+			container, err := buildReminderListContainer(b, event.User().ID.String(), page)
+			if err != nil {
+				return
+			}
+
+			_ = event.UpdateMessage(discord.NewMessageUpdateV2(container))
+		},
 	})
+}
+
+func buildReminderListContainer(b *core.Bot, userID string, page int) (discord.ContainerComponent, error) {
+	var totalCount int64
+	if err := b.DB.GormDB.Model(&Reminder{}).Where("user_id = ? AND completed = ?", userID, false).Count(&totalCount).Error; err != nil {
+		return discord.ContainerComponent{}, err
+	}
+
+	pageSize := 5
+	totalPages := int((totalCount + int64(pageSize) - 1) / int64(pageSize))
+	if totalPages < 1 {
+		totalPages = 1
+	}
+
+	if page < 1 {
+		page = 1
+	}
+	if page > totalPages {
+		page = totalPages
+	}
+
+	offset := (page - 1) * pageSize
+	var userReminders []Reminder
+	if err := b.DB.GormDB.Where("user_id = ? AND completed = ?", userID, false).
+		Order("remind_at ASC").
+		Limit(pageSize).
+		Offset(offset).
+		Find(&userReminders).Error; err != nil {
+		return discord.ContainerComponent{}, err
+	}
+
+	var components []discord.ContainerSubComponent
+	components = append(components, discord.NewTextDisplay("## Vos Rappels"))
+
+	if len(userReminders) == 0 {
+		components = append(components, discord.NewTextDisplay("Vous n'avez aucun rappel actif."))
+	} else {
+		for _, r := range userReminders {
+			relTime := utils.GenerateTimestamp(int(r.RemindAt.Unix()), utils.TimestampRelativeTime)
+			displayText := fmt.Sprintf("%d - %s\n> %s", r.ID, relTime, r.Content)
+			components = append(components, discord.NewTextDisplay(displayText))
+		}
+	}
+
+	prevBtn := discord.NewSecondaryButton("<", fmt.Sprintf("reminder-%s-page-%d", userID, page-1))
+	if page <= 1 {
+		prevBtn.Disabled = true
+	}
+
+	pageBtn := discord.NewSecondaryButton(fmt.Sprintf("%d/%d", page, totalPages), fmt.Sprintf("reminder-%s-noop", userID))
+	pageBtn.Disabled = true
+
+	nextBtn := discord.NewSecondaryButton(">", fmt.Sprintf("reminder-%s-page-%d", userID, page+1))
+	if page >= totalPages {
+		nextBtn.Disabled = true
+	}
+
+	components = append(components, discord.NewActionRow(prevBtn, pageBtn, nextBtn))
+
+	return discord.NewContainer(components...), nil
 }
