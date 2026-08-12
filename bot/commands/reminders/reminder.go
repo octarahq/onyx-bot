@@ -1,6 +1,8 @@
 package reminders
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	"onyx/bot/core"
@@ -79,6 +81,43 @@ func init() {
 				},
 			},
 		},
+		ExecuteAutocomplete: func(b *core.Bot, event *events.AutocompleteInteractionCreate) {
+			if event.Data.SubCommandName == nil {
+				return
+			}
+
+			switch *event.Data.SubCommandName {
+			case "delete", "edit":
+				query := strings.ToLower(event.Data.String("reminder"))
+				userID := event.User().ID.String()
+
+				var userReminders []Reminder
+				dbQuery := b.DB.GormDB.Where("user_id = ? AND completed = ?", userID, false)
+				if query != "" {
+					dbQuery = dbQuery.Where("LOWER(content) LIKE ?", "%"+query+"%")
+				}
+
+				if err := dbQuery.Order("created_at DESC").Limit(25).Find(&userReminders).Error; err != nil {
+					return
+				}
+
+				choices := make([]discord.AutocompleteChoice, 0, len(userReminders))
+				for _, r := range userReminders {
+					displayContent := r.Content
+					if len(displayContent) > 90 {
+						displayContent = displayContent[:87] + "..."
+					}
+					choices = append(choices, discord.AutocompleteChoiceString{
+						Name:  displayContent,
+						Value: strconv.Itoa(int(r.ID)),
+					})
+				}
+
+				_ = event.Respond(discord.InteractionResponseTypeAutocompleteResult, discord.AutocompleteResult{
+					Choices: choices,
+				})
+			}
+		},
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			slash := event.SlashCommandInteractionData()
 			if slash.SubCommandName == nil {
@@ -87,6 +126,17 @@ func init() {
 
 			switch *slash.SubCommandName {
 			case "create":
+				var count int64
+				if err := b.DB.GormDB.Model(&Reminder{}).Where("user_id = ? AND completed = ?", event.User().ID.String(), false).Count(&count).Error; err != nil {
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent("Oups, une erreur s'est produite."))
+					return
+				}
+
+				if count >= 25 {
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":x: Vous ne pouvez pas avoir plus de 25 rappels."))
+					return
+				}
+
 				content := slash.String("content")
 				duration := slash.String("time")
 				t, err := utils.ParseDurationToTime(duration)
@@ -128,12 +178,24 @@ func init() {
 						discord.NewContainer(
 							discord.NewSection(
 								discord.NewTextDisplay("## C'est noté !"),
-								discord.NewTextDisplayf("Je vous rappellerai : `%s` %s", content, utils.GenerateTimestamp(int(t.Unix()), utils.TimestampRelativeTime)),
+								discord.NewTextDisplayf("Je vous rappellerai : `%s`\n> %s", content, utils.GenerateTimestamp(int(t.Unix()), utils.TimestampRelativeTime)),
 							).WithAccessory(discord.NewThumbnail(event.User().EffectiveAvatarURL())),
 						),
 					),
 				)
 				return
+			case "delete":
+				id := slash.String("reminder")
+
+				err := b.DB.GormDB.Where("id = ? AND user_id = ?", id, event.User().ID.String()).Delete(&Reminder{}).Error
+				if err != nil {
+					_ = event.CreateMessage(discord.NewMessageCreate().WithContentf(":x: Un problème est survenu : %s", err))
+					return
+				}
+
+				_ = event.CreateMessage(discord.NewMessageCreate().WithContent(":white_check_mark: Ce rappel a été supprimé"))
+				return
+
 			}
 		},
 	})
