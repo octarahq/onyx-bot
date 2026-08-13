@@ -122,8 +122,8 @@ func unmarshalTrad(command string, raw []byte) (any, error) {
 }
 
 type AdviceTrad struct {
-	Advice string `json:"advice"`
 	Title  string `json:"title"`
+	Advice string `json:"advice"`
 }
 
 func GetAdvice(locale discord.Locale) AdviceTrad {
@@ -160,8 +160,8 @@ func GetAgify(locale discord.Locale) AgifyTrad {
 }
 
 type AsciiTrad struct {
-	Error string `json:"error"`
 	Title string `json:"title"`
+	Error string `json:"error"`
 }
 
 func GetAscii(locale discord.Locale) AsciiTrad {
@@ -179,12 +179,12 @@ func GetAscii(locale discord.Locale) AsciiTrad {
 }
 
 type ColorTrad struct {
-	Hex     string `json:"hex"`
 	Rgb     string `json:"rgb"`
 	Hsl     string `json:"hsl"`
 	Hsv     string `json:"hsv"`
 	Cmyk    string `json:"cmyk"`
 	Decimal string `json:"decimal"`
+	Hex     string `json:"hex"`
 }
 
 func GetColor(locale discord.Locale) ColorTrad {
@@ -202,9 +202,9 @@ func GetColor(locale discord.Locale) ColorTrad {
 }
 
 type EightballTrad struct {
-	Title    string `json:"title"`
 	Question string `json:"question"`
 	Answer   string `json:"answer"`
+	Title    string `json:"title"`
 }
 
 func GetEightball(locale discord.Locale) EightballTrad {
@@ -222,12 +222,12 @@ func GetEightball(locale discord.Locale) EightballTrad {
 }
 
 type EmojiTrad struct {
+	Random_error  string `json:"random_error"`
+	Random_title  string `json:"random_title"`
 	Emojify_error string `json:"emojify_error"`
 	Emojify_title string `json:"emojify_title"`
 	Mix_error     string `json:"mix_error"`
 	Mix_title     string `json:"mix_title"`
-	Random_error  string `json:"random_error"`
-	Random_title  string `json:"random_title"`
 }
 
 func GetEmoji(locale discord.Locale) EmojiTrad {
@@ -265,15 +265,15 @@ func GetFunfact(locale discord.Locale) FunfactTrad {
 }
 
 type GithubTrad struct {
+	No_desc      string `json:"no_desc"`
+	None         string `json:"none"`
+	Repo_desc    string `json:"repo_desc"`
+	Unknown      string `json:"unknown"`
 	User_title   string `json:"user_title"`
 	User_page    string `json:"user_page"`
 	Repo_title   string `json:"repo_title"`
-	Repo_desc    string `json:"repo_desc"`
 	Repo_license string `json:"repo_license"`
 	Repo_button  string `json:"repo_button"`
-	None         string `json:"none"`
-	No_desc      string `json:"no_desc"`
-	Unknown      string `json:"unknown"`
 }
 
 func GetGithub(locale discord.Locale) GithubTrad {
@@ -331,12 +331,12 @@ func GetMeme(locale discord.Locale) MemeTrad {
 }
 
 type NasaTrad struct {
-	Iss_title    string `json:"iss_title"`
 	Iss_position string `json:"iss_position"`
 	Iss_altitude string `json:"iss_altitude"`
 	Iss_updated  string `json:"iss_updated"`
 	Apod_title   string `json:"apod_title"`
 	Source       string `json:"source"`
+	Iss_title    string `json:"iss_title"`
 }
 
 func GetNasa(locale discord.Locale) NasaTrad {
@@ -354,16 +354,16 @@ func GetNasa(locale discord.Locale) NasaTrad {
 }
 
 type NpmTrad struct {
+	Unknown        string `json:"unknown"`
+	Na             string `json:"na"`
+	Title          string `json:"title"`
+	Desc           string `json:"desc"`
+	Last_published string `json:"last_published"`
+	Not_found      string `json:"not_found"`
 	None           string `json:"none"`
 	Npm_page       string `json:"npm_page"`
 	Repository     string `json:"repository"`
-	Na             string `json:"na"`
-	Title          string `json:"title"`
 	Downloads      string `json:"downloads"`
-	Last_published string `json:"last_published"`
-	Not_found      string `json:"not_found"`
-	Unknown        string `json:"unknown"`
-	Desc           string `json:"desc"`
 }
 
 func GetNpm(locale discord.Locale) NpmTrad {
@@ -381,9 +381,9 @@ func GetNpm(locale discord.Locale) NpmTrad {
 }
 
 type QuoteTrad struct {
+	Author string `json:"author"`
 	Title  string `json:"title"`
 	Quote  string `json:"quote"`
-	Author string `json:"author"`
 }
 
 func GetQuote(locale discord.Locale) QuoteTrad {
@@ -420,11 +420,11 @@ func GetUpsidedown(locale discord.Locale) UpsidedownTrad {
 }
 
 type UrbanTrad struct {
+	Example    string `json:"example"`
+	Author     string `json:"author"`
 	Source     string `json:"source"`
 	Title      string `json:"title"`
 	Definition string `json:"definition"`
-	Example    string `json:"example"`
-	Author     string `json:"author"`
 }
 
 func GetUrban(locale discord.Locale) UrbanTrad {
@@ -442,19 +442,19 @@ func GetUrban(locale discord.Locale) UrbanTrad {
 }
 
 type BotTrad struct {
-	Description       string `json:"description"`
-	Details_title     string `json:"details_title"`
-	Version_onyx      string `json:"version_onyx"`
 	Last_boot         string `json:"last_boot"`
-	Programming_title string `json:"programming_title"`
 	Versions          string `json:"versions"`
 	Db_size           string `json:"db_size"`
 	Invite_me         string `json:"invite_me"`
-	Title             string `json:"title"`
+	Stats_title       string `json:"stats_title"`
+	Details_title     string `json:"details_title"`
+	Programming_title string `json:"programming_title"`
 	Website           string `json:"website"`
 	Error_self_user   string `json:"error_self_user"`
-	Stats_title       string `json:"stats_title"`
 	Stats             string `json:"stats"`
+	Title             string `json:"title"`
+	Description       string `json:"description"`
+	Version_onyx      string `json:"version_onyx"`
 }
 
 func GetBot(locale discord.Locale) BotTrad {
@@ -472,25 +472,25 @@ func GetBot(locale discord.Locale) BotTrad {
 }
 
 type ReminderTrad struct {
-	Error_invalid_time       string `json:"error_invalid_time"`
+	Delete_success           string `json:"delete_success"`
+	Snooze_success_title     string `json:"snooze_success_title"`
+	Snooze_success_desc      string `json:"snooze_success_desc"`
+	Error_generic            string `json:"error_generic"`
+	Create_success_title     string `json:"create_success_title"`
 	Edit_modal_title         string `json:"edit_modal_title"`
 	Edit_success_desc        string `json:"edit_success_desc"`
-	Error_generic            string `json:"error_generic"`
-	Edit_modal_content_label string `json:"edit_modal_content_label"`
 	Trigger_title            string `json:"trigger_title"`
-	Error_limit_reached      string `json:"error_limit_reached"`
+	Error_invalid_time       string `json:"error_invalid_time"`
 	Error_db                 string `json:"error_db"`
-	Create_success_title     string `json:"create_success_title"`
 	Create_success_desc      string `json:"create_success_desc"`
-	Delete_success           string `json:"delete_success"`
+	Edit_modal_content_label string `json:"edit_modal_content_label"`
 	Edit_modal_time_label    string `json:"edit_modal_time_label"`
 	Edit_success_title       string `json:"edit_success_title"`
 	List_empty               string `json:"list_empty"`
-	Snooze_success_desc      string `json:"snooze_success_desc"`
+	Error_limit_reached      string `json:"error_limit_reached"`
 	Error_not_found          string `json:"error_not_found"`
 	List_title               string `json:"list_title"`
 	Snooze_button            string `json:"snooze_button"`
-	Snooze_success_title     string `json:"snooze_success_title"`
 }
 
 func GetReminder(locale discord.Locale) ReminderTrad {
@@ -508,10 +508,10 @@ func GetReminder(locale discord.Locale) ReminderTrad {
 }
 
 type PingTrad struct {
-	Rest_latency    string `json:"rest_latency"`
 	Db_latency      string `json:"db_latency"`
 	Title           string `json:"title"`
 	Gateway_latency string `json:"gateway_latency"`
+	Rest_latency    string `json:"rest_latency"`
 }
 
 func GetPing(locale discord.Locale) PingTrad {
@@ -583,41 +583,84 @@ func GetModule_ChannelCounter(locale discord.Locale) ModuleChannelCounterTrad {
 }
 
 type ModuleLoggingModuleTrad struct {
-	ChannelCreate ModuleLoggingModuleTrad_ChannelCreate `json:"channelCreate"`
-	RoleCreate    ModuleLoggingModuleTrad_RoleCreate    `json:"roleCreate"`
-	MemberJoin    ModuleLoggingModuleTrad_MemberJoin    `json:"memberJoin"`
-	StickerCreate ModuleLoggingModuleTrad_StickerCreate `json:"stickerCreate"`
-	MessageUpdate ModuleLoggingModuleTrad_MessageUpdate `json:"messageUpdate"`
-	ThreadDelete  ModuleLoggingModuleTrad_ThreadDelete  `json:"threadDelete"`
-	ChannelDelete ModuleLoggingModuleTrad_ChannelDelete `json:"channelDelete"`
-	RoleDelete    ModuleLoggingModuleTrad_RoleDelete    `json:"roleDelete"`
-	EmojiCreate   ModuleLoggingModuleTrad_EmojiCreate   `json:"emojiCreate"`
-	InviteCreate  ModuleLoggingModuleTrad_InviteCreate  `json:"inviteCreate"`
-	MessageDelete ModuleLoggingModuleTrad_MessageDelete `json:"messageDelete"`
-	ThreadCreate  ModuleLoggingModuleTrad_ThreadCreate  `json:"threadCreate"`
 	GuildUpdate   ModuleLoggingModuleTrad_GuildUpdate   `json:"guildUpdate"`
-	RoleUpdate    ModuleLoggingModuleTrad_RoleUpdate    `json:"roleUpdate"`
-	MemberLeave   ModuleLoggingModuleTrad_MemberLeave   `json:"memberLeave"`
-	BanRemove     ModuleLoggingModuleTrad_BanRemove     `json:"banRemove"`
-	StickerUpdate ModuleLoggingModuleTrad_StickerUpdate `json:"stickerUpdate"`
-	InviteDelete  ModuleLoggingModuleTrad_InviteDelete  `json:"inviteDelete"`
-	ChannelUpdate ModuleLoggingModuleTrad_ChannelUpdate `json:"channelUpdate"`
+	ChannelCreate ModuleLoggingModuleTrad_ChannelCreate `json:"channelCreate"`
+	RoleDelete    ModuleLoggingModuleTrad_RoleDelete    `json:"roleDelete"`
 	MemberUpdate  ModuleLoggingModuleTrad_MemberUpdate  `json:"memberUpdate"`
-	BanAdd        ModuleLoggingModuleTrad_BanAdd        `json:"banAdd"`
+	EmojiCreate   ModuleLoggingModuleTrad_EmojiCreate   `json:"emojiCreate"`
 	EmojiUpdate   ModuleLoggingModuleTrad_EmojiUpdate   `json:"emojiUpdate"`
 	EmojiDelete   ModuleLoggingModuleTrad_EmojiDelete   `json:"emojiDelete"`
+	StickerCreate ModuleLoggingModuleTrad_StickerCreate `json:"stickerCreate"`
+	ChannelDelete ModuleLoggingModuleTrad_ChannelDelete `json:"channelDelete"`
+	RoleUpdate    ModuleLoggingModuleTrad_RoleUpdate    `json:"roleUpdate"`
+	MemberJoin    ModuleLoggingModuleTrad_MemberJoin    `json:"memberJoin"`
+	MemberLeave   ModuleLoggingModuleTrad_MemberLeave   `json:"memberLeave"`
 	StickerDelete ModuleLoggingModuleTrad_StickerDelete `json:"stickerDelete"`
+	InviteDelete  ModuleLoggingModuleTrad_InviteDelete  `json:"inviteDelete"`
+	MessageUpdate ModuleLoggingModuleTrad_MessageUpdate `json:"messageUpdate"`
+	MessageDelete ModuleLoggingModuleTrad_MessageDelete `json:"messageDelete"`
+	RoleCreate    ModuleLoggingModuleTrad_RoleCreate    `json:"roleCreate"`
+	StickerUpdate ModuleLoggingModuleTrad_StickerUpdate `json:"stickerUpdate"`
+	ThreadDelete  ModuleLoggingModuleTrad_ThreadDelete  `json:"threadDelete"`
+	ChannelUpdate ModuleLoggingModuleTrad_ChannelUpdate `json:"channelUpdate"`
+	BanAdd        ModuleLoggingModuleTrad_BanAdd        `json:"banAdd"`
+	BanRemove     ModuleLoggingModuleTrad_BanRemove     `json:"banRemove"`
+	InviteCreate  ModuleLoggingModuleTrad_InviteCreate  `json:"inviteCreate"`
+	ThreadCreate  ModuleLoggingModuleTrad_ThreadCreate  `json:"threadCreate"`
 	ThreadUpdate  ModuleLoggingModuleTrad_ThreadUpdate  `json:"threadUpdate"`
 }
 
-type ModuleLoggingModuleTrad_BanAdd struct {
-	Title  string                                `json:"title"`
-	States ModuleLoggingModuleTrad_BanAdd_States `json:"states"`
+type ModuleLoggingModuleTrad_GuildUpdate struct {
+	Title  string                                     `json:"title"`
+	States ModuleLoggingModuleTrad_GuildUpdate_States `json:"states"`
 }
 
-type ModuleLoggingModuleTrad_BanAdd_States struct {
-	User   string `json:"user"`
-	Reason string `json:"reason"`
+type ModuleLoggingModuleTrad_GuildUpdate_States struct {
+	Name              string `json:"name"`
+	Description       string `json:"description"`
+	VerificationLevel string `json:"verificationLevel"`
+	Icon              string `json:"icon"`
+	Banner            string `json:"banner"`
+}
+
+type ModuleLoggingModuleTrad_ChannelCreate struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_ChannelCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ChannelCreate_States struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
+type ModuleLoggingModuleTrad_RoleDelete struct {
+	Title  string                                    `json:"title"`
+	States ModuleLoggingModuleTrad_RoleDelete_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_RoleDelete_States struct {
+	Name string `json:"name"`
+}
+
+type ModuleLoggingModuleTrad_MemberUpdate struct {
+	Title  string                                      `json:"title"`
+	States ModuleLoggingModuleTrad_MemberUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_MemberUpdate_States struct {
+	Roles    string `json:"roles"`
+	Avatar   string `json:"avatar"`
+	User     string `json:"user"`
+	Nickname string `json:"nickname"`
+}
+
+type ModuleLoggingModuleTrad_EmojiCreate struct {
+	Title  string                                     `json:"title"`
+	States ModuleLoggingModuleTrad_EmojiCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_EmojiCreate_States struct {
+	Name string `json:"name"`
 }
 
 type ModuleLoggingModuleTrad_EmojiUpdate struct {
@@ -638,84 +681,12 @@ type ModuleLoggingModuleTrad_EmojiDelete_States struct {
 	Name string `json:"name"`
 }
 
-type ModuleLoggingModuleTrad_StickerDelete struct {
-	Title  string                                       `json:"title"`
-	States ModuleLoggingModuleTrad_StickerDelete_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_StickerDelete_States struct {
-	Name string `json:"name"`
-}
-
-type ModuleLoggingModuleTrad_ThreadUpdate struct {
-	Title  string                                      `json:"title"`
-	States ModuleLoggingModuleTrad_ThreadUpdate_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_ThreadUpdate_States struct {
-	Name                string `json:"name"`
-	Archived            string `json:"archived"`
-	Locked              string `json:"locked"`
-	AutoArchiveDuration string `json:"autoArchiveDuration"`
-}
-
-type ModuleLoggingModuleTrad_ChannelCreate struct {
-	Title  string                                       `json:"title"`
-	States ModuleLoggingModuleTrad_ChannelCreate_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_ChannelCreate_States struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
-}
-
-type ModuleLoggingModuleTrad_RoleCreate struct {
-	Title  string                                    `json:"title"`
-	States ModuleLoggingModuleTrad_RoleCreate_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_RoleCreate_States struct {
-	Name  string `json:"name"`
-	Color string `json:"color"`
-}
-
-type ModuleLoggingModuleTrad_MemberJoin struct {
-	States ModuleLoggingModuleTrad_MemberJoin_States `json:"states"`
-	Title  string                                    `json:"title"`
-}
-
-type ModuleLoggingModuleTrad_MemberJoin_States struct {
-	User           string `json:"user"`
-	AccountCreated string `json:"accountCreated"`
-}
-
 type ModuleLoggingModuleTrad_StickerCreate struct {
 	Title  string                                       `json:"title"`
 	States ModuleLoggingModuleTrad_StickerCreate_States `json:"states"`
 }
 
 type ModuleLoggingModuleTrad_StickerCreate_States struct {
-	Name string `json:"name"`
-}
-
-type ModuleLoggingModuleTrad_MessageUpdate struct {
-	States ModuleLoggingModuleTrad_MessageUpdate_States `json:"states"`
-	Title  string                                       `json:"title"`
-}
-
-type ModuleLoggingModuleTrad_MessageUpdate_States struct {
-	Channel    string `json:"channel"`
-	OldContent string `json:"oldContent"`
-	NewContent string `json:"newContent"`
-	Author     string `json:"author"`
-}
-
-type ModuleLoggingModuleTrad_ThreadDelete struct {
-	Title  string                                      `json:"title"`
-	States ModuleLoggingModuleTrad_ThreadDelete_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_ThreadDelete_States struct {
 	Name string `json:"name"`
 }
 
@@ -728,35 +699,66 @@ type ModuleLoggingModuleTrad_ChannelDelete_States struct {
 	Name string `json:"name"`
 }
 
-type ModuleLoggingModuleTrad_RoleDelete struct {
+type ModuleLoggingModuleTrad_RoleUpdate struct {
+	States ModuleLoggingModuleTrad_RoleUpdate_States `json:"states"`
 	Title  string                                    `json:"title"`
-	States ModuleLoggingModuleTrad_RoleDelete_States `json:"states"`
 }
 
-type ModuleLoggingModuleTrad_RoleDelete_States struct {
-	Name string `json:"name"`
+type ModuleLoggingModuleTrad_RoleUpdate_States struct {
+	Hoist       string `json:"hoist"`
+	Mentionable string `json:"mentionable"`
+	Permissions string `json:"permissions"`
+	Name        string `json:"name"`
+	Color       string `json:"color"`
 }
 
-type ModuleLoggingModuleTrad_EmojiCreate struct {
+type ModuleLoggingModuleTrad_MemberJoin struct {
+	Title  string                                    `json:"title"`
+	States ModuleLoggingModuleTrad_MemberJoin_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_MemberJoin_States struct {
+	User           string `json:"user"`
+	AccountCreated string `json:"accountCreated"`
+}
+
+type ModuleLoggingModuleTrad_MemberLeave struct {
 	Title  string                                     `json:"title"`
-	States ModuleLoggingModuleTrad_EmojiCreate_States `json:"states"`
+	States ModuleLoggingModuleTrad_MemberLeave_States `json:"states"`
 }
 
-type ModuleLoggingModuleTrad_EmojiCreate_States struct {
+type ModuleLoggingModuleTrad_MemberLeave_States struct {
+	User string `json:"user"`
+}
+
+type ModuleLoggingModuleTrad_StickerDelete struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_StickerDelete_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_StickerDelete_States struct {
 	Name string `json:"name"`
 }
 
-type ModuleLoggingModuleTrad_InviteCreate struct {
-	States ModuleLoggingModuleTrad_InviteCreate_States `json:"states"`
+type ModuleLoggingModuleTrad_InviteDelete struct {
+	States ModuleLoggingModuleTrad_InviteDelete_States `json:"states"`
 	Title  string                                      `json:"title"`
 }
 
-type ModuleLoggingModuleTrad_InviteCreate_States struct {
-	Code    string `json:"code"`
-	Channel string `json:"channel"`
-	Inviter string `json:"inviter"`
-	MaxUses string `json:"maxUses"`
-	MaxAge  string `json:"maxAge"`
+type ModuleLoggingModuleTrad_InviteDelete_States struct {
+	Code string `json:"code"`
+}
+
+type ModuleLoggingModuleTrad_MessageUpdate struct {
+	Title  string                                       `json:"title"`
+	States ModuleLoggingModuleTrad_MessageUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_MessageUpdate_States struct {
+	Author     string `json:"author"`
+	Channel    string `json:"channel"`
+	OldContent string `json:"oldContent"`
+	NewContent string `json:"newContent"`
 }
 
 type ModuleLoggingModuleTrad_MessageDelete struct {
@@ -770,59 +772,14 @@ type ModuleLoggingModuleTrad_MessageDelete_States struct {
 	Content string `json:"content"`
 }
 
-type ModuleLoggingModuleTrad_ThreadCreate struct {
-	States ModuleLoggingModuleTrad_ThreadCreate_States `json:"states"`
-	Title  string                                      `json:"title"`
-}
-
-type ModuleLoggingModuleTrad_ThreadCreate_States struct {
-	Name   string `json:"name"`
-	Type   string `json:"type"`
-	Parent string `json:"parent"`
-}
-
-type ModuleLoggingModuleTrad_GuildUpdate struct {
-	Title  string                                     `json:"title"`
-	States ModuleLoggingModuleTrad_GuildUpdate_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_GuildUpdate_States struct {
-	Name              string `json:"name"`
-	Description       string `json:"description"`
-	VerificationLevel string `json:"verificationLevel"`
-	Icon              string `json:"icon"`
-	Banner            string `json:"banner"`
-}
-
-type ModuleLoggingModuleTrad_RoleUpdate struct {
+type ModuleLoggingModuleTrad_RoleCreate struct {
 	Title  string                                    `json:"title"`
-	States ModuleLoggingModuleTrad_RoleUpdate_States `json:"states"`
+	States ModuleLoggingModuleTrad_RoleCreate_States `json:"states"`
 }
 
-type ModuleLoggingModuleTrad_RoleUpdate_States struct {
-	Name        string `json:"name"`
-	Color       string `json:"color"`
-	Hoist       string `json:"hoist"`
-	Mentionable string `json:"mentionable"`
-	Permissions string `json:"permissions"`
-}
-
-type ModuleLoggingModuleTrad_MemberLeave struct {
-	Title  string                                     `json:"title"`
-	States ModuleLoggingModuleTrad_MemberLeave_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_MemberLeave_States struct {
-	User string `json:"user"`
-}
-
-type ModuleLoggingModuleTrad_BanRemove struct {
-	Title  string                                   `json:"title"`
-	States ModuleLoggingModuleTrad_BanRemove_States `json:"states"`
-}
-
-type ModuleLoggingModuleTrad_BanRemove_States struct {
-	User string `json:"user"`
+type ModuleLoggingModuleTrad_RoleCreate_States struct {
+	Name  string `json:"name"`
+	Color string `json:"color"`
 }
 
 type ModuleLoggingModuleTrad_StickerUpdate struct {
@@ -835,37 +792,80 @@ type ModuleLoggingModuleTrad_StickerUpdate_States struct {
 	Description string `json:"description"`
 }
 
-type ModuleLoggingModuleTrad_InviteDelete struct {
+type ModuleLoggingModuleTrad_ThreadDelete struct {
 	Title  string                                      `json:"title"`
-	States ModuleLoggingModuleTrad_InviteDelete_States `json:"states"`
+	States ModuleLoggingModuleTrad_ThreadDelete_States `json:"states"`
 }
 
-type ModuleLoggingModuleTrad_InviteDelete_States struct {
-	Code string `json:"code"`
+type ModuleLoggingModuleTrad_ThreadDelete_States struct {
+	Name string `json:"name"`
 }
 
 type ModuleLoggingModuleTrad_ChannelUpdate struct {
-	Title  string                                       `json:"title"`
 	States ModuleLoggingModuleTrad_ChannelUpdate_States `json:"states"`
+	Title  string                                       `json:"title"`
 }
 
 type ModuleLoggingModuleTrad_ChannelUpdate_States struct {
-	RateLimitPerUser string `json:"rateLimitPerUser"`
 	Name             string `json:"name"`
 	Topic            string `json:"topic"`
 	Nsfw             string `json:"nsfw"`
+	RateLimitPerUser string `json:"rateLimitPerUser"`
 }
 
-type ModuleLoggingModuleTrad_MemberUpdate struct {
+type ModuleLoggingModuleTrad_BanAdd struct {
+	Title  string                                `json:"title"`
+	States ModuleLoggingModuleTrad_BanAdd_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_BanAdd_States struct {
+	Reason string `json:"reason"`
+	User   string `json:"user"`
+}
+
+type ModuleLoggingModuleTrad_BanRemove struct {
+	Title  string                                   `json:"title"`
+	States ModuleLoggingModuleTrad_BanRemove_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_BanRemove_States struct {
+	User string `json:"user"`
+}
+
+type ModuleLoggingModuleTrad_InviteCreate struct {
 	Title  string                                      `json:"title"`
-	States ModuleLoggingModuleTrad_MemberUpdate_States `json:"states"`
+	States ModuleLoggingModuleTrad_InviteCreate_States `json:"states"`
 }
 
-type ModuleLoggingModuleTrad_MemberUpdate_States struct {
-	User     string `json:"user"`
-	Nickname string `json:"nickname"`
-	Roles    string `json:"roles"`
-	Avatar   string `json:"avatar"`
+type ModuleLoggingModuleTrad_InviteCreate_States struct {
+	MaxUses string `json:"maxUses"`
+	MaxAge  string `json:"maxAge"`
+	Code    string `json:"code"`
+	Channel string `json:"channel"`
+	Inviter string `json:"inviter"`
+}
+
+type ModuleLoggingModuleTrad_ThreadCreate struct {
+	Title  string                                      `json:"title"`
+	States ModuleLoggingModuleTrad_ThreadCreate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ThreadCreate_States struct {
+	Parent string `json:"parent"`
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+}
+
+type ModuleLoggingModuleTrad_ThreadUpdate struct {
+	Title  string                                      `json:"title"`
+	States ModuleLoggingModuleTrad_ThreadUpdate_States `json:"states"`
+}
+
+type ModuleLoggingModuleTrad_ThreadUpdate_States struct {
+	AutoArchiveDuration string `json:"autoArchiveDuration"`
+	Name                string `json:"name"`
+	Archived            string `json:"archived"`
+	Locked              string `json:"locked"`
 }
 
 func GetModule_LoggingModule(locale discord.Locale) ModuleLoggingModuleTrad {
@@ -883,59 +883,59 @@ func GetModule_LoggingModule(locale discord.Locale) ModuleLoggingModuleTrad {
 }
 
 type ModuleSafetyModuleTrad struct {
-	Nuke_masskick_alert                 string                            `json:"nuke_masskick_alert"`
-	Log_title_phishing                  string                            `json:"log_title_phishing"`
-	Mention_spam_censored_description   string                            `json:"mention_spam_censored_description"`
-	Emojis_spam_censored_description    string                            `json:"emojis_spam_censored_description"`
-	Nuke_success                        string                            `json:"nuke_success"`
-	Log_title_captcha_passed            string                            `json:"log_title_captcha_passed"`
-	Emojis_spam_censored_title          string                            `json:"emojis_spam_censored_title"`
-	Log_title_nuke                      string                            `json:"log_title_nuke"`
-	Blocked_invite_censored_description string                            `json:"blocked_invite_censored_description"`
-	Nuke_massdelete_alert               string                            `json:"nuke_massdelete_alert"`
-	Nuke_fail                           string                            `json:"nuke_fail"`
-	Log_title_mention                   string                            `json:"log_title_mention"`
-	Zalgo_censored_description          string                            `json:"zalgo_censored_description"`
-	Log_title_captcha_sent              string                            `json:"log_title_captcha_sent"`
-	Log_title_spam                      string                            `json:"log_title_spam"`
-	Log_title_vanity                    string                            `json:"log_title_vanity"`
-	Log_fields                          ModuleSafetyModuleTrad_Log_fields `json:"log_fields"`
-	Blocked_invite_censored_title       string                            `json:"blocked_invite_censored_title"`
-	Log_title_zalgo                     string                            `json:"log_title_zalgo"`
-	Log_title_raid                      string                            `json:"log_title_raid"`
-	Log_title_invite                    string                            `json:"log_title_invite"`
-	Log_title_danger_perm               string                            `json:"log_title_danger_perm"`
-	Phishing_censored_title             string                            `json:"phishing_censored_title"`
 	Zalgo_censored_title                string                            `json:"zalgo_censored_title"`
+	Log_title_zalgo                     string                            `json:"log_title_zalgo"`
+	Phishing_censored_description       string                            `json:"phishing_censored_description"`
+	Zalgo_censored_description          string                            `json:"zalgo_censored_description"`
+	Emojis_spam_censored_title          string                            `json:"emojis_spam_censored_title"`
+	Nuke_masskick_alert                 string                            `json:"nuke_masskick_alert"`
+	Mention_spam_censored_description   string                            `json:"mention_spam_censored_description"`
+	Nuke_fail                           string                            `json:"nuke_fail"`
+	Log_title_captcha_passed            string                            `json:"log_title_captcha_passed"`
+	Log_title_spam                      string                            `json:"log_title_spam"`
+	Log_title_danger_perm               string                            `json:"log_title_danger_perm"`
+	Log_title_vanity                    string                            `json:"log_title_vanity"`
+	Log_title_bot                       string                            `json:"log_title_bot"`
+	Vanity_nuke_alert                   string                            `json:"vanity_nuke_alert"`
+	Nuke_massdelete_alert               string                            `json:"nuke_massdelete_alert"`
+	Log_title_captcha_sent              string                            `json:"log_title_captcha_sent"`
+	Log_title_mention                   string                            `json:"log_title_mention"`
+	Log_title_alt                       string                            `json:"log_title_alt"`
+	Log_title_nuke                      string                            `json:"log_title_nuke"`
+	Log_fields                          ModuleSafetyModuleTrad_Log_fields `json:"log_fields"`
+	Blocked_invite_censored_description string                            `json:"blocked_invite_censored_description"`
+	Log_title_raid                      string                            `json:"log_title_raid"`
+	Log_title_phishing                  string                            `json:"log_title_phishing"`
+	Log_title_invite                    string                            `json:"log_title_invite"`
+	Blocked_invite_censored_title       string                            `json:"blocked_invite_censored_title"`
 	Mention_spam_censored_title         string                            `json:"mention_spam_censored_title"`
+	Emojis_spam_censored_description    string                            `json:"emojis_spam_censored_description"`
+	Nuke_massedit_alert                 string                            `json:"nuke_massedit_alert"`
+	Phishing_censored_title             string                            `json:"phishing_censored_title"`
+	Nuke_success                        string                            `json:"nuke_success"`
 	Log_title_captcha_failed            string                            `json:"log_title_captcha_failed"`
 	Log_title_emoji                     string                            `json:"log_title_emoji"`
-	Log_title_alt                       string                            `json:"log_title_alt"`
-	Phishing_censored_description       string                            `json:"phishing_censored_description"`
-	Vanity_nuke_alert                   string                            `json:"vanity_nuke_alert"`
-	Nuke_massedit_alert                 string                            `json:"nuke_massedit_alert"`
-	Log_title_bot                       string                            `json:"log_title_bot"`
 }
 
 type ModuleSafetyModuleTrad_Log_fields struct {
 	User                      string `json:"user"`
-	Author                    string `json:"author"`
-	Created_ago               string `json:"created_ago"`
-	Captcha_expired           string `json:"captcha_expired"`
-	Action_deleted_quarantine string `json:"action_deleted_quarantine"`
-	Infraction_code           string `json:"infraction_code"`
 	Target                    string `json:"target"`
 	Action_deleted_timeout    string `json:"action_deleted_timeout"`
+	Action_danger_perm        string `json:"action_danger_perm"`
+	Level_activated           string `json:"level_activated"`
+	Captcha_expired           string `json:"captcha_expired"`
+	Captcha_failed            string `json:"captcha_failed"`
+	Action_deleted_quarantine string `json:"action_deleted_quarantine"`
+	Action_vanity             string `json:"action_vanity"`
 	Nuke_action               string `json:"nuke_action"`
+	Status_vanity             string `json:"status_vanity"`
+	Author                    string `json:"author"`
+	Bot_kicked                string `json:"bot_kicked"`
+	Created_ago               string `json:"created_ago"`
 	Level_triggered           string `json:"level_triggered"`
 	Zalgo_ratio               string `json:"zalgo_ratio"`
-	Status_vanity             string `json:"status_vanity"`
-	Bot_kicked                string `json:"bot_kicked"`
-	Action_vanity             string `json:"action_vanity"`
-	Action_danger_perm        string `json:"action_danger_perm"`
 	Nuke_result               string `json:"nuke_result"`
-	Captcha_failed            string `json:"captcha_failed"`
-	Level_activated           string `json:"level_activated"`
+	Infraction_code           string `json:"infraction_code"`
 }
 
 func GetModule_SafetyModule(locale discord.Locale) ModuleSafetyModuleTrad {
@@ -987,14 +987,14 @@ func GetModule_TranslationModule(locale discord.Locale) ModuleTranslationModuleT
 }
 
 type ModuleWelcomeModuleTrad struct {
+	Leave_card_t2      string `json:"leave_card_t2"`
+	Leave_embed_title  string `json:"leave_embed_title"`
 	Leave_embed_footer string `json:"leave_embed_footer"`
 	Card_t1            string `json:"card_t1"`
 	Card_t2            string `json:"card_t2"`
 	Embed_title        string `json:"embed_title"`
 	Embed_footer       string `json:"embed_footer"`
 	Leave_card_t1      string `json:"leave_card_t1"`
-	Leave_card_t2      string `json:"leave_card_t2"`
-	Leave_embed_title  string `json:"leave_embed_title"`
 }
 
 func GetModule_WelcomeModule(locale discord.Locale) ModuleWelcomeModuleTrad {
@@ -1016,862 +1016,134 @@ type ModuleWizzardModuleTrad struct {
 }
 
 type ModuleWizzardModuleTrad_Spells struct {
-	Fiantoduri            ModuleWizzardModuleTrad_Spells_Fiantoduri            `json:"fiantoduri"`
-	Impedimenta           ModuleWizzardModuleTrad_Spells_Impedimenta           `json:"impedimenta"`
-	Incarcerem            ModuleWizzardModuleTrad_Spells_Incarcerem            `json:"incarcerem"`
-	Mobilicorpus          ModuleWizzardModuleTrad_Spells_Mobilicorpus          `json:"mobilicorpus"`
-	Reducto               ModuleWizzardModuleTrad_Spells_Reducto               `json:"reducto"`
-	Surdinam              ModuleWizzardModuleTrad_Spells_Surdinam              `json:"surdinam"`
-	Tergeo                ModuleWizzardModuleTrad_Spells_Tergeo                `json:"tergeo"`
-	Alohomora             ModuleWizzardModuleTrad_Spells_Alohomora             `json:"alohomora"`
-	Anapneo               ModuleWizzardModuleTrad_Spells_Anapneo               `json:"anapneo"`
-	Repelloinimicium      ModuleWizzardModuleTrad_Spells_Repelloinimicium      `json:"repelloinimicium"`
-	Harmonianecterepassus ModuleWizzardModuleTrad_Spells_Harmonianecterepassus `json:"harmonianecterepassus"`
-	Homomorphus           ModuleWizzardModuleTrad_Spells_Homomorphus           `json:"homomorphus"`
-	Protegototalum        ModuleWizzardModuleTrad_Spells_Protegototalum        `json:"protegototalum"`
-	Salveomaleficia       ModuleWizzardModuleTrad_Spells_Salveomaleficia       `json:"salveomaleficia"`
-	Avensegium            ModuleWizzardModuleTrad_Spells_Avensegium            `json:"avensegium"`
-	Nebulus               ModuleWizzardModuleTrad_Spells_Nebulus               `json:"nebulus"`
-	Sectumsempra          ModuleWizzardModuleTrad_Spells_Sectumsempra          `json:"sectumsempra"`
-	Riddikulus            ModuleWizzardModuleTrad_Spells_Riddikulus            `json:"riddikulus"`
-	Sonorus               ModuleWizzardModuleTrad_Spells_Sonorus               `json:"sonorus"`
-	Aguamenti             ModuleWizzardModuleTrad_Spells_Aguamenti             `json:"aguamenti"`
-	Brachiumemendo        ModuleWizzardModuleTrad_Spells_Brachiumemendo        `json:"brachiumemendo"`
-	Finiteincantatem      ModuleWizzardModuleTrad_Spells_Finiteincantatem      `json:"finiteincantatem"`
-	Oscausi               ModuleWizzardModuleTrad_Spells_Oscausi               `json:"oscausi"`
-	Priorincanto          ModuleWizzardModuleTrad_Spells_Priorincanto          `json:"priorincanto"`
-	Revigor               ModuleWizzardModuleTrad_Spells_Revigor               `json:"revigor"`
-	Flambios              ModuleWizzardModuleTrad_Spells_Flambios              `json:"flambios"`
-	Gemino                ModuleWizzardModuleTrad_Spells_Gemino                `json:"gemino"`
+	Ferula                ModuleWizzardModuleTrad_Spells_Ferula                `json:"ferula"`
+	Bloclang              ModuleWizzardModuleTrad_Spells_Bloclang              `json:"bloclang"`
 	Caveinimicum          ModuleWizzardModuleTrad_Spells_Caveinimicum          `json:"caveinimicum"`
-	Protegodiabolica      ModuleWizzardModuleTrad_Spells_Protegodiabolica      `json:"protegodiabolica"`
+	Confundo              ModuleWizzardModuleTrad_Spells_Confundo              `json:"confundo"`
+	Sonorus               ModuleWizzardModuleTrad_Spells_Sonorus               `json:"sonorus"`
+	Alohomora             ModuleWizzardModuleTrad_Spells_Alohomora             `json:"alohomora"`
+	Episkey               ModuleWizzardModuleTrad_Spells_Episkey               `json:"episkey"`
+	Impedimenta           ModuleWizzardModuleTrad_Spells_Impedimenta           `json:"impedimenta"`
+	Rictusempra           ModuleWizzardModuleTrad_Spells_Rictusempra           `json:"rictusempra"`
+	Circumrota            ModuleWizzardModuleTrad_Spells_Circumrota            `json:"circumrota"`
+	Slugvomitingcharm     ModuleWizzardModuleTrad_Spells_Slugvomitingcharm     `json:"slugvomitingcharm"`
+	Avis                  ModuleWizzardModuleTrad_Spells_Avis                  `json:"avis"`
+	Evanesco              ModuleWizzardModuleTrad_Spells_Evanesco              `json:"evanesco"`
+	Meteorribilisrecanto  ModuleWizzardModuleTrad_Spells_Meteorribilisrecanto  `json:"meteorribilisrecanto"`
+	Nebulus               ModuleWizzardModuleTrad_Spells_Nebulus               `json:"nebulus"`
+	Tergeo                ModuleWizzardModuleTrad_Spells_Tergeo                `json:"tergeo"`
+	Collaporta            ModuleWizzardModuleTrad_Spells_Collaporta            `json:"collaporta"`
+	Gemino                ModuleWizzardModuleTrad_Spells_Gemino                `json:"gemino"`
+	Harmonianecterepassus ModuleWizzardModuleTrad_Spells_Harmonianecterepassus `json:"harmonianecterepassus"`
+	Protegomaxima         ModuleWizzardModuleTrad_Spells_Protegomaxima         `json:"protegomaxima"`
+	Reducto               ModuleWizzardModuleTrad_Spells_Reducto               `json:"reducto"`
 	Reparo                ModuleWizzardModuleTrad_Spells_Reparo                `json:"reparo"`
-	Speropatronum         ModuleWizzardModuleTrad_Spells_Speropatronum         `json:"speropatronum"`
-	Cistemaperio          ModuleWizzardModuleTrad_Spells_Cistemaperio          `json:"cistemaperio"`
-	Emancipare            ModuleWizzardModuleTrad_Spells_Emancipare            `json:"emancipare"`
-	Recurvite             ModuleWizzardModuleTrad_Spells_Recurvite             `json:"recurvite"`
-	Stupefix              ModuleWizzardModuleTrad_Spells_Stupefix              `json:"stupefix"`
-	Aparecium             ModuleWizzardModuleTrad_Spells_Aparecium             `json:"aparecium"`
-	Hominumrevelio        ModuleWizzardModuleTrad_Spells_Hominumrevelio        `json:"hominumrevelio"`
-	Lacarnuminflammari    ModuleWizzardModuleTrad_Spells_Lacarnuminflammari    `json:"lacarnuminflammari"`
-	Diffindo              ModuleWizzardModuleTrad_Spells_Diffindo              `json:"diffindo"`
-	Erigo                 ModuleWizzardModuleTrad_Spells_Erigo                 `json:"erigo"`
-	Ascendio              ModuleWizzardModuleTrad_Spells_Ascendio              `json:"ascendio"`
-	Assurdiato            ModuleWizzardModuleTrad_Spells_Assurdiato            `json:"assurdiato"`
-	Revelio               ModuleWizzardModuleTrad_Spells_Revelio               `json:"revelio"`
-	Deprimo               ModuleWizzardModuleTrad_Spells_Deprimo               `json:"deprimo"`
-	Fidelitas             ModuleWizzardModuleTrad_Spells_Fidelitas             `json:"fidelitas"`
-	Furunculus            ModuleWizzardModuleTrad_Spells_Furunculus            `json:"furunculus"`
-	Incendio              ModuleWizzardModuleTrad_Spells_Incendio              `json:"incendio"`
-	Locomotorbarda        ModuleWizzardModuleTrad_Spells_Locomotorbarda        `json:"locomotorbarda"`
-	Molliare              ModuleWizzardModuleTrad_Spells_Molliare              `json:"molliare"`
-	Portus                ModuleWizzardModuleTrad_Spells_Portus                `json:"portus"`
-	Periculum             ModuleWizzardModuleTrad_Spells_Periculum             `json:"periculum"`
-	Protego               ModuleWizzardModuleTrad_Spells_Protego               `json:"protego"`
-	Vulnerasanentur       ModuleWizzardModuleTrad_Spells_Vulnerasanentur       `json:"vulnerasanentur"`
-	Amplificatum          ModuleWizzardModuleTrad_Spells_Amplificatum          `json:"amplificatum"`
-	Confringo             ModuleWizzardModuleTrad_Spells_Confringo             `json:"confringo"`
-	Accio                 ModuleWizzardModuleTrad_Spells_Accio                 `json:"accio"`
-	Fulgari               ModuleWizzardModuleTrad_Spells_Fulgari               `json:"fulgari"`
+	Aguamenti             ModuleWizzardModuleTrad_Spells_Aguamenti             `json:"aguamenti"`
 	Impero                ModuleWizzardModuleTrad_Spells_Impero                `json:"impero"`
-	Repellomoldum         ModuleWizzardModuleTrad_Spells_Repellomoldum         `json:"repellomoldum"`
-	Tarentallegra         ModuleWizzardModuleTrad_Spells_Tarentallegra         `json:"tarentallegra"`
-	Veraverto             ModuleWizzardModuleTrad_Spells_Veraverto             `json:"veraverto"`
-	Serpensortia          ModuleWizzardModuleTrad_Spells_Serpensortia          `json:"serpensortia"`
+	Mobiliarbus           ModuleWizzardModuleTrad_Spells_Mobiliarbus           `json:"mobiliarbus"`
+	Protego               ModuleWizzardModuleTrad_Spells_Protego               `json:"protego"`
+	Assurdiato            ModuleWizzardModuleTrad_Spells_Assurdiato            `json:"assurdiato"`
+	Mutinlutinmalinpesti  ModuleWizzardModuleTrad_Spells_Mutinlutinmalinpesti  `json:"mutinlutinmalinpesti"`
+	Silencio              ModuleWizzardModuleTrad_Spells_Silencio              `json:"silencio"`
+	Amplificatum          ModuleWizzardModuleTrad_Spells_Amplificatum          `json:"amplificatum"`
+	Araniaexumai          ModuleWizzardModuleTrad_Spells_Araniaexumai          `json:"araniaexumai"`
+	Orchideus             ModuleWizzardModuleTrad_Spells_Orchideus             `json:"orchideus"`
 	Apparevestigium       ModuleWizzardModuleTrad_Spells_Apparevestigium       `json:"apparevestigium"`
 	Expelliarmus          ModuleWizzardModuleTrad_Spells_Expelliarmus          `json:"expelliarmus"`
-	Waddiwasi             ModuleWizzardModuleTrad_Spells_Waddiwasi             `json:"waddiwasi"`
-	Capaciousextremis     ModuleWizzardModuleTrad_Spells_Capaciousextremis     `json:"capaciousextremis"`
-	Glisseo               ModuleWizzardModuleTrad_Spells_Glisseo               `json:"glisseo"`
-	Locomotorwibbly       ModuleWizzardModuleTrad_Spells_Locomotorwibbly       `json:"locomotorwibbly"`
-	Silencio              ModuleWizzardModuleTrad_Spells_Silencio              `json:"silencio"`
-	Ventus                ModuleWizzardModuleTrad_Spells_Ventus                `json:"ventus"`
-	Confundo              ModuleWizzardModuleTrad_Spells_Confundo              `json:"confundo"`
-	Duro                  ModuleWizzardModuleTrad_Spells_Duro                  `json:"duro"`
-	Morsmordre            ModuleWizzardModuleTrad_Spells_Morsmordre            `json:"morsmordre"`
-	Petrificustotalus     ModuleWizzardModuleTrad_Spells_Petrificustotalus     `json:"petrificustotalus"`
-	Evanesco              ModuleWizzardModuleTrad_Spells_Evanesco              `json:"evanesco"`
-	Expectopatronum       ModuleWizzardModuleTrad_Spells_Expectopatronum       `json:"expectopatronum"`
-	Impervius             ModuleWizzardModuleTrad_Spells_Impervius             `json:"impervius"`
-	Locomotormortis       ModuleWizzardModuleTrad_Spells_Locomotormortis       `json:"locomotormortis"`
-	Bloclang              ModuleWizzardModuleTrad_Spells_Bloclang              `json:"bloclang"`
+	Molliare              ModuleWizzardModuleTrad_Spells_Molliare              `json:"molliare"`
+	Recurvite             ModuleWizzardModuleTrad_Spells_Recurvite             `json:"recurvite"`
 	Bombardamaxima        ModuleWizzardModuleTrad_Spells_Bombardamaxima        `json:"bombardamaxima"`
-	Dissendium            ModuleWizzardModuleTrad_Spells_Dissendium            `json:"dissendium"`
-	Ferula                ModuleWizzardModuleTrad_Spells_Ferula                `json:"ferula"`
-	Orchideus             ModuleWizzardModuleTrad_Spells_Orchideus             `json:"orchideus"`
-	Slugvomitingcharm     ModuleWizzardModuleTrad_Spells_Slugvomitingcharm     `json:"slugvomitingcharm"`
-	Nox                   ModuleWizzardModuleTrad_Spells_Nox                   `json:"nox"`
-	Oppugno               ModuleWizzardModuleTrad_Spells_Oppugno               `json:"oppugno"`
-	Wingardiumleviosa     ModuleWizzardModuleTrad_Spells_Wingardiumleviosa     `json:"wingardiumleviosa"`
 	Destructum            ModuleWizzardModuleTrad_Spells_Destructum            `json:"destructum"`
-	Mobiliarbus           ModuleWizzardModuleTrad_Spells_Mobiliarbus           `json:"mobiliarbus"`
-	Obscuro               ModuleWizzardModuleTrad_Spells_Obscuro               `json:"obscuro"`
-	Enervatum             ModuleWizzardModuleTrad_Spells_Enervatum             `json:"enervatum"`
-	Fenestra              ModuleWizzardModuleTrad_Spells_Fenestra              `json:"fenestra"`
-	Oubliettes            ModuleWizzardModuleTrad_Spells_Oubliettes            `json:"oubliettes"`
-	Rictusempra           ModuleWizzardModuleTrad_Spells_Rictusempra           `json:"rictusempra"`
-	Volateascendere       ModuleWizzardModuleTrad_Spells_Volateascendere       `json:"volateascendere"`
-	Expulso               ModuleWizzardModuleTrad_Spells_Expulso               `json:"expulso"`
-	Levicorpus            ModuleWizzardModuleTrad_Spells_Levicorpus            `json:"levicorpus"`
-	Protegohorribilis     ModuleWizzardModuleTrad_Spells_Protegohorribilis     `json:"protegohorribilis"`
-	Specialisrevelio      ModuleWizzardModuleTrad_Spells_Specialisrevelio      `json:"specialisrevelio"`
-	Circumrota            ModuleWizzardModuleTrad_Spells_Circumrota            `json:"circumrota"`
-	Defodio               ModuleWizzardModuleTrad_Spells_Defodio               `json:"defodio"`
-	Liberacorpus          ModuleWizzardModuleTrad_Spells_Liberacorpus          `json:"liberacorpus"`
-	Reverte               ModuleWizzardModuleTrad_Spells_Reverte               `json:"reverte"`
-	Brachialigo           ModuleWizzardModuleTrad_Spells_Brachialigo           `json:"brachialigo"`
-	Immobulus             ModuleWizzardModuleTrad_Spells_Immobulus             `json:"immobulus"`
-	Meteorribilisrecanto  ModuleWizzardModuleTrad_Spells_Meteorribilisrecanto  `json:"meteorribilisrecanto"`
-	Mutinlutinmalinpesti  ModuleWizzardModuleTrad_Spells_Mutinlutinmalinpesti  `json:"mutinlutinmalinpesti"`
-	Surgito               ModuleWizzardModuleTrad_Spells_Surgito               `json:"surgito"`
-	Viperaevanesca        ModuleWizzardModuleTrad_Spells_Viperaevanesca        `json:"viperaevanesca"`
-	Avis                  ModuleWizzardModuleTrad_Spells_Avis                  `json:"avis"`
-	Evertestatum          ModuleWizzardModuleTrad_Spells_Evertestatum          `json:"evertestatum"`
-	Legilimens            ModuleWizzardModuleTrad_Spells_Legilimens            `json:"legilimens"`
-	Partistemporus        ModuleWizzardModuleTrad_Spells_Partistemporus        `json:"partistemporus"`
-	Prioriincantatum      ModuleWizzardModuleTrad_Spells_Prioriincantatum      `json:"prioriincantatum"`
-	Aberto                ModuleWizzardModuleTrad_Spells_Aberto                `json:"aberto"`
-	Avadakedavra          ModuleWizzardModuleTrad_Spells_Avadakedavra          `json:"avadakedavra"`
-	Dentesaugmento        ModuleWizzardModuleTrad_Spells_Dentesaugmento        `json:"dentesaugmento"`
-	Piertotumlocomotor    ModuleWizzardModuleTrad_Spells_Piertotumlocomotor    `json:"piertotumlocomotor"`
-	Protegomaxima         ModuleWizzardModuleTrad_Spells_Protegomaxima         `json:"protegomaxima"`
-	Araniaexumai          ModuleWizzardModuleTrad_Spells_Araniaexumai          `json:"araniaexumai"`
+	Revelio               ModuleWizzardModuleTrad_Spells_Revelio               `json:"revelio"`
 	Arrestomomentum       ModuleWizzardModuleTrad_Spells_Arrestomomentum       `json:"arrestomomentum"`
-	Collaporta            ModuleWizzardModuleTrad_Spells_Collaporta            `json:"collaporta"`
-	Endoloris             ModuleWizzardModuleTrad_Spells_Endoloris             `json:"endoloris"`
-	Episkey               ModuleWizzardModuleTrad_Spells_Episkey               `json:"episkey"`
+	Surdinam              ModuleWizzardModuleTrad_Spells_Surdinam              `json:"surdinam"`
+	Speropatronum         ModuleWizzardModuleTrad_Spells_Speropatronum         `json:"speropatronum"`
+	Avadakedavra          ModuleWizzardModuleTrad_Spells_Avadakedavra          `json:"avadakedavra"`
+	Lacarnuminflammari    ModuleWizzardModuleTrad_Spells_Lacarnuminflammari    `json:"lacarnuminflammari"`
+	Specialisrevelio      ModuleWizzardModuleTrad_Spells_Specialisrevelio      `json:"specialisrevelio"`
+	Wingardiumleviosa     ModuleWizzardModuleTrad_Spells_Wingardiumleviosa     `json:"wingardiumleviosa"`
+	Aberto                ModuleWizzardModuleTrad_Spells_Aberto                `json:"aberto"`
+	Capaciousextremis     ModuleWizzardModuleTrad_Spells_Capaciousextremis     `json:"capaciousextremis"`
+	Petrificustotalus     ModuleWizzardModuleTrad_Spells_Petrificustotalus     `json:"petrificustotalus"`
+	Incendio              ModuleWizzardModuleTrad_Spells_Incendio              `json:"incendio"`
+	Locomotorbarda        ModuleWizzardModuleTrad_Spells_Locomotorbarda        `json:"locomotorbarda"`
+	Locomotormortis       ModuleWizzardModuleTrad_Spells_Locomotormortis       `json:"locomotormortis"`
+	Partistemporus        ModuleWizzardModuleTrad_Spells_Partistemporus        `json:"partistemporus"`
+	Riddikulus            ModuleWizzardModuleTrad_Spells_Riddikulus            `json:"riddikulus"`
+	Brachiumemendo        ModuleWizzardModuleTrad_Spells_Brachiumemendo        `json:"brachiumemendo"`
+	Expectopatronum       ModuleWizzardModuleTrad_Spells_Expectopatronum       `json:"expectopatronum"`
+	Morsmordre            ModuleWizzardModuleTrad_Spells_Morsmordre            `json:"morsmordre"`
+	Anapneo               ModuleWizzardModuleTrad_Spells_Anapneo               `json:"anapneo"`
+	Incarcerem            ModuleWizzardModuleTrad_Spells_Incarcerem            `json:"incarcerem"`
+	Prioriincantatum      ModuleWizzardModuleTrad_Spells_Prioriincantatum      `json:"prioriincantatum"`
+	Protegohorribilis     ModuleWizzardModuleTrad_Spells_Protegohorribilis     `json:"protegohorribilis"`
+	Cistemaperio          ModuleWizzardModuleTrad_Spells_Cistemaperio          `json:"cistemaperio"`
+	Enervatum             ModuleWizzardModuleTrad_Spells_Enervatum             `json:"enervatum"`
+	Oscausi               ModuleWizzardModuleTrad_Spells_Oscausi               `json:"oscausi"`
+	Sectumsempra          ModuleWizzardModuleTrad_Spells_Sectumsempra          `json:"sectumsempra"`
+	Stupefix              ModuleWizzardModuleTrad_Spells_Stupefix              `json:"stupefix"`
+	Waddiwasi             ModuleWizzardModuleTrad_Spells_Waddiwasi             `json:"waddiwasi"`
+	Accio                 ModuleWizzardModuleTrad_Spells_Accio                 `json:"accio"`
+	Diffindo              ModuleWizzardModuleTrad_Spells_Diffindo              `json:"diffindo"`
+	Fiantoduri            ModuleWizzardModuleTrad_Spells_Fiantoduri            `json:"fiantoduri"`
+	Periculum             ModuleWizzardModuleTrad_Spells_Periculum             `json:"periculum"`
+	Defodio               ModuleWizzardModuleTrad_Spells_Defodio               `json:"defodio"`
+	Duro                  ModuleWizzardModuleTrad_Spells_Duro                  `json:"duro"`
 	Failamalle            ModuleWizzardModuleTrad_Spells_Failamalle            `json:"failamalle"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Accio struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Fulgari struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Impero struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Repellomoldum struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Tarentallegra struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Veraverto struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Serpensortia struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Apparevestigium struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Expelliarmus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Waddiwasi struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Capaciousextremis struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Glisseo struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Locomotorwibbly struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Silencio struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Ventus struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Confundo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Duro struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Morsmordre struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Petrificustotalus struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Evanesco struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Expectopatronum struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Impervius struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Locomotormortis struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Bloclang struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Bombardamaxima struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Dissendium struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Ferula struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Orchideus struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Slugvomitingcharm struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Nox struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Oppugno struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Wingardiumleviosa struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Destructum struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Mobiliarbus struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Obscuro struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Enervatum struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Fenestra struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Oubliettes struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Rictusempra struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Volateascendere struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
+	Immobulus             ModuleWizzardModuleTrad_Spells_Immobulus             `json:"immobulus"`
+	Priorincanto          ModuleWizzardModuleTrad_Spells_Priorincanto          `json:"priorincanto"`
+	Dissendium            ModuleWizzardModuleTrad_Spells_Dissendium            `json:"dissendium"`
+	Finiteincantatem      ModuleWizzardModuleTrad_Spells_Finiteincantatem      `json:"finiteincantatem"`
+	Homomorphus           ModuleWizzardModuleTrad_Spells_Homomorphus           `json:"homomorphus"`
+	Viperaevanesca        ModuleWizzardModuleTrad_Spells_Viperaevanesca        `json:"viperaevanesca"`
+	Mobilicorpus          ModuleWizzardModuleTrad_Spells_Mobilicorpus          `json:"mobilicorpus"`
+	Oppugno               ModuleWizzardModuleTrad_Spells_Oppugno               `json:"oppugno"`
+	Avensegium            ModuleWizzardModuleTrad_Spells_Avensegium            `json:"avensegium"`
+	Hominumrevelio        ModuleWizzardModuleTrad_Spells_Hominumrevelio        `json:"hominumrevelio"`
+	Repelloinimicium      ModuleWizzardModuleTrad_Spells_Repelloinimicium      `json:"repelloinimicium"`
+	Vulnerasanentur       ModuleWizzardModuleTrad_Spells_Vulnerasanentur       `json:"vulnerasanentur"`
+	Dentesaugmento        ModuleWizzardModuleTrad_Spells_Dentesaugmento        `json:"dentesaugmento"`
+	Emancipare            ModuleWizzardModuleTrad_Spells_Emancipare            `json:"emancipare"`
+	Evertestatum          ModuleWizzardModuleTrad_Spells_Evertestatum          `json:"evertestatum"`
+	Furunculus            ModuleWizzardModuleTrad_Spells_Furunculus            `json:"furunculus"`
+	Piertotumlocomotor    ModuleWizzardModuleTrad_Spells_Piertotumlocomotor    `json:"piertotumlocomotor"`
+	Serpensortia          ModuleWizzardModuleTrad_Spells_Serpensortia          `json:"serpensortia"`
+	Confringo             ModuleWizzardModuleTrad_Spells_Confringo             `json:"confringo"`
+	Deprimo               ModuleWizzardModuleTrad_Spells_Deprimo               `json:"deprimo"`
+	Endoloris             ModuleWizzardModuleTrad_Spells_Endoloris             `json:"endoloris"`
+	Portus                ModuleWizzardModuleTrad_Spells_Portus                `json:"portus"`
+	Protegodiabolica      ModuleWizzardModuleTrad_Spells_Protegodiabolica      `json:"protegodiabolica"`
+	Tarentallegra         ModuleWizzardModuleTrad_Spells_Tarentallegra         `json:"tarentallegra"`
+	Veraverto             ModuleWizzardModuleTrad_Spells_Veraverto             `json:"veraverto"`
+	Expulso               ModuleWizzardModuleTrad_Spells_Expulso               `json:"expulso"`
+	Aparecium             ModuleWizzardModuleTrad_Spells_Aparecium             `json:"aparecium"`
+	Ascendio              ModuleWizzardModuleTrad_Spells_Ascendio              `json:"ascendio"`
+	Brachialigo           ModuleWizzardModuleTrad_Spells_Brachialigo           `json:"brachialigo"`
+	Liberacorpus          ModuleWizzardModuleTrad_Spells_Liberacorpus          `json:"liberacorpus"`
+	Obscuro               ModuleWizzardModuleTrad_Spells_Obscuro               `json:"obscuro"`
+	Oubliettes            ModuleWizzardModuleTrad_Spells_Oubliettes            `json:"oubliettes"`
+	Protegototalum        ModuleWizzardModuleTrad_Spells_Protegototalum        `json:"protegototalum"`
+	Flambios              ModuleWizzardModuleTrad_Spells_Flambios              `json:"flambios"`
+	Legilimens            ModuleWizzardModuleTrad_Spells_Legilimens            `json:"legilimens"`
+	Repellomoldum         ModuleWizzardModuleTrad_Spells_Repellomoldum         `json:"repellomoldum"`
+	Salveomaleficia       ModuleWizzardModuleTrad_Spells_Salveomaleficia       `json:"salveomaleficia"`
+	Surgito               ModuleWizzardModuleTrad_Spells_Surgito               `json:"surgito"`
+	Volateascendere       ModuleWizzardModuleTrad_Spells_Volateascendere       `json:"volateascendere"`
+	Erigo                 ModuleWizzardModuleTrad_Spells_Erigo                 `json:"erigo"`
+	Glisseo               ModuleWizzardModuleTrad_Spells_Glisseo               `json:"glisseo"`
+	Fulgari               ModuleWizzardModuleTrad_Spells_Fulgari               `json:"fulgari"`
+	Reverte               ModuleWizzardModuleTrad_Spells_Reverte               `json:"reverte"`
+	Fidelitas             ModuleWizzardModuleTrad_Spells_Fidelitas             `json:"fidelitas"`
+	Impervius             ModuleWizzardModuleTrad_Spells_Impervius             `json:"impervius"`
+	Levicorpus            ModuleWizzardModuleTrad_Spells_Levicorpus            `json:"levicorpus"`
+	Nox                   ModuleWizzardModuleTrad_Spells_Nox                   `json:"nox"`
+	Revigor               ModuleWizzardModuleTrad_Spells_Revigor               `json:"revigor"`
+	Ventus                ModuleWizzardModuleTrad_Spells_Ventus                `json:"ventus"`
+	Fenestra              ModuleWizzardModuleTrad_Spells_Fenestra              `json:"fenestra"`
+	Locomotorwibbly       ModuleWizzardModuleTrad_Spells_Locomotorwibbly       `json:"locomotorwibbly"`
 }
 
 type ModuleWizzardModuleTrad_Spells_Expulso struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Levicorpus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Protegohorribilis struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Specialisrevelio struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Circumrota struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Defodio struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Liberacorpus struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Reverte struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Brachialigo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Immobulus struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Meteorribilisrecanto struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Mutinlutinmalinpesti struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Surgito struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Viperaevanesca struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Avis struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Evertestatum struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Legilimens struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Partistemporus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Prioriincantatum struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Aberto struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Avadakedavra struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Dentesaugmento struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Piertotumlocomotor struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Protegomaxima struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Araniaexumai struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Arrestomomentum struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Collaporta struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Endoloris struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Episkey struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Failamalle struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Fiantoduri struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Impedimenta struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Incarcerem struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Mobilicorpus struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Reducto struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Surdinam struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Tergeo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Alohomora struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Anapneo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Repelloinimicium struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Harmonianecterepassus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Homomorphus struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Protegototalum struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Salveomaleficia struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Avensegium struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Nebulus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Sectumsempra struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Riddikulus struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Sonorus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Aguamenti struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Brachiumemendo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Finiteincantatem struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Oscausi struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Priorincanto struct {
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Revigor struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Flambios struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Gemino struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Caveinimicum struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Protegodiabolica struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Reparo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Speropatronum struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Cistemaperio struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Emancipare struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Recurvite struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Stupefix struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Success     string `json:"success"`
@@ -1885,39 +1157,354 @@ type ModuleWizzardModuleTrad_Spells_Aparecium struct {
 	Fail        string `json:"fail"`
 }
 
-type ModuleWizzardModuleTrad_Spells_Hominumrevelio struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Lacarnuminflammari struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Diffindo struct {
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Erigo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
 type ModuleWizzardModuleTrad_Spells_Ascendio struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Success     string `json:"success"`
 	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Brachialigo struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Liberacorpus struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Obscuro struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Oubliettes struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Protegototalum struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Flambios struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Legilimens struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Repellomoldum struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Salveomaleficia struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Surgito struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Volateascendere struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Erigo struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Glisseo struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Fulgari struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Reverte struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Fidelitas struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Impervius struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Levicorpus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Nox struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Revigor struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Ventus struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Fenestra struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Locomotorwibbly struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Ferula struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Bloclang struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Caveinimicum struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Confundo struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Sonorus struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Alohomora struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Episkey struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Impedimenta struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Rictusempra struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Circumrota struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Slugvomitingcharm struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Avis struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Evanesco struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Meteorribilisrecanto struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Nebulus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Tergeo struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Collaporta struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Gemino struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Harmonianecterepassus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Protegomaxima struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Reducto struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Reparo struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Aguamenti struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Impero struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Mobiliarbus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Protego struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
 }
 
 type ModuleWizzardModuleTrad_Spells_Assurdiato struct {
@@ -1927,7 +1514,462 @@ type ModuleWizzardModuleTrad_Spells_Assurdiato struct {
 	Fail        string `json:"fail"`
 }
 
+type ModuleWizzardModuleTrad_Spells_Mutinlutinmalinpesti struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Silencio struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Amplificatum struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Araniaexumai struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Orchideus struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Apparevestigium struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Expelliarmus struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Molliare struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Recurvite struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Bombardamaxima struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Destructum struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
 type ModuleWizzardModuleTrad_Spells_Revelio struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Arrestomomentum struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Surdinam struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Speropatronum struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Avadakedavra struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Lacarnuminflammari struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Specialisrevelio struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Wingardiumleviosa struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Aberto struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Capaciousextremis struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Petrificustotalus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Incendio struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Locomotorbarda struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Locomotormortis struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Partistemporus struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Riddikulus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Brachiumemendo struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Expectopatronum struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Morsmordre struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Anapneo struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Incarcerem struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Prioriincantatum struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Protegohorribilis struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Cistemaperio struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Enervatum struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Oscausi struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Sectumsempra struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Stupefix struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Waddiwasi struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Accio struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Diffindo struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Fiantoduri struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Periculum struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Defodio struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Duro struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Failamalle struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Immobulus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Priorincanto struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Dissendium struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Finiteincantatem struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Homomorphus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Viperaevanesca struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Mobilicorpus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Oppugno struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Avensegium struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Hominumrevelio struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Repelloinimicium struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Vulnerasanentur struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Dentesaugmento struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Emancipare struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Evertestatum struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Furunculus struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Piertotumlocomotor struct {
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Serpensortia struct {
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Success     string `json:"success"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Confringo struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Success     string `json:"success"`
@@ -1941,35 +1983,7 @@ type ModuleWizzardModuleTrad_Spells_Deprimo struct {
 	Fail        string `json:"fail"`
 }
 
-type ModuleWizzardModuleTrad_Spells_Fidelitas struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Furunculus struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Incendio struct {
-	Fail        string `json:"fail"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Locomotorbarda struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Molliare struct {
+type ModuleWizzardModuleTrad_Spells_Endoloris struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Success     string `json:"success"`
@@ -1977,41 +1991,27 @@ type ModuleWizzardModuleTrad_Spells_Molliare struct {
 }
 
 type ModuleWizzardModuleTrad_Spells_Portus struct {
+	Description string `json:"description"`
+	Success     string `json:"success"`
+	Fail        string `json:"fail"`
+	Name        string `json:"name"`
+}
+
+type ModuleWizzardModuleTrad_Spells_Protegodiabolica struct {
 	Success     string `json:"success"`
 	Fail        string `json:"fail"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
 
-type ModuleWizzardModuleTrad_Spells_Periculum struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Protego struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Vulnerasanentur struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Success     string `json:"success"`
-	Fail        string `json:"fail"`
-}
-
-type ModuleWizzardModuleTrad_Spells_Amplificatum struct {
+type ModuleWizzardModuleTrad_Spells_Tarentallegra struct {
 	Fail        string `json:"fail"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Success     string `json:"success"`
 }
 
-type ModuleWizzardModuleTrad_Spells_Confringo struct {
+type ModuleWizzardModuleTrad_Spells_Veraverto struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Success     string `json:"success"`

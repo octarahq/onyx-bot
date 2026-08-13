@@ -776,15 +776,6 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 		case *events.ModalSubmitInteractionCreate:
 			if data, ok := ParseModuleCustomID(e.Data.CustomID); ok {
 				if matchesModuleName(mod.Metadata().Name, data.ModuleName) {
-					if data.TargetUser != "" && data.TargetUser != "all" && data.TargetUser != e.User().ID.String() {
-						trad := locales.GetInteraction(e.Locale())
-						e.CreateMessage(discord.MessageCreate{
-							Content: trad.Not_allowed_modal,
-							Flags:   discord.MessageFlagEphemeral,
-						})
-						return true
-					}
-
 					if handler, ok := mod.(core.ModuleModalHandler); ok {
 						if handler.HandleModal(b, e, data.Action, data.Args) {
 							return true
