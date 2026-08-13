@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "name": "SuggestionModule",
+    "label": "Suggestions",
+    "description": "Allow your members to submit suggestions.",
+    "submodules": {
+      "main": {
+        "label": "Main Settings",
+        "description": "Configure the Suggestions module.",
+        "options": {
+          "channel": {
+            "label": "Suggestions Channel",
+            "description": "The channel where suggestions will be sent."
+          },
+          "allow_debate": {
+            "label": "Allow Debates",
+            "description": "Creates a thread (text channel) or allows replies (forum channel) so members can debate."
+          },
+          "manager_roles": {
+            "label": "Manager Roles",
+            "description": "Roles allowed to accept or deny suggestions."
+          }
+        }
+      },
+      "content": {
+        "label": "Content",
+        "description": "Configure what content members can submit.",
+        "options": {
+          "allow_images": {
+            "label": "Allow Images",
+            "description": "Allows members to include images in their suggestions."
+          }
+        }
+      }
+    }
+  }
+}

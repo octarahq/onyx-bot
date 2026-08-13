@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "name": "SuggestionModule",
+    "label": "Suggestions",
+    "description": "Permettez à vos membres de soumettre des suggestions.",
+    "submodules": {
+      "main": {
+        "label": "Paramètres Principaux",
+        "description": "Configurez le module de Suggestions.",
+        "options": {
+          "channel": {
+            "label": "Salon des suggestions",
+            "description": "Le salon où les suggestions seront envoyées."
+          },
+          "allow_debate": {
+            "label": "Autoriser les débats",
+            "description": "Crée un fil de discussion (salon texte) ou autorise les réponses (salon forum) pour permettre aux membres de débattre."
+          },
+          "manager_roles": {
+            "label": "Rôles gestionnaires",
+            "description": "Les rôles autorisés à accepter ou refuser les suggestions."
+          }
+        }
+      },
+      "content": {
+        "label": "Contenu",
+        "description": "Configurez le contenu que les membres peuvent envoyer.",
+        "options": {
+          "allow_images": {
+            "label": "Autoriser les images",
+            "description": "Autorise les membres à envoyer des images dans leurs suggestions."
+          }
+        }
+      }
+    }
+  }
+}
