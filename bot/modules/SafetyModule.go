@@ -1200,12 +1200,31 @@ func (m *SafetyModule) handleZalgo(b *core.Bot, client *bot.Client, message disc
 
 	var diacriticCount int
 	var totalRunes int
+	var maxConsecutiveMn int
+	var currentConsecutiveMn int
+	var latinMnCount int
+	var nonLatinScriptCount int
 
+	var prevRune rune
 	for _, r := range content {
 		totalRunes++
 
-		if unicode.Is(unicode.Mn, r) {
+		if !unicode.Is(unicode.Latin, r) && !unicode.Is(unicode.Common, r) && !unicode.Is(unicode.Inherited, r) {
+			nonLatinScriptCount++
+		}
+
+		if unicode.Is(unicode.Mn, r) || unicode.Is(unicode.Me, r) {
 			diacriticCount++
+			currentConsecutiveMn++
+			if currentConsecutiveMn > maxConsecutiveMn {
+				maxConsecutiveMn = currentConsecutiveMn
+			}
+			if prevRune != 0 && unicode.Is(unicode.Latin, prevRune) {
+				latinMnCount++
+			}
+		} else {
+			currentConsecutiveMn = 0
+			prevRune = r
 		}
 	}
 
@@ -1216,7 +1235,13 @@ func (m *SafetyModule) handleZalgo(b *core.Bot, client *bot.Client, message disc
 	ratio := float64(diacriticCount) / float64(totalRunes)
 
 	isZalgo := false
-	if ratio > 0.30 || diacriticCount > 15 {
+	if nonLatinScriptCount > 0 {
+		isZalgo = true
+	} else if maxConsecutiveMn >= 4 {
+		isZalgo = true
+	} else if ratio > 0.60 && maxConsecutiveMn >= 3 && totalRunes >= 5 {
+		isZalgo = true
+	} else if latinMnCount >= 3 && ratio > 0.35 {
 		isZalgo = true
 	}
 
