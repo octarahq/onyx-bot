@@ -1,9 +1,11 @@
 package suggestion
 
 import (
+	"time"
+
 	"onyx/bot/core"
 	"onyx/bot/locales"
-	
+
 	"github.com/disgoorg/disgo/discord"
 	"gorm.io/gorm"
 )
@@ -16,6 +18,27 @@ type SuggestionMainSettings struct {
 
 type SuggestionContentSettings struct {
 	AllowImages bool `json:"allow_images"`
+}
+
+type SuggestionStatus string
+
+const (
+	SuggestionStatusPending     SuggestionStatus = "pending"
+	SuggestionStatusApproved    SuggestionStatus = "approved"
+	SuggestionStatusDenied      SuggestionStatus = "denied"
+	SuggestionStatusImplemented SuggestionStatus = "implemented"
+)
+
+type GuildSuggestion struct {
+	ID        uint             `gorm:"primaryKey;autoIncrement" json:"id"`
+	GuildID   string           `gorm:"index;not null" json:"guild_id"`
+	MessageID string           `gorm:"index" json:"message_id"`
+	ThreadID  string           `json:"thread_id,omitempty"`
+	AuthorID  string           `json:"author_id"`
+	Status    SuggestionStatus `gorm:"default:'pending'" json:"status"`
+	Upvotes   []string         `gorm:"serializer:json" json:"upvotes"`
+	Downvotes []string         `gorm:"serializer:json" json:"downvotes"`
+	CreatedAt time.Time        `json:"created_at"`
 }
 
 type SuggestionSettings struct {
@@ -69,7 +92,9 @@ func (m *SuggestionModule) Permissions() []discord.Permissions {
 	}
 }
 
-func (m *SuggestionModule) Schema() interface{}  { return &SuggestionSettings{} }
+func (m *SuggestionModule) Schema() interface{} {
+	return []interface{}{&SuggestionSettings{}, &GuildSuggestion{}}
+}
 func (m *SuggestionModule) DataPtr() interface{} { return &m.Data }
 func (m *SuggestionModule) LoadData(db *gorm.DB, guildID string) error {
 	m.Data = SuggestionSettings{GuildID: guildID}

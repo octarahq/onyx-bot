@@ -54,6 +54,18 @@ type ModuleCommand interface {
 	HandleCommand(b *Bot, event *events.ApplicationCommandInteractionCreate) bool
 }
 
+type ModuleButtonHandler interface {
+	HandleButton(b *Bot, event *events.ComponentInteractionCreate, action string, args []string) bool
+}
+
+type ModuleSelectMenuHandler interface {
+	HandleSelectMenu(b *Bot, event *events.ComponentInteractionCreate, action string, args []string) bool
+}
+
+type ModuleModalHandler interface {
+	HandleModal(b *Bot, event *events.ModalSubmitInteractionCreate, action string, args []string) bool
+}
+
 type OnApplicationCommandInteractionCreate interface {
 	HandleApplicationCommandInteractionCreate(b *Bot, event *events.ApplicationCommandInteractionCreate) bool
 }

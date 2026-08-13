@@ -12,6 +12,10 @@ import (
 	"github.com/disgoorg/disgo/events"
 )
 
+func isModuleInteraction(customID string) bool {
+	return strings.HasPrefix(customID, "module-")
+}
+
 func init() {
 	handlers.RegisterEvent(handlers.Event{
 		Name:     "ApplicationCommandInteractionCreate",
@@ -39,15 +43,16 @@ func init() {
 			}
 
 			customID := event.Data.CustomID()
+			if isModuleInteraction(customID) {
+				return
+			}
+
 			parts := strings.Split(customID, "-")
 			if len(parts) < 2 {
 				return
 			}
 
 			commandName := parts[0]
-			if commandName == "module" {
-				return
-			}
 			userID := parts[1]
 
 			if userID != "all" && userID != event.User().ID.String() {
@@ -83,6 +88,10 @@ func init() {
 			}
 
 			customID := event.Data.CustomID
+			if isModuleInteraction(customID) {
+				return
+			}
+
 			parts := strings.Split(customID, "-")
 			if len(parts) < 2 {
 				return

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"onyx/bot/core"
+	"onyx/bot/locales"
 	"onyx/bot/utils"
 
 	"github.com/disgoorg/disgo/bot"
@@ -297,6 +298,32 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 				}
 			}
 		case *events.ComponentInteractionCreate:
+			if data, ok := ParseModuleCustomID(e.Data.CustomID()); ok {
+				if matchesModuleName(mod.Metadata().Name, data.ModuleName) {
+					if data.TargetUser != "" && data.TargetUser != "all" && data.TargetUser != e.User().ID.String() {
+						trad := locales.GetInteraction(e.Locale())
+						e.CreateMessage(discord.MessageCreate{
+							Content: trad.Not_allowed_component,
+							Flags:   discord.MessageFlagEphemeral,
+						})
+						return true
+					}
+
+					if e.Data.Type() == discord.ComponentTypeButton {
+						if handler, ok := mod.(core.ModuleButtonHandler); ok {
+							if handler.HandleButton(b, e, data.Action, data.Args) {
+								return true
+							}
+						}
+					} else {
+						if handler, ok := mod.(core.ModuleSelectMenuHandler); ok {
+							if handler.HandleSelectMenu(b, e, data.Action, data.Args) {
+								return true
+							}
+						}
+					}
+				}
+			}
 			if handler, ok := mod.(core.OnComponentInteractionCreate); ok {
 				if handler.HandleComponentInteractionCreate(b, e) {
 					return true
@@ -747,6 +774,24 @@ func ExecModulesEvent(b *core.Bot, event bot.Event) bool {
 				}
 			}
 		case *events.ModalSubmitInteractionCreate:
+			if data, ok := ParseModuleCustomID(e.Data.CustomID); ok {
+				if matchesModuleName(mod.Metadata().Name, data.ModuleName) {
+					if data.TargetUser != "" && data.TargetUser != "all" && data.TargetUser != e.User().ID.String() {
+						trad := locales.GetInteraction(e.Locale())
+						e.CreateMessage(discord.MessageCreate{
+							Content: trad.Not_allowed_modal,
+							Flags:   discord.MessageFlagEphemeral,
+						})
+						return true
+					}
+
+					if handler, ok := mod.(core.ModuleModalHandler); ok {
+						if handler.HandleModal(b, e, data.Action, data.Args) {
+							return true
+						}
+					}
+				}
+			}
 			if handler, ok := mod.(core.OnModalSubmitInteractionCreate); ok {
 				if handler.HandleModalSubmitInteractionCreate(b, e) {
 					return true
@@ -969,4 +1014,48 @@ func CheckPerms(b *core.Bot, module core.Module, me discord.Member) bool {
 		return true
 	}
 	return false
+}
+
+type ModuleInteractionData struct {
+	ModuleName string
+	Action     string
+	TargetUser string
+	Args       []string
+}
+
+func ParseModuleCustomID(customID string) (*ModuleInteractionData, bool) {
+	if !strings.HasPrefix(customID, "module-") {
+		return nil, false
+	}
+
+	parts := strings.Split(customID, "-")
+	if len(parts) < 3 {
+		return nil, false
+	}
+
+	data := &ModuleInteractionData{
+		ModuleName: parts[1],
+		Action:     parts[2],
+	}
+
+	if len(parts) >= 4 {
+		data.TargetUser = parts[3]
+	} else {
+		data.TargetUser = "all"
+	}
+
+	if len(parts) >= 5 {
+		data.Args = parts[4:]
+	}
+
+	return data, true
+}
+
+func matchesModuleName(moduleMetadataName string, requestedName string) bool {
+	if strings.EqualFold(moduleMetadataName, requestedName) {
+		return true
+	}
+	cleanMeta := strings.TrimSuffix(strings.ToLower(moduleMetadataName), "module")
+	cleanReq := strings.TrimSuffix(strings.ToLower(requestedName), "module")
+	return cleanMeta == cleanReq
 }

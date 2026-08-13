@@ -395,7 +395,6 @@ func init() {
 }
 
 func StartWorker(b *core.Bot) {
-	// Cleanup completed reminders from database at bot startup
 	if b.DB != nil && b.DB.GormDB != nil {
 		b.DB.GormDB.Where("completed = ?", true).Delete(&Reminder{})
 	}

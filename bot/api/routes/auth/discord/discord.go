@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"onyx/bot/api"
@@ -81,6 +82,10 @@ func handleLogin(c *gin.Context) {
 
 	c.SetCookie("oauth_state", state, 300, "/", "", false, true)
 
+	if redirectTarget := c.Query("redirect"); redirectTarget != "" {
+		c.SetCookie("redirect_after_login", redirectTarget, 600, "/", "", false, true)
+	}
+
 	url := getOAuthConfig().AuthCodeURL(state)
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }
@@ -150,7 +155,18 @@ func handleCallback(c *gin.Context) {
 	c.SetCookie("session_id", sessionID, 7*24*3600, "/", "", false, true)
 
 	_ = godotenv.Load()
-	c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("%s/dashboard", os.Getenv("SITE_URL")))
+	targetPath := "/dashboard"
+	if cookieRedirect, err := c.Cookie("redirect_after_login"); err == nil && cookieRedirect != "" {
+		targetPath = cookieRedirect
+		c.SetCookie("redirect_after_login", "", -1, "/", "", false, true)
+	}
+
+	siteURL := strings.TrimSuffix(os.Getenv("SITE_URL"), "/")
+	if !strings.HasPrefix(targetPath, "/") {
+		targetPath = "/" + targetPath
+	}
+
+	c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("%s%s", siteURL, targetPath))
 }
 
 func handleMe(c *gin.Context) {
