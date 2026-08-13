@@ -1,10 +1,21 @@
 package core
 
 import (
+	"sort"
+
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
 	"gorm.io/gorm"
 )
+
+var RegisteredModules []Module
+
+func Register(m Module) {
+	RegisteredModules = append(RegisteredModules, m)
+	sort.SliceStable(RegisteredModules, func(i, j int) bool {
+		return RegisteredModules[i].Priority() > RegisteredModules[j].Priority()
+	})
+}
 
 type SubmoduleMeta struct {
 	Label       string `json:"label"`
@@ -36,6 +47,11 @@ type DatabaseAware interface {
 type ModuleLogger interface {
 	LogInfo(b *Bot, gid string, moduleName string, title string, logs []string)
 	LogImportant(b *Bot, gid string, moduleName string, title string, logs []string)
+}
+
+type ModuleCommand interface {
+	Command() *discord.SlashCommandCreate
+	HandleCommand(b *Bot, event *events.ApplicationCommandInteractionCreate) bool
 }
 
 type OnApplicationCommandInteractionCreate interface {

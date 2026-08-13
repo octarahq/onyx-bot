@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/signal"
 	"strings"
 	"syscall"
@@ -36,6 +37,16 @@ import (
 func main() {
 	var version = "1.3.0"
 	_ = godotenv.Load()
+
+	if os.Getenv("ENV") == "dev" || os.Getenv("ENV") == "" {
+		if _, err := exec.LookPath("go"); err == nil {
+			cmd := exec.Command("go", "generate", "./...")
+			if out, err := cmd.CombinedOutput(); err != nil {
+				fmt.Printf("Warning: go generate failed: %v\nOutput: %s\n", err, string(out))
+			}
+		}
+	}
+
 	if err := locales.Load("locales"); err != nil {
 		fmt.Printf("Warning: failed to load locales: %v\n", err)
 	}

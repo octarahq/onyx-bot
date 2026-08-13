@@ -1,9 +1,9 @@
-package modules
+package suggestion
 
 import (
 	"onyx/bot/core"
 	"onyx/bot/locales"
-
+	
 	"github.com/disgoorg/disgo/discord"
 	"gorm.io/gorm"
 )
@@ -30,7 +30,7 @@ type SuggestionModule struct {
 }
 
 func init() {
-	Register(&SuggestionModule{})
+	core.Register(&SuggestionModule{})
 }
 
 func (m *SuggestionModule) Metadata() core.Metadata {
