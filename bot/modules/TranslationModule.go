@@ -6,6 +6,7 @@ import (
 	"onyx/bot/locales"
 	"onyx/bot/utils"
 	"strings"
+	"time"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -89,6 +90,12 @@ func (m *TranslationModule) HandleMessageCreate(b *core.Bot, e *events.MessageCr
 	if ch != e.ChannelID.String() {
 		return false
 	}
+
+	cacheKey := fmt.Sprintf("translation_ratelimit:%s", e.ChannelID.String())
+	if _, limited := utils.Cache.Get(cacheKey); limited {
+		return false
+	}
+	utils.Cache.Set(cacheKey, true, 5*time.Second)
 
 	params := discord.ThreadCreateFromMessage{
 		Name:                fmt.Sprintf("Traduction %s", m.Data.Main.Lang),
