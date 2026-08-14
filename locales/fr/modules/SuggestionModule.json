@@ -33,5 +33,25 @@
         }
       }
     }
+  },
+  "trad": {
+    "cmd_name": "suggestion",
+    "cmd_description": "Module de suggestions",
+    "sub_submit_name": "soumettre",
+    "sub_submit_description": "Soumettre une suggestion",
+    "modal_title": "Soumettre une suggestion",
+    "modal_title_label": "Titre de la suggestion",
+    "modal_title_placeholder": "Une nouvelle fonctionnalité",
+    "modal_desc_label": "Description de la suggestion",
+    "modal_desc_placeholder": "Une fonctionnalité qui permet de...",
+    "modal_images_label": "Images de la suggestion",
+    "suggestion_from": "> Suggestion de <@%s>",
+    "submit_footer": "-# Soumettez votre suggestion avec /suggestion submit",
+    "thread_name": "Suggestion de ",
+    "error_channel_not_found": "Le salon de suggestions n'a pas pu être trouvé ou est mal configuré.",
+    "error_send_failed": "Une erreur est survenue lors de l'envoi de votre suggestion.",
+    "error_invalid_channel_type": "Le salon configuré n'est pas un salon textuel ou forum valide.",
+    "success_title": "Merci pour votre suggestion !",
+    "success_desc": "> Votre suggestion a été envoyée %s."
   }
 }

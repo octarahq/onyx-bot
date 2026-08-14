@@ -2,6 +2,7 @@ package suggestion
 
 import (
 	"onyx/bot/core"
+	"onyx/bot/locales"
 	"strings"
 
 	"github.com/disgoorg/disgo/discord"
@@ -12,7 +13,7 @@ import (
 func (m *SuggestionModule) Command() *discord.SlashCommandCreate {
 	return &discord.SlashCommandCreate{
 		Name:        "suggestion",
-		Description: "Module de suggestions",
+		Description: "Suggestions module",
 		Options: []discord.ApplicationCommandOption{
 			discord.ApplicationCommandOptionSubCommand{
 				Name:        "submit",
@@ -35,17 +36,18 @@ func (m *SuggestionModule) HandleCommand(b *core.Bot, event *events.ApplicationC
 
 	switch *slash.SubCommandName {
 	case "submit":
+		trad := locales.GetModule_SuggestionModule(event.Locale())
 		modal := discord.NewModalCreate(
-			"module-suggestion-all-submit", "Submit a suggestion",
+			"module-suggestion-all-submit", trad.Modal_title,
 		).AddLabel(
-			"suggestion title", discord.NewTextInput("submit-title", discord.TextInputStyleShort).WithMaxLength(100).WithPlaceholder("A new feature").WithRequired(true),
+			trad.Modal_title_label, discord.NewTextInput("submit-title", discord.TextInputStyleShort).WithMaxLength(100).WithPlaceholder(trad.Modal_title_placeholder).WithRequired(true),
 		).AddLabel(
-			"suggestion description", discord.NewTextInput("submit-description", discord.TextInputStyleParagraph).WithMaxLength(100).WithPlaceholder("A feature who can...").WithRequired(true),
+			trad.Modal_desc_label, discord.NewTextInput("submit-description", discord.TextInputStyleParagraph).WithMaxLength(100).WithPlaceholder(trad.Modal_desc_placeholder).WithRequired(true),
 		)
 
 		if m.Data.Content.AllowImages {
 			modal = modal.AddLabel(
-				"suggestion images", discord.NewFileUpload("submit-images").WithMinValues(0).WithMaxValues(10),
+				trad.Modal_images_label, discord.NewFileUpload("submit-images").WithMinValues(0).WithMaxValues(10),
 			)
 		}
 
@@ -57,21 +59,32 @@ func (m *SuggestionModule) HandleCommand(b *core.Bot, event *events.ApplicationC
 
 func (m *SuggestionModule) HandleModal(b *core.Bot, event *events.ModalSubmitInteractionCreate, action string, args []string) bool {
 	if event.Data.CustomID == "module-suggestion-all-submit" {
+		trad := locales.GetModule_SuggestionModule(event.Locale())
 		title := event.Data.Text("submit-title")
+		if len(title) > 0 {
+			title = strings.ToUpper(string(title[0])) + title[1:]
+		}
 		desc := event.Data.Text("submit-description")
 
 		cid, err := snowflake.Parse(m.Data.Main.Channel)
 		if err != nil {
+			event.CreateMessage(discord.NewMessageCreateV2(
+				discord.NewContainer(discord.NewTextDisplay(trad.Error_channel_not_found)),
+			).WithEphemeral(true))
 			return false
 		}
 		channel, exist := event.Client().Caches.Channel(cid)
 		if !exist {
+			event.CreateMessage(discord.NewMessageCreateV2(
+				discord.NewContainer(discord.NewTextDisplay(trad.Error_channel_not_found)),
+			).WithEphemeral(true))
 			return false
 		}
 
 		container := discord.NewContainer(
 			discord.NewSection(
 				discord.NewTextDisplayf("## %s", title),
+				discord.NewTextDisplayf(trad.Suggestion_from, event.Member().User.ID.String()),
 				discord.NewTextDisplayf("%s", desc),
 			).WithAccessory(discord.NewThumbnail(event.Member().EffectiveAvatarURL())),
 		)
@@ -100,31 +113,40 @@ func (m *SuggestionModule) HandleModal(b *core.Bot, event *events.ModalSubmitInt
 
 		msg := discord.NewMessageCreateV2(
 			container.AddComponents(
-				discord.NewTextDisplayf("-# Suggestion de <@%s>", event.Member().User.ID.String()),
+				discord.NewTextDisplay(trad.Submit_footer),
 			),
 		)
 
+		var suggestionUrl string
 		switch channel.Type() {
 		case discord.ChannelTypeGuildText:
 			msg, err := event.Client().Rest.CreateMessage(channel.ID(), msg)
 			if err != nil {
+				event.CreateMessage(discord.NewMessageCreateV2(
+					discord.NewContainer(discord.NewTextDisplay(trad.Error_send_failed)),
+				).WithEphemeral(true))
 				return false
 			}
+			suggestionUrl = msg.JumpURL()
 
 			if m.Data.Main.AllowDebate {
 				event.Client().Rest.CreateThreadFromMessage(msg.ChannelID, msg.ID, discord.ThreadCreateFromMessage{
-					Name: "Suggestion de " + event.Member().User.EffectiveName(),
+					Name: trad.Thread_name + event.Member().User.EffectiveName(),
 				})
 			}
 		case discord.ChannelTypeGuildForum:
 			postCreate := discord.ThreadChannelPostCreate{
-				Name:    "Suggestion de " + event.Member().User.EffectiveName(),
+				Name:    trad.Thread_name + event.Member().User.EffectiveName(),
 				Message: msg,
 			}
 			post, err := event.Client().Rest.CreatePostInThreadChannel(channel.ID(), postCreate)
 			if err != nil {
+				event.CreateMessage(discord.NewMessageCreateV2(
+					discord.NewContainer(discord.NewTextDisplay(trad.Error_send_failed)),
+				).WithEphemeral(true))
 				return false
 			}
+			suggestionUrl = post.Message.JumpURL()
 
 			if !m.Data.Main.AllowDebate {
 				locked := true
@@ -132,10 +154,27 @@ func (m *SuggestionModule) HandleModal(b *core.Bot, event *events.ModalSubmitInt
 					Locked: &locked,
 				})
 			}
-			
+
 		default:
+			event.CreateMessage(discord.NewMessageCreateV2(
+				discord.NewContainer(discord.NewTextDisplay(trad.Error_invalid_channel_type)),
+			).WithEphemeral(true))
 			return false
 		}
+
+		guild, exist := event.Guild()
+		if !exist {
+			return false
+		}
+
+		event.CreateMessage(discord.NewMessageCreateV2(
+			discord.NewContainer(
+				discord.NewSection(
+					discord.NewTextDisplayf("## %s", trad.Success_title),
+					discord.NewTextDisplayf(trad.Success_desc, suggestionUrl),
+				).WithAccessory(discord.NewThumbnail(*guild.IconURL())),
+			),
+		).WithFlags(discord.MessageFlagEphemeral))
 	}
 
 	return false

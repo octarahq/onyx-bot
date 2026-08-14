@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "name": "suggestion",
+    "description": "Suggestions module",
+    "options": {
+      "submit": {
+        "name": "submit",
+        "description": "Submit a suggestion"
+      }
+    }
+  }
+}
