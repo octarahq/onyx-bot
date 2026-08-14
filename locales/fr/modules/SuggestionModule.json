@@ -9,16 +9,12 @@
         "description": "Configurez le module de Suggestions.",
         "options": {
           "channel": {
-            "label": "Salon des suggestions",
+            "label": "Salon de suggestions",
             "description": "Le salon où les suggestions seront envoyées."
           },
           "allow_debate": {
             "label": "Autoriser les débats",
-            "description": "Crée un fil de discussion (salon texte) ou autorise les réponses (salon forum) pour permettre aux membres de débattre."
-          },
-          "manager_roles": {
-            "label": "Rôles gestionnaires",
-            "description": "Les rôles autorisés à accepter ou refuser les suggestions."
+            "description": "Crée un fil de discussion (salon textuel) ou autorise les réponses (salon forum) pour que les membres puissent débattre."
           }
         }
       },

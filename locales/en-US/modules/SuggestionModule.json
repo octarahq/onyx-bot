@@ -15,10 +15,6 @@
           "allow_debate": {
             "label": "Allow Debates",
             "description": "Creates a thread (text channel) or allows replies (forum channel) so members can debate."
-          },
-          "manager_roles": {
-            "label": "Manager Roles",
-            "description": "Roles allowed to accept or deny suggestions."
           }
         }
       },

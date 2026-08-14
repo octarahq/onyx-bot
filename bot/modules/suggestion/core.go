@@ -1,8 +1,6 @@
 package suggestion
 
 import (
-	"time"
-
 	"onyx/bot/core"
 	"onyx/bot/locales"
 
@@ -11,35 +9,14 @@ import (
 )
 
 type SuggestionMainSettings struct {
-	Channel      string   `json:"channel"`
-	AllowDebate  bool     `json:"allow_debate"`
-	ManagerRoles []string `gorm:"serializer:json" json:"manager_roles"`
+	Channel      string `json:"channel"`
+	AllowDebate  bool   `json:"allow_debate"`
 }
 
 type SuggestionContentSettings struct {
 	AllowImages bool `json:"allow_images"`
 }
 
-type SuggestionStatus string
-
-const (
-	SuggestionStatusPending     SuggestionStatus = "pending"
-	SuggestionStatusApproved    SuggestionStatus = "approved"
-	SuggestionStatusDenied      SuggestionStatus = "denied"
-	SuggestionStatusImplemented SuggestionStatus = "implemented"
-)
-
-type GuildSuggestion struct {
-	ID        uint             `gorm:"primaryKey;autoIncrement" json:"id"`
-	GuildID   string           `gorm:"index;not null" json:"guild_id"`
-	MessageID string           `gorm:"index" json:"message_id"`
-	ThreadID  string           `json:"thread_id,omitempty"`
-	AuthorID  string           `json:"author_id"`
-	Status    SuggestionStatus `gorm:"default:'pending'" json:"status"`
-	Upvotes   []string         `gorm:"serializer:json" json:"upvotes"`
-	Downvotes []string         `gorm:"serializer:json" json:"downvotes"`
-	CreatedAt time.Time        `json:"created_at"`
-}
 
 type SuggestionSettings struct {
 	GuildID string                    `gorm:"primaryKey" json:"guild_id"`
@@ -93,7 +70,7 @@ func (m *SuggestionModule) Permissions() []discord.Permissions {
 }
 
 func (m *SuggestionModule) Schema() interface{} {
-	return []interface{}{&SuggestionSettings{}, &GuildSuggestion{}}
+	return []interface{}{&SuggestionSettings{}}
 }
 func (m *SuggestionModule) DataPtr() interface{} { return &m.Data }
 func (m *SuggestionModule) LoadData(db *gorm.DB, guildID string) error {
@@ -126,14 +103,7 @@ func (m *SuggestionModule) UISchema(locale discord.Locale) core.UISchema {
 						Type:        core.ComponentTypeBoolean,
 						Required:    false,
 					},
-					{
-						Name:        "manager_roles",
-						Label:       meta.Submodules["main"].Options["manager_roles"].Label,
-						Description: meta.Submodules["main"].Options["manager_roles"].Description,
-						Type:        core.ComponentTypeRole,
-						Multiple:    true,
-						Required:    false,
-					},
+
 				},
 			},
 			{
