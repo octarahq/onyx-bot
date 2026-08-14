@@ -106,13 +106,33 @@ func (m *SuggestionModule) HandleModal(b *core.Bot, event *events.ModalSubmitInt
 
 		switch channel.Type() {
 		case discord.ChannelTypeGuildText:
-			event.Client().Rest.CreateMessage(channel.ID(), msg)
+			msg, err := event.Client().Rest.CreateMessage(channel.ID(), msg)
+			if err != nil {
+				return false
+			}
+
+			if m.Data.Main.AllowDebate {
+				event.Client().Rest.CreateThreadFromMessage(msg.ChannelID, msg.ID, discord.ThreadCreateFromMessage{
+					Name: "Suggestion de " + event.Member().User.EffectiveName(),
+				})
+			}
 		case discord.ChannelTypeGuildForum:
 			postCreate := discord.ThreadChannelPostCreate{
-				Name:    "Suggestion de " + event.Member().User.Username,
+				Name:    "Suggestion de " + event.Member().User.EffectiveName(),
 				Message: msg,
 			}
-			event.Client().Rest.CreatePostInThreadChannel(channel.ID(), postCreate)
+			post, err := event.Client().Rest.CreatePostInThreadChannel(channel.ID(), postCreate)
+			if err != nil {
+				return false
+			}
+
+			if !m.Data.Main.AllowDebate {
+				locked := true
+				event.Client().Rest.UpdateChannel(post.ID(), discord.GuildThreadUpdate{
+					Locked: &locked,
+				})
+			}
+			
 		default:
 			return false
 		}
