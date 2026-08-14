@@ -15,6 +15,7 @@ type Command struct {
 	Name                string
 	Description         string
 	Category            string
+	Schema              interface{}
 	Create              discord.ApplicationCommandCreate
 	Execute             func(b *Bot, event *events.ApplicationCommandInteractionCreate)
 	ExecuteButton       func(b *Bot, event *events.ComponentInteractionCreate)

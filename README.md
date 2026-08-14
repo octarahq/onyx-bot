@@ -33,8 +33,8 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 - [ ] Fun : Add playful interactions to your server.
 - [x] Wizarding World : Add a magical experience to your server with wizarding spells.
 - [ ] Infinite Counter : Create a counter that can be incremented infinitely.
-- [ ] Reminders : Set reminders.
-- [ ] Suggestions : Collect and manage suggestions from your community.
+- [x] Reminders : Set reminders.
+- [x] Suggestions : Collect and manage suggestions from your community.
 - [ ] Starboard : Highlight popular messages in your server.
 - [ ] Social Notifications : Notify your server about social media updates.
 - [ ] Partenerships : Manage and search partnerships with other servers.

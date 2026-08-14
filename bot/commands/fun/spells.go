@@ -7,7 +7,7 @@ import (
 	"onyx/bot/core"
 	"onyx/bot/handlers"
 	"onyx/bot/locales"
-	"onyx/bot/modules"
+	"onyx/bot/modules/wizzard"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/events"
@@ -33,7 +33,7 @@ func init() {
 		ExecuteAutocomplete: func(b *core.Bot, event *events.AutocompleteInteractionCreate) {
 			searchOpt, _ := event.Data.Option("spell")
 			search := strings.ToLower(fmt.Sprint(searchOpt))
-			spells := modules.InitWizzardSpells(locales.GetModule_WizzardModule(event.Locale()))
+			spells := wizzard.InitWizzardSpells(locales.GetModule_WizzardModule(event.Locale()))
 			choices := make([]discord.AutocompleteChoice, 0, 25)
 
 			for _, s := range spells {
@@ -58,9 +58,9 @@ func init() {
 		Execute: func(b *core.Bot, event *events.ApplicationCommandInteractionCreate) {
 			cmd := event.SlashCommandInteractionData()
 			s, _ := cmd.Option("spell")
-			spells := modules.InitWizzardSpells(locales.GetModule_WizzardModule(event.Locale()))
+			spells := wizzard.InitWizzardSpells(locales.GetModule_WizzardModule(event.Locale()))
 
-			var spell modules.Sort
+			var spell wizzard.Sort
 			for _, sort := range spells {
 				if sort.Key == s.String() {
 					spell = sort

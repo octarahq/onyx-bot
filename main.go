@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/signal"
 	"strings"
 	"syscall"
@@ -15,6 +16,7 @@ import (
 	"onyx/bot/logs"
 
 	_ "onyx/bot/commands"
+	"onyx/bot/commands/reminders"
 	_ "onyx/bot/events"
 	"onyx/bot/locales"
 	"onyx/bot/modules"
@@ -33,8 +35,18 @@ import (
 )
 
 func main() {
-	var version = "1.2.0"
+	var version = "1.3.0"
 	_ = godotenv.Load()
+
+	if os.Getenv("ENV") == "dev" || os.Getenv("ENV") == "" {
+		if _, err := exec.LookPath("go"); err == nil {
+			cmd := exec.Command("go", "generate", "./...")
+			if out, err := cmd.CombinedOutput(); err != nil {
+				fmt.Printf("Warning: go generate failed: %v\nOutput: %s\n", err, string(out))
+			}
+		}
+	}
+
 	if err := locales.Load("locales"); err != nil {
 		fmt.Printf("Warning: failed to load locales: %v\n", err)
 	}
@@ -71,6 +83,16 @@ func main() {
 				db.GormDB.AutoMigrate(slice...)
 			} else {
 				db.GormDB.AutoMigrate(schema)
+			}
+		}
+	}
+
+	for _, cmd := range coreBot.Commands {
+		if cmd.Schema != nil {
+			if slice, isSlice := cmd.Schema.([]interface{}); isSlice {
+				db.GormDB.AutoMigrate(slice...)
+			} else {
+				db.GormDB.AutoMigrate(cmd.Schema)
 			}
 		}
 	}
@@ -120,6 +142,7 @@ func main() {
 	handlers.SetupEvents(coreBot)
 
 	go api.Start(coreBot)
+	go reminders.StartWorker(coreBot)
 
 	defer func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

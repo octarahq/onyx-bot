@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "name": "reminder",
+    "description": "Manage your reminders",
+    "options": {
+      "create": {
+        "name": "create",
+        "description": "Create a reminder",
+        "options": {
+          "content": {
+            "name": "content",
+            "description": "The content I will remind you about"
+          },
+          "time": {
+            "name": "time",
+            "description": "When you want me to remind you"
+          }
+        }
+      },
+      "list": {
+        "name": "list",
+        "description": "List your active reminders"
+      },
+      "delete": {
+        "name": "delete",
+        "description": "Delete a reminder",
+        "options": {
+          "reminder": {
+            "name": "reminder",
+            "description": "The reminder to delete"
+          }
+        }
+      },
+      "edit": {
+        "name": "edit",
+        "description": "Edit a reminder",
+        "options": {
+          "reminder": {
+            "name": "reminder",
+            "description": "The reminder to edit"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "create_success_title": "## Noted!",
+    "create_success_desc": "I will remind you: `%s` %s",
+    "delete_success": ":white_check_mark: This reminder has been deleted.",
+    "edit_modal_title": "Edit reminder",
+    "edit_modal_content_label": "Content",
+    "edit_modal_time_label": "New duration (optional, e.g. 10m, 1h)",
+    "edit_success_title": "## Reminder updated!",
+    "edit_success_desc": "I will remind you: `%s` %s",
+    "list_title": "## Your Reminders",
+    "list_empty": "You have no active reminders.",
+    "trigger_title": "## ⏰ Reminder!",
+    "snooze_button": "Remind me in 10 min",
+    "snooze_success_title": "## Noted!",
+    "snooze_success_desc": "I will remind you again in 10 minutes: `%s` %s",
+    "error_limit_reached": ":x: You cannot have more than 25 active reminders.",
+    "error_invalid_time": ":x: Time must be between 1 minute and 1 month.",
+    "error_not_found": ":x: Reminder not found.",
+    "error_db": "Oops, an error occurred.",
+    "error_generic": ":x: An error occurred: %s"
+  }
+}

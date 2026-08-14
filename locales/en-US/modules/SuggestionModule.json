@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "name": "SuggestionModule",
+    "label": "Suggestions",
+    "description": "Allow your members to submit suggestions.",
+    "submodules": {
+      "main": {
+        "label": "Main Settings",
+        "description": "Configure the Suggestions module.",
+        "options": {
+          "channel": {
+            "label": "Suggestions Channel",
+            "description": "The channel where suggestions will be sent."
+          },
+          "allow_debate": {
+            "label": "Allow Debates",
+            "description": "Creates a thread (text channel) or allows replies (forum channel) so members can debate."
+          }
+        }
+      },
+      "content": {
+        "label": "Content",
+        "description": "Configure what content members can submit.",
+        "options": {
+          "allow_images": {
+            "label": "Allow Images",
+            "description": "Allows members to include images in their suggestions."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "cmd_name": "suggestion",
+    "cmd_description": "Suggestions module",
+    "sub_submit_name": "submit",
+    "sub_submit_description": "Submit a suggestion",
+    "modal_title": "Submit a suggestion",
+    "modal_title_label": "Suggestion title",
+    "modal_title_placeholder": "A new feature",
+    "modal_desc_label": "Suggestion description",
+    "modal_desc_placeholder": "A feature that can...",
+    "modal_images_label": "Suggestion images",
+    "suggestion_from": "> Suggestion from <@%s>",
+    "submit_footer": "-# Submit your suggestion with /suggestion submit",
+    "thread_name": "Suggestion from ",
+    "error_channel_not_found": "The suggestions channel could not be found or is misconfigured.",
+    "error_send_failed": "An error occurred while sending your suggestion.",
+    "error_invalid_channel_type": "The configured channel is not a valid text or forum channel.",
+    "success_title": "Thank you for your suggestion!",
+    "success_desc": "> Your suggestion has been sent %s."
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "name": "rappel",
+    "description": "Gérer vos rappels",
+    "options": {
+      "create": {
+        "name": "creer",
+        "description": "Créer un rappel",
+        "options": {
+          "content": {
+            "name": "contenu",
+            "description": "Le contenu à vous rappeler"
+          },
+          "time": {
+            "name": "temps",
+            "description": "Quand voulez-vous être rappelé"
+          }
+        }
+      },
+      "list": {
+        "name": "liste",
+        "description": "La liste de vos rappels actifs"
+      },
+      "delete": {
+        "name": "supprimer",
+        "description": "Supprimer un rappel",
+        "options": {
+          "reminder": {
+            "name": "rappel",
+            "description": "Le rappel à supprimer"
+          }
+        }
+      },
+      "edit": {
+        "name": "modifier",
+        "description": "Modifier un rappel",
+        "options": {
+          "reminder": {
+            "name": "rappel",
+            "description": "Le rappel à modifier"
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "create_success_title": "## C'est noté !",
+    "create_success_desc": "Je vous rappellerai : `%s` %s",
+    "delete_success": ":white_check_mark: Ce rappel a été supprimé.",
+    "edit_modal_title": "Modifier le rappel",
+    "edit_modal_content_label": "Contenu",
+    "edit_modal_time_label": "Nouveau délai (optionnel, ex: 10m, 1h)",
+    "edit_success_title": "## Rappel modifié !",
+    "edit_success_desc": "Je vous rappellerai : `%s` %s",
+    "list_title": "## Vos Rappels",
+    "list_empty": "Vous n'avez aucun rappel actif.",
+    "trigger_title": "## ⏰ Rappel !",
+    "snooze_button": "Me rappeler dans 10 min",
+    "snooze_success_title": "## C'est noté !",
+    "snooze_success_desc": "Je vous rappellerai à nouveau dans 10 minutes : `%s` %s",
+    "error_limit_reached": ":x: Vous ne pouvez pas avoir plus de 25 rappels.",
+    "error_invalid_time": ":x: Le temps doit être compris entre 1min et 1 mois.",
+    "error_not_found": ":x: Rappel introuvable.",
+    "error_db": "Oups, une erreur s'est produite.",
+    "error_generic": ":x: Un problème est survenu : %s"
+  }
+}
