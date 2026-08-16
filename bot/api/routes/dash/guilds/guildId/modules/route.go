@@ -288,11 +288,11 @@ func handlePatchModuleData(c *gin.Context) {
 					}
 
 					if comp.Type == core.ComponentTypeString || comp.Type == core.ComponentTypeTextarea {
-						if comp.Min != nil && len(strVal) < *comp.Min {
+						if comp.Min > 0 && len(strVal) < comp.Min {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too short", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
-						if comp.Max != nil && len(strVal) > *comp.Max {
+						if comp.Max > 0 && len(strVal) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too long", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -304,7 +304,7 @@ func handlePatchModuleData(c *gin.Context) {
 							channels = strings.Split(strVal, ",")
 						}
 
-						if comp.Max != nil && len(channels) > *comp.Max {
+						if comp.Max > 0 && len(channels) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s has too many channels", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -351,7 +351,7 @@ func handlePatchModuleData(c *gin.Context) {
 							roles = strings.Split(strVal, ",")
 						}
 
-						if comp.Max != nil && len(roles) > *comp.Max {
+						if comp.Max > 0 && len(roles) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s has too many roles", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -394,11 +394,11 @@ func handlePatchModuleData(c *gin.Context) {
 
 				if floatVal, ok := val.(float64); ok {
 					if comp.Type == core.ComponentTypeNumber {
-						if comp.Min != nil && int(floatVal) < *comp.Min {
+						if comp.Min != 0 && int(floatVal) < comp.Min {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too small", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
-						if comp.Max != nil && int(floatVal) > *comp.Max {
+						if comp.Max != 0 && int(floatVal) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too large", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}

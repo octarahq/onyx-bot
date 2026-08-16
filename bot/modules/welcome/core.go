@@ -3,7 +3,7 @@ package welcome
 import (
 	"onyx/bot/core"
 	"onyx/bot/locales"
-	
+
 	"github.com/disgoorg/disgo/discord"
 	"gorm.io/gorm"
 )
@@ -199,9 +199,6 @@ func (m *WelcomeModule) UISchema(locale discord.Locale) core.UISchema {
 		}
 	}
 
-	maxContent := 1000
-	maxLinks := 5
-
 	return core.UISchema{
 		SubModules: []core.UISubModule{
 			{
@@ -227,7 +224,7 @@ func (m *WelcomeModule) UISchema(locale discord.Locale) core.UISchema {
 						Name:      "content",
 						Label:     joinContentLabel,
 						Type:      core.ComponentTypeTextarea,
-						Max:       &maxContent,
+						Max:       1000,
 						Required:  true,
 						Variables: joinVars,
 					},
@@ -237,7 +234,7 @@ func (m *WelcomeModule) UISchema(locale discord.Locale) core.UISchema {
 						Description: joinLinksDesc,
 						Type:        core.ComponentTypeList,
 						ListType:    "link",
-						Max:         &maxLinks,
+						Max:         5,
 						Required:    false,
 					},
 					{
@@ -271,7 +268,7 @@ func (m *WelcomeModule) UISchema(locale discord.Locale) core.UISchema {
 						Name:      "content",
 						Label:     leaveContentLabel,
 						Type:      core.ComponentTypeTextarea,
-						Max:       &maxContent,
+						Max:       1000,
 						Required:  true,
 						Variables: leaveVars,
 					},
@@ -281,7 +278,7 @@ func (m *WelcomeModule) UISchema(locale discord.Locale) core.UISchema {
 						Description: leaveLinksDesc,
 						Type:        core.ComponentTypeList,
 						ListType:    "link",
-						Max:         &maxLinks,
+						Max:         5,
 						Required:    false,
 					},
 					{
