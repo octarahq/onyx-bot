@@ -75,6 +75,36 @@
             "description": "Le texte sur le bouton. Laissez vide pour utiliser celui par défaut."
           }
         }
+      },
+      "reddit": {
+        "label": "Reddit",
+        "description": "Soyez notifié quand un nouveau post est publié sur un subreddit.",
+        "options": {
+          "enabled": {
+            "label": "Activer Reddit",
+            "description": "Active les notifications Reddit."
+          },
+          "fluxs": {
+            "label": "Sources Reddit",
+            "description": "Ajoutez des subreddits à écouter."
+          },
+          "fluxs.subreddit": {
+            "label": "Subreddit",
+            "description": "Le nom du subreddit (ex: r/gaming ou gaming)."
+          },
+          "fluxs.channel": {
+            "label": "Salon Discord",
+            "description": "Le salon où les notifications seront envoyées."
+          },
+          "fluxs.message": {
+            "label": "Message de notification",
+            "description": "Le message à envoyer. Vous pouvez utiliser {feed.title}, {title} et {url}."
+          },
+          "fluxs.button_text": {
+            "label": "Texte du bouton",
+            "description": "Le texte sur le bouton. Laissez vide pour utiliser celui par défaut."
+          }
+        }
       }
     }
   },

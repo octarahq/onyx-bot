@@ -37,12 +37,20 @@ type YouTubeFlux struct {
 	NotifyShorts bool   `json:"notify_shorts"`
 }
 
+type RedditFlux struct {
+	Subreddit  string `json:"subreddit"`
+	Channel    string `json:"channel"`
+	Message    string `json:"message"`
+	ButtonText string `json:"button_text"`
+}
+
 type SocialNotifsSettings struct {
 	GuildID string                           `gorm:"primaryKey" json:"guild_id"`
 	Enabled bool                             `gorm:"default:false" json:"enabled"`
 	Github  GeneralNotifSettings[GithubFlux] `gorm:"embedded;embeddedPrefix:github_" json:"github"`
 	RSS     GeneralNotifSettings[RSSFlux]    `gorm:"embedded;embeddedPrefix:rss_" json:"rss"`
 	YouTube GeneralNotifSettings[YouTubeFlux] `gorm:"embedded;embeddedPrefix:youtube_" json:"youtube"`
+	Reddit  GeneralNotifSettings[RedditFlux] `gorm:"embedded;embeddedPrefix:reddit_" json:"reddit"`
 }
 
 type SocialNotifsModule struct {
