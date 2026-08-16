@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "name": "SocialNotifsModule",
+    "label": "Notifications Sociales",
+    "description": "Gérez vos notifications de réseaux sociaux",
+    "submodules": {
+      "youtube": {
+        "label": "YouTube",
+        "description": "Soyez notifié quand une nouvelle vidéo ou un live est publié sur YouTube.",
+        "options": {
+          "enabled": {
+            "label": "Activer YouTube",
+            "description": "Active les notifications YouTube."
+          },
+          "fluxs": {
+            "label": "Sources YouTube",
+            "description": "Ajoutez des chaînes YouTube à écouter."
+          },
+          "fluxs.channel_url": {
+            "label": "Lien de la chaîne",
+            "description": "Le lien de la chaîne YouTube."
+          },
+          "fluxs.channel": {
+            "label": "Salon Discord",
+            "description": "Le salon où les notifications seront envoyées."
+          },
+          "fluxs.message": {
+            "label": "Message de notification",
+            "description": "Le message à envoyer. Vous pouvez utiliser {channel.name}, {title} et {url}."
+          },
+          "fluxs.button_text": {
+            "label": "Texte du bouton",
+            "description": "Le texte sur le bouton. Laissez vide pour utiliser celui par défaut."
+          },
+          "fluxs.notify_videos": {
+            "label": "Notifier les nouvelles vidéos",
+            "description": "Notifie lorsqu'une nouvelle vidéo est publiée."
+          },
+          "fluxs.notify_shorts": {
+            "label": "Notifier les nouveaux Shorts",
+            "description": "Notifie lorsqu'un nouveau short est publié."
+          },
+          "fluxs.notify_lives": {
+            "label": "Notifier les Live Streams",
+            "description": "Notifie lorsqu'un live stream démarre."
+          }
+        }
+      },
+      "rss": {
+        "label": "Flux RSS",
+        "description": "Soyez notifié quand un nouvel élément est publié sur un flux RSS.",
+        "options": {
+          "enabled": {
+            "label": "Activer RSS",
+            "description": "Active les notifications RSS."
+          },
+          "fluxs": {
+            "label": "Sources RSS",
+            "description": "Ajoutez des flux RSS à écouter."
+          },
+          "fluxs.feed_url": {
+            "label": "Lien du flux",
+            "description": "Le lien du flux RSS."
+          },
+          "fluxs.channel": {
+            "label": "Salon Discord",
+            "description": "Le salon où les notifications seront envoyées."
+          },
+          "fluxs.message": {
+            "label": "Message de notification",
+            "description": "Le message à envoyer. Vous pouvez utiliser {feed.title}, {item.title} et {item.link}."
+          },
+          "fluxs.button_text": {
+            "label": "Texte du bouton",
+            "description": "Le texte sur le bouton. Laissez vide pour utiliser celui par défaut."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}

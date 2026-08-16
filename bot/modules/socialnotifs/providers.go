@@ -26,14 +26,12 @@ type FluxMessage struct {
 	LinkLabel string
 }
 
-func DispatchMessage(bot *core.Bot, msg FluxMessage) {
+func DispatchMessageV2(bot *core.Bot, msg FluxMessage) {
 	if msg.ChannelID == "" || msg.Content == "" {
 		return
 	}
 
-	components := []discord.ContainerSubComponent{
-		discord.NewTextDisplay(msg.Content),
-	}
+	var components []discord.ContainerSubComponent
 
 	if msg.Link != "" {
 		label := msg.LinkLabel
@@ -46,6 +44,31 @@ func DispatchMessage(bot *core.Bot, msg FluxMessage) {
 		components = append(components, actionRow)
 	}
 
-	payload := discord.NewMessageCreateV2(discord.NewContainer(components...))
+	payload := discord.NewMessageCreateV2(
+		discord.NewContainer(components...),
+	)
+	payload.Content = msg.Content
+
+	bot.SendMessage(msg.ChannelID, payload)
+}
+
+func DispatchMessage(bot *core.Bot, msg FluxMessage) {
+	if msg.ChannelID == "" || msg.Content == "" {
+		return
+	}
+
+	payload := discord.NewMessageCreate().WithContent(msg.Content)
+
+	if msg.Link != "" {
+		label := msg.LinkLabel
+		if label == "" {
+			label = "Open link"
+		}
+
+		payload = payload.AddActionRow(
+			discord.NewLinkButton(label, msg.Link),
+		)
+	}
+
 	bot.SendMessage(msg.ChannelID, payload)
 }

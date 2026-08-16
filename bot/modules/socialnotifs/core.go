@@ -27,11 +27,22 @@ type RSSFlux struct {
 	ButtonText string `json:"button_text"`
 }
 
+type YouTubeFlux struct {
+	ChannelURL   string `json:"channel_url"`
+	Channel      string `json:"channel"`
+	Message      string `json:"message"`
+	ButtonText   string `json:"button_text"`
+	NotifyVideos bool   `json:"notify_videos"`
+	NotifyLives  bool   `json:"notify_lives"`
+	NotifyShorts bool   `json:"notify_shorts"`
+}
+
 type SocialNotifsSettings struct {
 	GuildID string                           `gorm:"primaryKey" json:"guild_id"`
 	Enabled bool                             `gorm:"default:false" json:"enabled"`
 	Github  GeneralNotifSettings[GithubFlux] `gorm:"embedded;embeddedPrefix:github_" json:"github"`
 	RSS     GeneralNotifSettings[RSSFlux]    `gorm:"embedded;embeddedPrefix:rss_" json:"rss"`
+	YouTube GeneralNotifSettings[YouTubeFlux] `gorm:"embedded;embeddedPrefix:youtube_" json:"youtube"`
 }
 
 type SocialNotifsModule struct {

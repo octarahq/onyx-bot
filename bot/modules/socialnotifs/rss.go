@@ -114,7 +114,7 @@ func (r *RSSProvider) checkFeeds(bot *core.Bot, db *gorm.DB) {
 
 				content := utils.ParseVariables(flux.Message, vars)
 
-				DispatchMessage(bot, FluxMessage{
+				DispatchMessageV2(bot, FluxMessage{
 					ChannelID: flux.Channel,
 					Content:   content,
 					Link:      latestItem.Link,

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"onyx/bot/db"
 	"onyx/bot/logs"
 	"time"
@@ -43,7 +44,7 @@ type Bot struct {
 	ConnectedSince time.Time
 	Version        string
 
-	Logger logs.Logger
+	Logger       logs.Logger
 	ModuleLogger ModuleLogger
 }
 
@@ -67,6 +68,7 @@ func (b *Bot) SendMessage(cid string, msg discord.MessageCreate) {
 
 	_, err = b.Client.Rest.CreateMessage(scid, msg)
 	if err != nil {
+		fmt.Println("SendMessage failed: %v", err)
 		return
 	}
 }

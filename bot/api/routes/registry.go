@@ -8,4 +8,5 @@ import (
 	_ "onyx/bot/api/routes/discord"
 	_ "onyx/bot/api/routes/invite"
 	_ "onyx/bot/api/routes/status"
+	_ "onyx/bot/api/routes/webhooks/youtube"
 )
