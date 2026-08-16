@@ -9,6 +9,7 @@ import (
 	_ "onyx/bot/modules/channelcounter"
 	_ "onyx/bot/modules/logging"
 	_ "onyx/bot/modules/safety"
+	_ "onyx/bot/modules/socialnotifs"
 	_ "onyx/bot/modules/suggestion"
 	_ "onyx/bot/modules/translation"
 	_ "onyx/bot/modules/welcome"
