@@ -105,6 +105,36 @@
             "description": "Le texte sur le bouton. Laissez vide pour utiliser celui par défaut."
           }
         }
+      },
+      "twitch": {
+        "label": "Twitch",
+        "description": "Soyez notifié quand une chaîne lance un live sur Twitch.",
+        "options": {
+          "enabled": {
+            "label": "Activer Twitch",
+            "description": "Active les notifications Twitch."
+          },
+          "fluxs": {
+            "label": "Sources Twitch",
+            "description": "Ajoutez des chaînes Twitch à écouter."
+          },
+          "fluxs.channel_name": {
+            "label": "Nom de la chaîne Twitch",
+            "description": "Le nom de la chaîne Twitch (ex: lotus64)."
+          },
+          "fluxs.channel": {
+            "label": "Salon Discord",
+            "description": "Le salon où les notifications seront envoyées."
+          },
+          "fluxs.message": {
+            "label": "Message de notification",
+            "description": "Le message à envoyer. Vous pouvez utiliser {channel.name}, {title}, {url} et {game}."
+          },
+          "fluxs.button_text": {
+            "label": "Texte du bouton",
+            "description": "Le texte sur le bouton. Laissez vide pour utiliser celui par défaut."
+          }
+        }
       }
     }
   },

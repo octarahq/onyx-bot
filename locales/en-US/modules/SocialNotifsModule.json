@@ -105,6 +105,36 @@
             "description": "The text on the button. Leave empty for default."
           }
         }
+      },
+      "twitch": {
+        "label": "Twitch",
+        "description": "Notify when a channel goes live on Twitch.",
+        "options": {
+          "enabled": {
+            "label": "Enable Twitch",
+            "description": "Enable Twitch notifications."
+          },
+          "fluxs": {
+            "label": "Twitch Sources",
+            "description": "Add Twitch channels to listen to."
+          },
+          "fluxs.channel_name": {
+            "label": "Twitch Channel Name",
+            "description": "The Twitch channel name (e.g. lotus64)."
+          },
+          "fluxs.channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "fluxs.message": {
+            "label": "Notification Message",
+            "description": "The message to send. You can use {channel.name}, {title}, {url} and {game}."
+          },
+          "fluxs.button_text": {
+            "label": "Button Text",
+            "description": "The text on the button. Leave empty for default."
+          }
+        }
       }
     }
   },

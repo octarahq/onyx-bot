@@ -44,6 +44,13 @@ type RedditFlux struct {
 	ButtonText string `json:"button_text"`
 }
 
+type TwitchFlux struct {
+	ChannelName string `json:"channel_name"`
+	Channel     string `json:"channel"`
+	Message     string `json:"message"`
+	ButtonText  string `json:"button_text"`
+}
+
 type SocialNotifsSettings struct {
 	GuildID string                           `gorm:"primaryKey" json:"guild_id"`
 	Enabled bool                             `gorm:"default:false" json:"enabled"`
@@ -51,6 +58,7 @@ type SocialNotifsSettings struct {
 	RSS     GeneralNotifSettings[RSSFlux]    `gorm:"embedded;embeddedPrefix:rss_" json:"rss"`
 	YouTube GeneralNotifSettings[YouTubeFlux] `gorm:"embedded;embeddedPrefix:youtube_" json:"youtube"`
 	Reddit  GeneralNotifSettings[RedditFlux] `gorm:"embedded;embeddedPrefix:reddit_" json:"reddit"`
+	Twitch  GeneralNotifSettings[TwitchFlux] `gorm:"embedded;embeddedPrefix:twitch_" json:"twitch"`
 }
 
 type SocialNotifsModule struct {
