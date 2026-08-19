@@ -7,6 +7,7 @@ import (
 	"onyx/bot/core"
 
 	_ "onyx/bot/modules/channelcounter"
+	_ "onyx/bot/modules/freegames"
 	_ "onyx/bot/modules/logging"
 	_ "onyx/bot/modules/safety"
 	_ "onyx/bot/modules/socialnotifs"

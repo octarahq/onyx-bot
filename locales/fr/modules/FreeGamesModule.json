@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "name": "FreeGamesModule",
+    "label": "Jeux Gratuits",
+    "description": "Gérer les notifications de jeux gratuits pour des plateformes comme Steam ou Epic Games.",
+    "submodules": {
+      "steam": {
+        "label": "Steam",
+        "description": "Notifier lorsqu'un jeu gratuit est disponible sur Steam.",
+        "options": {
+          "enabled": {
+            "label": "Activer Steam",
+            "description": "Activer les notifications de jeux gratuits Steam."
+          },
+          "channel": {
+            "label": "Salon Discord",
+            "description": "Le salon où les notifications seront envoyées."
+          },
+          "role": {
+            "label": "Rôle à mentionner",
+            "description": "Un rôle optionnel à mentionner."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}
