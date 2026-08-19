@@ -19,6 +19,7 @@ type FreeGamesSettings struct {
 	GuildID string         `gorm:"primaryKey" json:"guild_id"`
 	Enabled bool           `gorm:"default:false" json:"enabled"`
 	Steam   FreeGameConfig `gorm:"embedded;embeddedPrefix:steam_" json:"steam"`
+	Epic    FreeGameConfig `gorm:"embedded;embeddedPrefix:epic_" json:"epic"`
 }
 
 type FreeGamesModule struct {

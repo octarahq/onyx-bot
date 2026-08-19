@@ -21,6 +21,24 @@
             "description": "Un rôle optionnel à mentionner."
           }
         }
+      },
+      "epic": {
+        "label": "Epic Games",
+        "description": "Notifier lorsqu'un jeu gratuit est disponible sur l'Epic Games Store.",
+        "options": {
+          "enabled": {
+            "label": "Activer Epic Games",
+            "description": "Activer les notifications de jeux gratuits Epic Games."
+          },
+          "channel": {
+            "label": "Salon Discord",
+            "description": "Le salon où les notifications seront envoyées."
+          },
+          "role": {
+            "label": "Rôle à mentionner",
+            "description": "Un rôle optionnel à mentionner."
+          }
+        }
       }
     }
   },
