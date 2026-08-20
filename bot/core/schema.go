@@ -13,6 +13,7 @@ const (
 	ComponentTypeRole     ComponentType = "role"
 	ComponentTypeTextarea ComponentType = "textarea"
 	ComponentTypeList        ComponentType = "list"
+	ComponentTypeObjectList  ComponentType = "objectList"
 	ComponentTypeModuleGrid  ComponentType = "moduleGrid"
 )
 
@@ -36,16 +37,17 @@ type UIComponent struct {
 	Placeholder  string                `json:"placeholder,omitempty"`
 	Type         ComponentType         `json:"type"`
 	Required     bool                  `json:"required"`
-	Min          *int                  `json:"min,omitempty"`
-	Max          *int                  `json:"max,omitempty"`
+	Min          int                   `json:"min,omitempty"`
+	Max          int                   `json:"max,omitempty"`
 	Multiple     bool                  `json:"multiple,omitempty"`
 	Options      []UISelectOption      `json:"options,omitempty"`
 	ChannelTypes []discord.ChannelType `json:"channelTypes,omitempty"`
 	Variables    []Variables           `json:"variables,omitempty"`
 	ListType     string                `json:"listType,omitempty"`
-	ItemMin      *int                  `json:"itemMin,omitempty"`
-	ItemMax      *int                  `json:"itemMax,omitempty"`
+	ItemMin      int                   `json:"itemMin,omitempty"`
+	ItemMax      int                   `json:"itemMax,omitempty"`
 	UniqueGroup  string                `json:"uniqueGroup,omitempty"`
+	SubComponents []UIComponent        `json:"subComponents,omitempty"`
 }
 
 type UISubModule struct {

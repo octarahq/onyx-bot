@@ -39,3 +39,4 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 - [ ] Social Notifications : Notify your server about social media updates.
 - [ ] Partenerships : Manage and search partnerships with other servers.
 - [ ] Forms : Create forms for your community.
+- [x] Free Games : Notify your server about free games.

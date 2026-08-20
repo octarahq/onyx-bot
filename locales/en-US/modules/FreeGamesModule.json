@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "name": "FreeGamesModule",
+    "label": "Free Games",
+    "description": "Manage free games notifications from platforms like Steam or Epic Games.",
+    "submodules": {
+      "steam": {
+        "label": "Steam",
+        "description": "Notify when a free game is available on Steam.",
+        "options": {
+          "enabled": {
+            "label": "Enable Steam",
+            "description": "Enable Steam free games notifications."
+          },
+          "channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "role": {
+            "label": "Role to mention",
+            "description": "An optional role to mention."
+          }
+        }
+      },
+      "epic": {
+        "label": "Epic Games",
+        "description": "Notify when a free game is available on Epic Games Store.",
+        "options": {
+          "enabled": {
+            "label": "Enable Epic Games",
+            "description": "Enable Epic Games free games notifications."
+          },
+          "channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "role": {
+            "label": "Role to mention",
+            "description": "An optional role to mention."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}

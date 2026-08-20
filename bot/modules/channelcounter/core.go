@@ -204,7 +204,7 @@ func (m *ChannelCounterModule) UISchema(locale discord.Locale) core.UISchema {
 				Placeholder: defaultName,
 				Type:        core.ComponentTypeString,
 				Required:    true,
-				Max:         &maxNameLength,
+				Max:         maxNameLength,
 				Variables: []core.Variables{
 					{
 						Key:         "count",
@@ -309,8 +309,8 @@ func (m *ChannelCounterModule) UISchema(locale discord.Locale) core.UISchema {
 						Placeholder: "10",
 						Type:        core.ComponentTypeNumber,
 						Required:    true,
-						Min:         func() *int { v := 1; return &v }(),
-						Max:         func() *int { v := 10080; return &v }(),
+						Min:         1,
+						Max:         10080,
 					},
 					{
 						Name:        "names",
@@ -319,8 +319,8 @@ func (m *ChannelCounterModule) UISchema(locale discord.Locale) core.UISchema {
 						Type:        core.ComponentTypeList,
 						ListType:    "string",
 						Required:    true,
-						Max:         &maxStatuses,
-						ItemMax:     &maxNameLength,
+						Max:         maxStatuses,
+						ItemMax:     maxNameLength,
 						Variables:   statusVars,
 					},
 				},
