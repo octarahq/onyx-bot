@@ -15,6 +15,7 @@ const (
 	ComponentTypeList        ComponentType = "list"
 	ComponentTypeObjectList  ComponentType = "objectList"
 	ComponentTypeModuleGrid  ComponentType = "moduleGrid"
+	ComponentTypeButton      ComponentType = "button"
 )
 
 type UISelectOption struct {
@@ -31,23 +32,25 @@ type Variables struct {
 }
 
 type UIComponent struct {
-	Name         string                `json:"name"`
-	Label        string                `json:"label,omitempty"`
-	Description  string                `json:"description,omitempty"`
-	Placeholder  string                `json:"placeholder,omitempty"`
-	Type         ComponentType         `json:"type"`
-	Required     bool                  `json:"required"`
-	Min          int                   `json:"min,omitempty"`
-	Max          int                   `json:"max,omitempty"`
-	Multiple     bool                  `json:"multiple,omitempty"`
-	Options      []UISelectOption      `json:"options,omitempty"`
-	ChannelTypes []discord.ChannelType `json:"channelTypes,omitempty"`
-	Variables    []Variables           `json:"variables,omitempty"`
-	ListType     string                `json:"listType,omitempty"`
-	ItemMin      int                   `json:"itemMin,omitempty"`
-	ItemMax      int                   `json:"itemMax,omitempty"`
-	UniqueGroup  string                `json:"uniqueGroup,omitempty"`
-	SubComponents []UIComponent        `json:"subComponents,omitempty"`
+	Name          string                `json:"name"`
+	Label         string                `json:"label,omitempty"`
+	Description   string                `json:"description,omitempty"`
+	Placeholder   string                `json:"placeholder,omitempty"`
+	Type          ComponentType         `json:"type"`
+	Required      bool                  `json:"required"`
+	Min           int                   `json:"min,omitempty"`
+	Max           int                   `json:"max,omitempty"`
+	Multiple      bool                  `json:"multiple,omitempty"`
+	Action        string                `json:"action,omitempty"`
+	Variant       string                `json:"variant,omitempty"`
+	Options       []UISelectOption      `json:"options,omitempty"`
+	ChannelTypes  []discord.ChannelType `json:"channelTypes,omitempty"`
+	Variables     []Variables           `json:"variables,omitempty"`
+	ListType      string                `json:"listType,omitempty"`
+	ItemMin       int                   `json:"itemMin,omitempty"`
+	ItemMax       int                   `json:"itemMax,omitempty"`
+	UniqueGroup   string                `json:"uniqueGroup,omitempty"`
+	SubComponents []UIComponent         `json:"subComponents,omitempty"`
 }
 
 type UISubModule struct {

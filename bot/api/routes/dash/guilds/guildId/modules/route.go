@@ -41,6 +41,11 @@ func init() {
 		Path:    "/dash/guilds/:guildId/modules/:module",
 		Handler: handleDeleteModuleData,
 	})
+	api.AddRoute(api.Route{
+		Method:  http.MethodPost,
+		Path:    "/dash/guilds/:guildId/modules/:module/action/:action",
+		Handler: handlePostModuleAction,
+	})
 }
 
 func checkBotPermission(b *core.Bot, module core.Module, me discord.Member) []string {
@@ -516,3 +521,51 @@ func handlePostModuleData(c *gin.Context) {
 func handleDeleteModuleData(c *gin.Context) {
 	setModuleStatus(c, false)
 }
+
+func handlePostModuleAction(c *gin.Context) {
+	api.GuildAuthMiddleware()(c)
+	if c.IsAborted() {
+		return
+	}
+
+	api.PermissionMiddleware(discord.PermissionManageGuild)(c)
+	if c.IsAborted() {
+		return
+	}
+
+	bot, guildId, mod, _, ok := getModuleSettingsContext(c)
+	if !ok {
+		return
+	}
+
+	actionHandler, ok := mod.(core.ModuleActionHandler)
+	if !ok {
+		c.JSON(http.StatusNotImplemented, gin.H{"error": "module does not support actions", "error_code": "NO_ACTION_HANDLER"})
+		return
+	}
+
+	actionName := c.Param("action")
+	if actionName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "action name is required", "error_code": "MISSING_ACTION"})
+		return
+	}
+
+	var payload map[string]any
+	if c.Request.ContentLength > 0 {
+		_ = c.ShouldBindJSON(&payload)
+	}
+
+	res, err := actionHandler.HandleAction(bot, guildId, actionName, payload)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "error_code": "ACTION_FAILED"})
+		return
+	}
+
+	if res == nil {
+		c.JSON(http.StatusOK, gin.H{"ok": true})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}
+

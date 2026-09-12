@@ -35,8 +35,8 @@ Onyx is a powerful and user-friendly and open-source discord bot who offers a wi
 - [ ] Infinite Counter : Create a counter that can be incremented infinitely.
 - [x] Reminders : Set reminders.
 - [x] Suggestions : Collect and manage suggestions from your community.
-- [ ] Starboard : Highlight popular messages in your server.
-- [ ] Social Notifications : Notify your server about social media updates.
+- [x] Starboard : Highlight popular messages in your server.
+- [x] Social Notifications : Notify your server about social media updates.
 - [ ] Partenerships : Manage and search partnerships with other servers.
 - [ ] Forms : Create forms for your community.
 - [x] Free Games : Notify your server about free games.

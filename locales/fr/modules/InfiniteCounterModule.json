@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "name": "InfiniteCounterModule",
+    "label": "Compteur Infini",
+    "description": "Système de compteur de nombres pour votre serveur (Modes Libre & Strict).",
+    "submodules": {
+      "main": {
+        "label": "Configuration Principale",
+        "description": "Configurez le salon et le mode du compteur.",
+        "options": {
+          "channel_id": {
+            "label": "Salon du Compteur",
+            "description": "Le salon textuel réservé au compteur."
+          },
+          "type": {
+            "label": "Type de Compteur",
+            "description": "Sélectionnez le mode de compteur pour votre serveur.",
+            "options": {
+              "free": { "label": "Compteur Libre" },
+              "strict": { "label": "Compteur Strict" }
+            }
+          }
+        }
+      },
+      "free": {
+        "label": "Paramètres Compteur Libre",
+        "description": "Les utilisateurs écrivent eux-mêmes les nombres dans le salon.",
+        "options": {
+          "restart_on_error": {
+            "label": "Recommencer à 0 si erreur",
+            "description": "Réinitialise le compteur à 0 si un utilisateur se trompe."
+          },
+          "allow_chat": {
+            "label": "Permettre les discussions",
+            "description": "Autorise les messages texte classiques hors nombres dans le salon."
+          }
+        }
+      },
+      "strict": {
+        "label": "Paramètres Compteur Strict",
+        "description": "Le bot gère l'incrémentation via un panel interactif avec bouton.",
+        "options": {
+          "send_panel": {
+            "label": "Envoyer le panel",
+            "description": "Envoie ou met à jour le message du panel avec le bouton dans le salon."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}

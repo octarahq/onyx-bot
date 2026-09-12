@@ -8,6 +8,7 @@ import (
 
 	_ "onyx/bot/modules/channelcounter"
 	_ "onyx/bot/modules/freegames"
+	_ "onyx/bot/modules/infinite_counter"
 	_ "onyx/bot/modules/logging"
 	_ "onyx/bot/modules/safety"
 	_ "onyx/bot/modules/socialnotifs"
