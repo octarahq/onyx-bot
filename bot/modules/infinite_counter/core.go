@@ -14,21 +14,21 @@ type MainCounterSettings struct {
 }
 
 type FreeCounterSettings struct {
-	Enabled        bool `gorm:"default:false" json:"enabled"`
 	RestartOnError bool `gorm:"default:false" json:"restart_on_error"`
 	AllowChat      bool `gorm:"default:true" json:"allow_chat"`
 }
 
 type StrictCounterSettings struct {
-	Enabled bool `gorm:"default:false" json:"enabled"`
 }
 
 type InfiniteCounterSettings struct {
-	GuildID string                `gorm:"primaryKey" json:"guild_id"`
-	Enabled bool                  `gorm:"default:false" json:"enabled"`
-	Main    MainCounterSettings   `gorm:"embedded;embeddedPrefix:main_" json:"main"`
-	Free    FreeCounterSettings   `gorm:"embedded;embeddedPrefix:free_" json:"free"`
-	Strict  StrictCounterSettings `gorm:"embedded;embeddedPrefix:strict_" json:"strict"`
+	GuildID      string                 `gorm:"primaryKey" json:"guild_id"`
+	Enabled      bool                   `gorm:"default:false" json:"enabled"`
+	ServerCount  int64                  `gorm:"default:0" json:"-"`
+	UserProgress map[string]int64       `gorm:"serializer:json" json:"-"`
+	Main         MainCounterSettings    `gorm:"embedded;embeddedPrefix:main_" json:"main"`
+	Free         FreeCounterSettings    `gorm:"embedded;embeddedPrefix:free_" json:"free"`
+	Strict       StrictCounterSettings  `gorm:"embedded;embeddedPrefix:strict_" json:"strict"`
 }
 
 type InfiniteCounterModule struct {
