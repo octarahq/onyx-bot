@@ -75,6 +75,7 @@ func (m *InfiniteCounterModule) Permissions() []discord.Permissions {
 	return []discord.Permissions{
 		discord.PermissionSendMessages,
 		discord.PermissionManageMessages,
+		discord.PermissionManageChannels,
 	}
 }
 
