@@ -1,16 +1,20 @@
 package infinitecounter
 
 import (
+	"errors"
+	"fmt"
 	"onyx/bot/core"
 	"onyx/bot/locales"
+	"onyx/bot/utils"
 
 	"github.com/disgoorg/disgo/discord"
+	"github.com/disgoorg/snowflake/v2"
 	"gorm.io/gorm"
 )
 
 type MainCounterSettings struct {
 	ChannelID string `json:"channel_id"`
-	Type      string `gorm:"default:'free'" json:"type"`
+	Type      string `gorm:"default:'strict'" json:"type"`
 }
 
 type FreeCounterSettings struct {
@@ -22,13 +26,14 @@ type StrictCounterSettings struct {
 }
 
 type InfiniteCounterSettings struct {
-	GuildID      string                 `gorm:"primaryKey" json:"guild_id"`
-	Enabled      bool                   `gorm:"default:false" json:"enabled"`
-	ServerCount  int64                  `gorm:"default:0" json:"-"`
-	UserProgress map[string]int64       `gorm:"serializer:json" json:"-"`
-	Main         MainCounterSettings    `gorm:"embedded;embeddedPrefix:main_" json:"main"`
-	Free         FreeCounterSettings    `gorm:"embedded;embeddedPrefix:free_" json:"free"`
-	Strict       StrictCounterSettings  `gorm:"embedded;embeddedPrefix:strict_" json:"strict"`
+	GuildID      string                `gorm:"primaryKey" json:"guild_id"`
+	Enabled      bool                  `gorm:"default:false" json:"enabled"`
+	ServerCount  int64                 `gorm:"default:0" json:"-"`
+	LastUser     string                `json:"-"`
+	UserProgress map[string]int64      `gorm:"serializer:json" json:"-"`
+	Main         MainCounterSettings   `gorm:"embedded;embeddedPrefix:main_" json:"main"`
+	Free         FreeCounterSettings   `gorm:"embedded;embeddedPrefix:free_" json:"free"`
+	Strict       StrictCounterSettings `gorm:"embedded;embeddedPrefix:strict_" json:"strict"`
 }
 
 type InfiniteCounterModule struct {
@@ -42,7 +47,7 @@ func init() {
 func (m *InfiniteCounterModule) Metadata() core.Metadata {
 	return core.Metadata{
 		Name: "InfiniteCounterModule",
-		Icon: "plus",
+		Icon: "format_list_numbered",
 		Label: func(locale discord.Locale) string {
 			return locales.GetMeta(locale, "module_InfiniteCounterModule").Label
 		},
@@ -79,8 +84,68 @@ func (m *InfiniteCounterModule) LoadData(db *gorm.DB, guildID string) error {
 	return db.FirstOrCreate(&m.Data, InfiniteCounterSettings{GuildID: guildID}).Error
 }
 
+func CreatePanel(b *core.Bot, currentCount int, name, avatarURL string) discord.MessageCreate {
+	return discord.NewMessageCreate().AddEmbeds(
+		discord.Embed{
+			Color:       utils.ParseStrColor("#2c92b8"),
+			Description: fmt.Sprintf("## %d", currentCount),
+			Author: &discord.EmbedAuthor{
+				Name:    name,
+				IconURL: avatarURL,
+			},
+		},
+	).AddActionRow(
+		discord.NewPrimaryButton("+1", "module-infinite_counter-all-counterup"),
+	)
+}
+
+func CreatePanelUpdate(b *core.Bot, currentCount int, name, avatarURL string) discord.MessageUpdate {
+	return discord.NewMessageUpdate().ClearEmbeds().AddEmbeds(
+		discord.Embed{
+			Color:       utils.ParseStrColor("#2c92b8"),
+			Description: fmt.Sprintf("## %d", currentCount),
+			Author: &discord.EmbedAuthor{
+				Name:    name,
+				IconURL: avatarURL,
+			},
+		},
+	).AddActionRow(
+		discord.NewPrimaryButton("+1", "module-infinite_counter-all-counterup"),
+	)
+}
+
+func SendPanel(b *core.Bot, currentCount int, name, avatarURL string, cid snowflake.ID) error {
+	msg := CreatePanel(b, currentCount, name, avatarURL)
+	_, err := b.Client.Rest.CreateMessage(cid, msg)
+	return err
+}
+
 func (m *InfiniteCounterModule) HandleAction(b *core.Bot, guildID string, action string, payload map[string]any) (any, error) {
 	if action == "send_panel" {
+		cid, err := snowflake.Parse(m.Data.Main.ChannelID)
+		if err != nil {
+			return map[string]any{"success": false}, errors.New("Invalid channel id")
+		}
+
+		self, ok := b.Client.Caches.SelfUser()
+		if !ok {
+			return map[string]any{"success": false}, errors.New("Bot user cache not found")
+		}
+
+		globalName := self.Username
+		if self.GlobalName != nil && *self.GlobalName != "" {
+			globalName = *self.GlobalName
+		}
+
+		avatarURL := ""
+		if self.AvatarURL() != nil {
+			avatarURL = *self.AvatarURL()
+		}
+
+		err = SendPanel(b, int(m.Data.ServerCount), globalName, avatarURL, cid)
+		if err != nil {
+			return map[string]any{"success": false}, errors.New("Cannot send panel message")
+		}
 		return map[string]any{"success": true}, nil
 	}
 	return nil, nil

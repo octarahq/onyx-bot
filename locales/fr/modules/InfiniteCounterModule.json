@@ -51,6 +51,7 @@
   "trad": {
     "error_title": "## ❌ Erreur de comptage !",
     "error_desc": "Un mauvais nombre a été envoyé. Le compteur a été réinitialisé à **0**.",
-    "error_next": "➡ Le prochain nombre est **1**."
+    "error_next": "➡ Le prochain nombre est **1**.",
+    "error_double_click": "Vous ne pouvez pas compter deux fois d'affilée !"
   }
 }

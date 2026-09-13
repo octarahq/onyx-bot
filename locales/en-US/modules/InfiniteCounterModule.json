@@ -51,6 +51,7 @@
   "trad": {
     "error_title": "## ❌ Counting Error!",
     "error_desc": "A wrong number was sent. The counter has been reset to **0**.",
-    "error_next": "➡ The next number is **1**."
+    "error_next": "➡ The next number is **1**.",
+    "error_double_click": "You cannot count twice in a row!"
   }
 }
