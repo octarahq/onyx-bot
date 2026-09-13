@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "name": "counter",
+    "description": "Infinite counter module",
+    "options": {
+      "leaderboard": {
+        "name": "leaderboard",
+        "description": "Displays the server members leaderboard"
+      }
+    }
+  }
+}

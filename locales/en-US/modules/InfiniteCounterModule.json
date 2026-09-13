@@ -55,6 +55,9 @@
     "error_double_click": "You cannot count twice in a row!",
     "action_invalid_channel": "Invalid channel ID",
     "action_bot_not_found": "Bot user cache not found",
-    "action_cannot_send_panel": "Cannot send panel message"
+    "action_cannot_send_panel": "Cannot send panel message",
+    "leaderboard_title": "# 🏆 Counter Leaderboard",
+    "leaderboard_empty": "No members have participated in the counter on this server yet!",
+    "leaderboard_first": "# 🥇 1st — %s\n> **%d** count(s)"
   }
 }

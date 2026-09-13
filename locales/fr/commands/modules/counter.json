@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "name": "compteur",
+    "description": "Module du compteur infini",
+    "options": {
+      "leaderboard": {
+        "name": "classement",
+        "description": "Affiche le classement des membres du serveur"
+      }
+    }
+  }
+}

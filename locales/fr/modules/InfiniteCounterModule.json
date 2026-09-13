@@ -55,6 +55,9 @@
     "error_double_click": "Vous ne pouvez pas compter deux fois d'affilée !",
     "action_invalid_channel": "ID de salon invalide",
     "action_bot_not_found": "Cache du bot introuvable",
-    "action_cannot_send_panel": "Impossible d'envoyer le message du panel"
+    "action_cannot_send_panel": "Impossible d'envoyer le message du panel",
+    "leaderboard_title": "# 🏆 Classement du Compteur",
+    "leaderboard_empty": "Aucun membre n'a encore participé au compteur sur ce serveur !",
+    "leaderboard_first": "# 🥇 1er — %s\n> **%d** incrémentation(s)"
   }
 }
