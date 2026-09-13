@@ -554,6 +554,22 @@ func handlePostModuleAction(c *gin.Context) {
 	if c.Request.ContentLength > 0 {
 		_ = c.ShouldBindJSON(&payload)
 	}
+	if payload == nil {
+		payload = make(map[string]any)
+	}
+
+	lang := c.Query("lang")
+	headerLang := c.GetHeader("Accept-Language")
+	if lang == "" {
+		lang = headerLang
+		if len(lang) > 2 {
+			lang = lang[:2]
+		}
+	}
+	if lang == "" {
+		lang = string(discord.LocaleEnglishUS)
+	}
+	payload["_lang"] = lang
 
 	res, err := actionHandler.HandleAction(bot, guildId, actionName, payload)
 	if err != nil {

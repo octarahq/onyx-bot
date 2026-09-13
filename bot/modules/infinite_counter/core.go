@@ -6,6 +6,7 @@ import (
 	"onyx/bot/core"
 	"onyx/bot/locales"
 	"onyx/bot/utils"
+	"strings"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/snowflake/v2"
@@ -122,14 +123,41 @@ func SendPanel(b *core.Bot, currentCount int, name, avatarURL string, cid snowfl
 
 func (m *InfiniteCounterModule) HandleAction(b *core.Bot, guildID string, action string, payload map[string]any) (any, error) {
 	if action == "send_panel" {
+		locale := discord.LocaleEnglishUS
+		if payload != nil {
+			if l, ok := payload["_lang"].(string); ok && l != "" {
+				if strings.HasPrefix(l, "fr") {
+					locale = discord.LocaleFrench
+				} else if strings.HasPrefix(l, "en") {
+					locale = discord.LocaleEnglishUS
+				} else {
+					locale = discord.Locale(l)
+				}
+			} else if l, ok := payload["lang"].(string); ok && l != "" {
+				if strings.HasPrefix(l, "fr") {
+					locale = discord.LocaleFrench
+				} else if strings.HasPrefix(l, "en") {
+					locale = discord.LocaleEnglishUS
+				} else {
+					locale = discord.Locale(l)
+				}
+			}
+		} else if gid, err := snowflake.Parse(guildID); err == nil {
+			if guild, ok := b.Client.Caches.Guild(gid); ok && guild.PreferredLocale != "" {
+				locale = discord.Locale(guild.PreferredLocale)
+			}
+		}
+
+		trad := locales.GetModule_InfiniteCounterModule(locale)
+
 		cid, err := snowflake.Parse(m.Data.Main.ChannelID)
 		if err != nil {
-			return map[string]any{"success": false}, errors.New("Invalid channel id")
+			return map[string]any{"success": false}, errors.New(trad.Action_invalid_channel)
 		}
 
 		self, ok := b.Client.Caches.SelfUser()
 		if !ok {
-			return map[string]any{"success": false}, errors.New("Bot user cache not found")
+			return map[string]any{"success": false}, errors.New(trad.Action_bot_not_found)
 		}
 
 		globalName := self.Username
@@ -144,7 +172,7 @@ func (m *InfiniteCounterModule) HandleAction(b *core.Bot, guildID string, action
 
 		err = SendPanel(b, int(m.Data.ServerCount), globalName, avatarURL, cid)
 		if err != nil {
-			return map[string]any{"success": false}, errors.New("Cannot send panel message")
+			return map[string]any{"success": false}, errors.New(trad.Action_cannot_send_panel)
 		}
 		return map[string]any{"success": true}, nil
 	}
