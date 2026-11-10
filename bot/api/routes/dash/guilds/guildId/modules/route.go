@@ -41,6 +41,11 @@ func init() {
 		Path:    "/dash/guilds/:guildId/modules/:module",
 		Handler: handleDeleteModuleData,
 	})
+	api.AddRoute(api.Route{
+		Method:  http.MethodPost,
+		Path:    "/dash/guilds/:guildId/modules/:module/action/:action",
+		Handler: handlePostModuleAction,
+	})
 }
 
 func checkBotPermission(b *core.Bot, module core.Module, me discord.Member) []string {
@@ -288,11 +293,11 @@ func handlePatchModuleData(c *gin.Context) {
 					}
 
 					if comp.Type == core.ComponentTypeString || comp.Type == core.ComponentTypeTextarea {
-						if comp.Min != nil && len(strVal) < *comp.Min {
+						if comp.Min > 0 && len(strVal) < comp.Min {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too short", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
-						if comp.Max != nil && len(strVal) > *comp.Max {
+						if comp.Max > 0 && len(strVal) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too long", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -304,7 +309,7 @@ func handlePatchModuleData(c *gin.Context) {
 							channels = strings.Split(strVal, ",")
 						}
 
-						if comp.Max != nil && len(channels) > *comp.Max {
+						if comp.Max > 0 && len(channels) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s has too many channels", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -351,7 +356,7 @@ func handlePatchModuleData(c *gin.Context) {
 							roles = strings.Split(strVal, ",")
 						}
 
-						if comp.Max != nil && len(roles) > *comp.Max {
+						if comp.Max > 0 && len(roles) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s has too many roles", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -394,11 +399,11 @@ func handlePatchModuleData(c *gin.Context) {
 
 				if floatVal, ok := val.(float64); ok {
 					if comp.Type == core.ComponentTypeNumber {
-						if comp.Min != nil && int(floatVal) < *comp.Min {
+						if comp.Min != 0 && int(floatVal) < comp.Min {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too small", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
-						if comp.Max != nil && int(floatVal) > *comp.Max {
+						if comp.Max != 0 && int(floatVal) > comp.Max {
 							c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("field %s.%s is too large", sub.Name, comp.Name), "error_code": "VALIDATION_FAILED"})
 							return
 						}
@@ -516,3 +521,67 @@ func handlePostModuleData(c *gin.Context) {
 func handleDeleteModuleData(c *gin.Context) {
 	setModuleStatus(c, false)
 }
+
+func handlePostModuleAction(c *gin.Context) {
+	api.GuildAuthMiddleware()(c)
+	if c.IsAborted() {
+		return
+	}
+
+	api.PermissionMiddleware(discord.PermissionManageGuild)(c)
+	if c.IsAborted() {
+		return
+	}
+
+	bot, guildId, mod, _, ok := getModuleSettingsContext(c)
+	if !ok {
+		return
+	}
+
+	actionHandler, ok := mod.(core.ModuleActionHandler)
+	if !ok {
+		c.JSON(http.StatusNotImplemented, gin.H{"error": "module does not support actions", "error_code": "NO_ACTION_HANDLER"})
+		return
+	}
+
+	actionName := c.Param("action")
+	if actionName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "action name is required", "error_code": "MISSING_ACTION"})
+		return
+	}
+
+	var payload map[string]any
+	if c.Request.ContentLength > 0 {
+		_ = c.ShouldBindJSON(&payload)
+	}
+	if payload == nil {
+		payload = make(map[string]any)
+	}
+
+	lang := c.Query("lang")
+	headerLang := c.GetHeader("Accept-Language")
+	if lang == "" {
+		lang = headerLang
+		if len(lang) > 2 {
+			lang = lang[:2]
+		}
+	}
+	if lang == "" {
+		lang = string(discord.LocaleEnglishUS)
+	}
+	payload["_lang"] = lang
+
+	res, err := actionHandler.HandleAction(bot, guildId, actionName, payload)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "error_code": "ACTION_FAILED"})
+		return
+	}
+
+	if res == nil {
+		c.JSON(http.StatusOK, gin.H{"ok": true})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}
+

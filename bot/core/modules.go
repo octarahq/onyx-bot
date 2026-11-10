@@ -66,6 +66,10 @@ type ModuleModalHandler interface {
 	HandleModal(b *Bot, event *events.ModalSubmitInteractionCreate, action string, args []string) bool
 }
 
+type ModuleActionHandler interface {
+	HandleAction(b *Bot, guildID string, action string, payload map[string]any) (any, error)
+}
+
 type OnApplicationCommandInteractionCreate interface {
 	HandleApplicationCommandInteractionCreate(b *Bot, event *events.ApplicationCommandInteractionCreate) bool
 }

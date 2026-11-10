@@ -44,16 +44,19 @@ func handleGetGuildInfo(c *gin.Context) {
 	}
 
 	var guild discord.Guild
+	var memberCount int
 	cguild, ok := bot.Client.Caches.GuildCache().Get(sgid)
 	if ok {
-		guild = cguild
+		guild = cguild.Guild
+		memberCount = cguild.MemberCount
 	} else {
-		rguid, err := bot.Client.Rest.GetGuild(sgid, false)
+		rguid, err := bot.Client.Rest.GetGuild(sgid, true)
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "guild not found (bot is not in this server)", "error_code": "GUILD_NOT_FOUND"})
 			return
 		}
 		guild = rguid.Guild
+		memberCount = rguid.ApproximateMemberCount
 	}
 
 	modules := make([]gin.H, 0, len(bot.Modules))
@@ -124,7 +127,7 @@ func handleGetGuildInfo(c *gin.Context) {
 		"id":          guild.ID.String(),
 		"name":        guild.Name,
 		"iconURL":     iconURL,
-		"memberCount": guild.MemberCount,
+		"memberCount": memberCount,
 		"ownerId":     guild.OwnerID.String(),
 		"modules":     modules,
 	})

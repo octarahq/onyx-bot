@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "name": "SocialNotifsModule",
+    "label": "Social Notifications",
+    "description": "Manage social media notifications",
+    "submodules": {
+      "youtube": {
+        "label": "YouTube",
+        "description": "Notify when a new video or live is posted on YouTube.",
+        "options": {
+          "enabled": {
+            "label": "Enable YouTube",
+            "description": "Enable YouTube notifications."
+          },
+          "fluxs": {
+            "label": "YouTube Sources",
+            "description": "Add YouTube channels to listen to."
+          },
+          "fluxs.channel_url": {
+            "label": "Channel URL",
+            "description": "The URL of the YouTube channel."
+          },
+          "fluxs.channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "fluxs.message": {
+            "label": "Notification Message",
+            "description": "The message to send. You can use {channel.name}, {title} and {url}."
+          },
+          "fluxs.button_text": {
+            "label": "Button Text",
+            "description": "The text on the button. Leave empty for default."
+          },
+          "fluxs.notify_videos": {
+            "label": "Notify on New Videos",
+            "description": "Notify when a new video is posted."
+          },
+          "fluxs.notify_shorts": {
+            "label": "Notify on New Shorts",
+            "description": "Notify when a new short is posted."
+          },
+          "fluxs.notify_lives": {
+            "label": "Notify on Live Streams",
+            "description": "Notify when a live stream starts."
+          }
+        }
+      },
+      "rss": {
+        "label": "RSS Feeds",
+        "description": "Notify when a new item is posted on an RSS feed.",
+        "options": {
+          "enabled": {
+            "label": "Enable RSS",
+            "description": "Enable RSS notifications."
+          },
+          "fluxs": {
+            "label": "RSS Sources",
+            "description": "Add RSS feeds to listen to."
+          },
+          "fluxs.feed_url": {
+            "label": "Feed URL",
+            "description": "The URL of the RSS feed."
+          },
+          "fluxs.channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "fluxs.message": {
+            "label": "Notification Message",
+            "description": "The message to send. You can use {feed.title}, {item.title} and {item.link}."
+          },
+          "fluxs.button_text": {
+            "label": "Button Text",
+            "description": "The text on the button. Leave empty for default."
+          }
+        }
+      },
+      "reddit": {
+        "label": "Reddit",
+        "description": "Notify when a new post is published on a subreddit.",
+        "options": {
+          "enabled": {
+            "label": "Enable Reddit",
+            "description": "Enable Reddit notifications."
+          },
+          "fluxs": {
+            "label": "Reddit Sources",
+            "description": "Add subreddits to listen to."
+          },
+          "fluxs.subreddit": {
+            "label": "Subreddit",
+            "description": "The subreddit name (e.g. r/gaming or gaming)."
+          },
+          "fluxs.channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "fluxs.message": {
+            "label": "Notification Message",
+            "description": "The message to send. You can use {feed.title}, {title} and {url}."
+          },
+          "fluxs.button_text": {
+            "label": "Button Text",
+            "description": "The text on the button. Leave empty for default."
+          }
+        }
+      },
+      "twitch": {
+        "label": "Twitch",
+        "description": "Notify when a channel goes live on Twitch.",
+        "options": {
+          "enabled": {
+            "label": "Enable Twitch",
+            "description": "Enable Twitch notifications."
+          },
+          "fluxs": {
+            "label": "Twitch Sources",
+            "description": "Add Twitch channels to listen to."
+          },
+          "fluxs.channel_name": {
+            "label": "Twitch Channel Name",
+            "description": "The Twitch channel name (e.g. lotus64)."
+          },
+          "fluxs.channel": {
+            "label": "Discord Channel",
+            "description": "The channel where notifications will be sent."
+          },
+          "fluxs.message": {
+            "label": "Notification Message",
+            "description": "The message to send. You can use {channel.name}, {title}, {url} and {game}."
+          },
+          "fluxs.button_text": {
+            "label": "Button Text",
+            "description": "The text on the button. Leave empty for default."
+          }
+        }
+      }
+    }
+  },
+  "trad": {}
+}

@@ -98,7 +98,7 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 					return false
 				}
 
-				msg, good, _ := utils.CaptchaBuildMessage("", e.Member, guild)
+				msg, good, _ := utils.CaptchaBuildMessage("", e.Member, guild.Guild)
 				m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(good)+1), e.GuildID, false, nil)
 
 				e.Client().Rest.CreateMessage(cid, msg)
@@ -120,7 +120,7 @@ func (m *SafetyModule) HandleGuildMemberJoin(b *core.Bot, e *events.GuildMemberJ
 				return false
 			}
 
-			msg, goodIdx, _ := utils.CaptchaBuildMessage(e.Member.User.ID.String(), e.Member, guild)
+			msg, goodIdx, _ := utils.CaptchaBuildMessage(e.Member.User.ID.String(), e.Member, guild.Guild)
 			m.addCaptchaSession(b, e.Member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), e.GuildID, false, nil)
 
 			_, err = e.Client().Rest.CreateMessage(cid, msg)
@@ -151,7 +151,7 @@ func (m *SafetyModule) triggerSuspectCaptcha(b *core.Bot, client *bot.Client, gu
 		return false
 	}
 
-	msg, goodIdx, _ := utils.CaptchaBuildMessage(member.User.ID.String(), member, guild)
+	msg, goodIdx, _ := utils.CaptchaBuildMessage(member.User.ID.String(), member, guild.Guild)
 	m.addCaptchaSession(b, member.User.ID.String(), fmt.Sprintf("%d", int(goodIdx)+1), guildID, true, backupRoles)
 
 	channel, err := b.Client.Rest.CreateDMChannel(member.User.ID)
@@ -245,7 +245,7 @@ func (m *SafetyModule) HandleModalSubmitInteractionCreate(b *core.Bot, e *events
 				return false
 			}
 
-			msg, good, _ := utils.CaptchaBuildMessage("", member, guild)
+			msg, good, _ := utils.CaptchaBuildMessage("", member, guild.Guild)
 			currentSession := m.Data.SaveState.CaptchaSessions[member.User.ID.String()]
 			currentSession.CorrectAnswer = fmt.Sprintf("%d", int(good)+1)
 			if currentSession.IsSuspect {

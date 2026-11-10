@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "name": "InfiniteCounterModule",
+    "label": "Compteur Infini",
+    "description": "Système de compteur de nombres pour votre serveur (Modes Libre & Strict).",
+    "submodules": {
+      "main": {
+        "label": "Configuration Principale",
+        "description": "Configurez le salon et le mode du compteur.",
+        "options": {
+          "channel_id": {
+            "label": "Salon du Compteur",
+            "description": "Le salon textuel réservé au compteur."
+          },
+          "type": {
+            "label": "Type de Compteur",
+            "description": "Sélectionnez le mode de compteur pour votre serveur.",
+            "options": {
+              "free": { "label": "Compteur Libre" },
+              "strict": { "label": "Compteur Strict" }
+            }
+          }
+        }
+      },
+      "free": {
+        "label": "Paramètres Compteur Libre",
+        "description": "Les utilisateurs écrivent eux-mêmes les nombres dans le salon.",
+        "options": {
+          "restart_on_error": {
+            "label": "Recommencer à 0 si erreur",
+            "description": "Réinitialise le compteur à 0 si un utilisateur se trompe."
+          },
+          "allow_chat": {
+            "label": "Permettre les discussions",
+            "description": "Autorise les messages texte classiques hors nombres dans le salon."
+          }
+        }
+      },
+      "strict": {
+        "label": "Paramètres Compteur Strict",
+        "description": "Le bot gère l'incrémentation via un panel interactif avec bouton.",
+        "options": {
+          "send_panel": {
+            "label": "Envoyer le panel",
+            "description": "Envoie ou met à jour le message du panel avec le bouton dans le salon."
+          }
+        }
+      }
+    }
+  },
+  "trad": {
+    "error_title": "## ❌ Erreur de comptage !",
+    "error_desc": "Un mauvais nombre a été envoyé. Le compteur a été réinitialisé à **0**.",
+    "error_next": "➡ Le prochain nombre est **1**.",
+    "error_double_click": "Vous ne pouvez pas compter deux fois d'affilée !",
+    "action_invalid_channel": "ID de salon invalide",
+    "action_bot_not_found": "Cache du bot introuvable",
+    "action_cannot_send_panel": "Impossible d'envoyer le message du panel",
+    "leaderboard_title": "# 🏆 Classement du Compteur",
+    "leaderboard_empty": "Aucun membre n'a encore participé au compteur sur ce serveur !",
+    "leaderboard_first": "# 🥇 1er — %s\n> **%d** incrémentation(s)"
+  }
+}

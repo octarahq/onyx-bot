@@ -3,7 +3,7 @@ package translation
 import (
 	"onyx/bot/core"
 	"onyx/bot/locales"
-		"onyx/bot/utils"
+	"onyx/bot/utils"
 
 	"github.com/disgoorg/disgo/discord"
 	"gorm.io/gorm"
@@ -77,8 +77,6 @@ func (m *TranslationModule) UISchema(locale discord.Locale) core.UISchema {
 		})
 	}
 
-	maxChannels := 5
-
 	meta := locales.GetMeta(locale, "module_TranslationModule")
 	mainLabel := "Main Settings"
 	mainDesc := ""
@@ -112,7 +110,7 @@ func (m *TranslationModule) UISchema(locale discord.Locale) core.UISchema {
 						Type:         core.ComponentTypeChannel,
 						Required:     false,
 						Multiple:     true,
-						Max:          &maxChannels,
+						Max:          5,
 						ChannelTypes: []discord.ChannelType{discord.ChannelTypeGuildNews},
 					},
 				},

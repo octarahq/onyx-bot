@@ -101,8 +101,10 @@ func init() {
 							oldCode := "onyx"
 							newCode := "stolen"
 
-							oldGuild := discord.Guild{
-								ID: *event.GuildID,
+							oldGuild := discord.CacheGuild{
+								Guild: discord.Guild{
+									ID: *event.GuildID,
+								},
 							}
 							newGuild := discord.Guild{
 								ID: *event.GuildID,
@@ -110,7 +112,7 @@ func init() {
 
 							if guild, ok := b.Client.Caches.Guild(*event.GuildID); ok {
 								oldGuild = guild
-								newGuild = guild
+								newGuild = guild.Guild
 							}
 							oldGuild.VanityURLCode = &oldCode
 							newGuild.VanityURLCode = &newCode
