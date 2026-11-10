@@ -232,7 +232,7 @@ func InitWizzardSpells(t locales.ModuleWizzardModuleTrad) []Sort {
 				user := e.Message.Mentions[0]
 				if vs, ok := e.Client().Caches.VoiceState(*e.GuildID, e.Message.Author.ID); ok && vs.ChannelID != nil {
 					channelID := *vs.ChannelID
-					update := discord.MemberUpdate{ChannelID: &channelID}
+					update := discord.MemberUpdate{ChannelID: omit.New(&channelID)}
 					_, err := b.Client.Rest.UpdateMember(*e.GuildID, user.ID, update)
 					if err == nil {
 						msg = createSpellMessage("#3498db", sp.Accio.Name, "🧲 "+user.Tag()+" a été attiré vers vous !")
